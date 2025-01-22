@@ -1,0 +1,40 @@
+#include "array.h"
+
+Array::Array(int n) {
+    data = new int[n];
+    my_size = n;
+}
+
+Array::Array(const Array& other) {
+    data = new int[other.my_size];
+    my_size = other.my_size;
+    for(int i=0; i< my_size; ++i) {
+      data[i] = other.data[i];
+    }
+}
+
+Array::~Array() {
+  //delete data;
+}
+
+Array& Array::operator=(const Array& rhs) {
+    data = new int[rhs.my_size];
+    my_size = rhs.my_size;
+    for(int i=0; i< my_size; ++i) {
+      data[i] = rhs.data[i];
+    }
+    return *this;
+}
+
+
+int Array::length() const {
+  return my_size;
+}
+
+int& Array::operator[](int i) {
+    return data[i];
+}
+
+int& Array::operator[](int i) const {
+    return data[i];
+}

@@ -1,0 +1,468 @@
+%Master File:lectures.tex
+
+\begin{slide}
+\lesson{Sometimes It Pays Not to Be Binary}
+
+\vspace*{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{btree}
+\end{center}
+
+\keywords{B-Trees, Tries, Suffix Trees}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{B-Trees}{btrees}
+    \outlineitem{Tries}{tries}
+    \outlineitem{Suffix Tree}{suffix}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{14cm}
+  \includegraphics[width=14cm]{btree}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{B-Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item \emph{B-trees} are balanced trees for fast search, finding successors
+    and predecessors, insert, delete, maximum, minimum, etc.\pause
+  \item Not to be confused with binary trees\pause
+  \item They are designed to keep related data close to each other in
+    (disk) memory to minimise retrieval time\pause
+  \item Important when working with large amount of data that is stored
+    on secondary storage (e.g. disks)\pause
+  \item Used extensively in databases\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{When Big-O Doesn't Work}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An underlying assumption of Big-O is that all elementary
+    operations take roughly the same amount of time\pause
+  \item This just isn't true of disk look-up\pause
+  \item The typical time of an elementary operation on a modern
+    processor is $10^{-9}$ seconds\pause
+  \item But a typical hard disk might do 7\,200 revolutions per
+    minute or 120 revolutions per second\pause
+  \item The typical time it takes to locate a record is around 10ms or
+    $10^7$ times slower than an elementary operation\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Accessing Data from Disk}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When accessing data from disk minimising the number of disk
+    accesses is critical for good performance\pause
+  \item In database applications we want to store data as large
+    sets\pause
+  \item Storing data in binary trees is disastrous as we typically need
+    around $\log_2(n)$ disk accesses before we locate our data\pause
+  \item It is not unusual in databases for $n=10\,000\,000$ so that
+    $\log_2(n) \approx 24$\pause
+  \item Using binary trees it would often take several seconds to find a
+    record\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Multiway-Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To remedy this we can use M-way trees so that the access time is
+    \begin{align*}
+      \log_M(n) = \frac{\log_2(n)}{\log_2(M)}\pause
+    \end{align*}
+  \item In practice we might use $M\approx 200 \approx 2^8$ so we can
+    reduce the depth of the tree by around a factor of 8\pause
+  \item The basic data structures for doing this is the B-tree\pause
+  \item There are many variants of B-tree, all trying to squeeze a bit
+    more performances from the basic structure\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{$\mathbf{B}^{+}$ Tree}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A pretty basic implementation would obey the following rules
+    \begin{enumerate}\squeeze
+    \item The data items are stored at leaves\pause
+    \item The non-leaf nodes store up to M-1 keys to guide the
+      search: key $i$ represents the smallest key in subtree
+      $i+1$\pause
+    \item The root is either a leaf or has between 2 and $M$ children\pause
+    \item All non-leaf nodes except the root have between $\lceil M/2
+      \rceil$ and $M$ children\pause
+    \item All leaves are at the same depth and have between $\lceil L/2
+      \rceil$ and $L$ data entries\pause
+    \end{enumerate}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Choosing $M$ and $L$}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The choice of $M$ and $L$ depends on the block size (the
+    information read in one go from disk)\pause
+  \item It also depends on the type of data that is being stored
+    (integer, reals, strings, etc.)\pause
+  \item $M$ and $L$ might be in the hundreds or thousands\pause
+  \item In the examples below we consider tiny $M = L = 5$ which is
+    unrealistic, but drawable\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{B-Tree Example}
+\begin{itemize}
+\item $M=5$, $L=5$
+\end{itemize}
+\pb\pause
+\begin{center}
+\multipdf[width=\linewidth]{bTree} \pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Changes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If the root is full then it can be split into two and a new root
+    created\pause
+  \item B-trees also have to allow the removal of records without losing
+    its structure\pause
+  \item There are a number of variant strategies (e.g. neighbouring
+    nodes can adopt a child if the current node cannot expand any more)\pause
+  \item The actual implementation of B-trees is tricky because there are
+    many special cases\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{B-Tree Summary}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item B-trees are an important data structure for databases where
+    reducing the number of disk searches is vital\pause
+  \item They tend to be much more complex than the other data structures
+    we have seen\pause
+  \item The problem of disk access can be improved by replacing disk
+    memory with solid-state drives (still slow compared to memory)\pause
+  \item For massive databases new data structures have been developed to
+    allow faster (although less flexible) information access
+    (e.g. NOSQL, MongoDB, Neo4j)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Tries
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Tries}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A \emph{Trie} (pron. `try') or \emph{digital tree} is a multiway
+    tree often used for storing large sets of words\pause
+  \item They are trees with a possible branch for every letter of an
+    alphabet\pause
+  \item Their names comes from the word \textit{re\emph{trie}val}\pause
+  \item Tries usually compactify the edges in the tree\pause
+  \item All words end with a special letter ``\$''\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Trie}
+\pause
+\pb
+\begin{center}
+  \includegraphics[width=\linewidth]{trie1}\mypl{1}
+  \multido{\i=2+1}{2}{%
+    \llap{\includegraphics[width=\linewidth]{trie\i}}\mypl{\i}}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Uses of Tries}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Tries are yet another way of implementing sets\pause
+  \item They provide quick insertion, deletion and find\pause
+  \item Typically considerably quicker than binary trees and hash
+    tables\pause
+  \item They are particularly good for spell checkers, completion
+    algorithms, longest-prefix matching, hyphenation\pause
+  \item Each search finds the longest match between the words in the set
+    and the query\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Trie for 31 Most Common English Words}
+\pause
+\pb
+\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.99\linewidth]{trieTable}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Disadvantage of Tries}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Table-based tries typically waste large amounts of memory\pause
+  \item Often table-based tries are used for the first few layers, while
+    lower levels use a less memory intensive data structure\pause
+  \item These days memory is less of a problem so table-based tries are
+    acceptable for some applications\pause
+  \item There are many implementations of tries each suited to a
+    particular task\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Binary Tries}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One extreme (though not uncommon) solution to address memory
+    issues is to build a bit-level trie so the data-structure is a
+    binary tree\pause
+  \item It differs from a binary tree in that the decisions to go left
+    or right depends on the current bit\pause
+  \item Although you lose the advantage of a multiway tree (of reducing
+    the depth) it does find the longest match and it speeds up finds
+    which fail\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Why Tries?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Tries are a classic example of a trade-off between memory and
+    computational complexity\pause
+  \item Tries are slightly specialist and tend to get used in very
+    particular applications
+    \begin{itemize}
+    \item Finding longest matches
+    \item Completion, spell checking, etc.\pause
+    \end{itemize}
+  \item A basic trie is not too complicated, however, \ldots\pause
+  \item There are many implementation which try to overcome the
+    difficulty of wasting too much memory\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Suffix Trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Suffix Tree}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Suffix tree is a trie of all suffixes of a string\pause
+  \item E.g. banana
+    \begin{center}
+      \includegraphics[width=\linewidth]{suffixBanana}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Importance of Suffix Tree}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The first linear-time algorithm for computing suffix trees was
+    proposed by Peter Weiner in 1973, a more space efficient algorithm
+    was proposed by Edward M. McCreight in 1976\pause
+  \item Esko Ukkonen in 1995 proposed a variant of McCreight's
+    algorithm, but in a way that was much easier to understand\pause
+  \item It really only got implemented after this\pause
+  \item They are very important for string-based algorithms\pause
+  \item The classic application is in finding a match for a query
+    string, $Q$, in a text, $T$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{String Matching}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To find a match of a query string, $Q$, in a text, $T$, we can
+    first construct the suffix tree of the string $T$ we then simple look
+    up the query, $Q$, using the trie
+  \end{itemize}
+    \begin{center}
+      \includegraphics[width=\linewidth]{suffixBanana}\pause
+    \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Complexity of Suffix Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Using a regular trie for a suffix tree would typically use far
+    too much memory to be useful\pause
+  \item However, by using pointers to the original text it is possible
+    to build a suffix tree using $O(n)$ memory where $n$ is the length
+    of the text\pause
+  \item Furthermore (and rather incredibly) there is a linear time
+    ($O(n)$) algorithm to construct the trie\pause
+  \item The algorithm is not however trivial to understand\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Uses of Suffix Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Suffix trees are efficient whenever it is likely that you will
+    do multiple searches\pause
+  \item Exact word matching is in itself a very important application\pause
+  \item Suffix trees in combination with dynamic programming (which we
+    will eventually get to) can be used to do inexact matching (finding
+    the match with the smallest edit distance)\pause
+  \item Suffix trees get used in bioinformatics, advanced machine
+    learning algorithms, \ldots\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Multiway trees can considerable speed up search over binary
+    trees\pause
+  \item They are very important in some specialised applications
+    (e.g. databases, spell-checking, completion, suffix trees)\pause
+  \item They are not as general purpose as binary search trees and are
+    more complicated to implement\pause
+  \item But they can give the best performance\pause---sometimes
+    performance matters enough to make it worthwhile implementing
+    multiway trees\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

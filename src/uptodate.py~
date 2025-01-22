@@ -1,0 +1,25 @@
+from pathlib import Path
+import datetime
+
+class UpToDate:
+    def __init__(self, filename):
+        self.filename = filename
+        file = Path(filename)
+        if (file.is_file()):
+            with open(filename, "r") as f:
+                self.timestamp = float(f.readline())
+        else:
+            self.timestamp = 0
+
+    def update(self, filename):
+        file = Path(filename)
+        if (file.is_file()):
+            modified = file.stat().st_mtime
+            return modifed > self.time_stamp
+        else:
+            return True
+
+    def done(self):
+        now = datetime.datetime.now()
+        with open(filename, "w") as f:
+            f.write(f"{now}\n")

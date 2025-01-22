@@ -1,0 +1,94 @@
+struct Heap {
+  int[] array;
+  int count;
+  
+  static Heap Heap(int capacity=11) {
+    Heap heap = new Heap;
+    heap.array = new int[capacity];
+    heap.count = 0;
+    return heap;
+  }
+
+  
+  pair pos(int index) {
+    int full = 1;
+    real space = 8.0;
+    int level = 0;
+    for(; true; ++level) {
+      if (index>full-1) {
+	index -= full;
+	full *= 2;
+	space *= 0.5;
+      } else
+	break;
+    }
+    real offset = (level==0)? 0.0: 0.5*full - 0.5;
+    return 20*(space*(index-offset), -level);
+  }
+  
+  void graph() {
+    for(int i=1; i<count; ++i) {
+      draw(pos(floor((i-1)/2))--pos(i));
+    }
+    for(int i=0; i<count; ++i) {
+      label(string(array[i]), pos(i), UnFill);
+    }
+  }
+
+  void push(int priority, bool show=false) {
+    array[count] = priority;
+    int child = count;
+    ++count;
+    while (child!=0) {
+      int parent = floor((child-1)/2);
+      if (show) {
+	erase();
+	label("push("+string(priority)+")", (-5, -1), 5W, red);
+	graph();
+	if (array[child]<array[parent]) {
+	  draw(0.9*pos(child)+0.1*pos(parent)--0.2*pos(child)+0.8*pos(parent), red, Arrows);
+	} else {
+	  draw(0.9*pos(child)+0.1*pos(parent)--0.2*pos(child)+0.8*pos(parent), red);
+	}
+	label(string(array[child]), pos(child), red+linewidth(1));
+	label(string(array[parent]), pos(parent), red+linewidth(1));
+
+	ship();
+      }
+      if (array[parent] < array[child])
+	return;
+      array[child] = array[parent];
+      array[parent] = priority;
+      child = parent;
+    }
+    return;
+  }
+
+
+  int top() {return array[0];}
+
+  int pop() {
+    int value = array[0];
+    int tmp = array[--count];
+    array[0] = tmp;
+    int parent = 0;
+
+    int child = 2*parent + 1;
+    while(child<count) {
+      if (child+1<count && array[child+1] < array[child])
+	++child;
+      if (array[child]>array[parent])
+	break;
+      array[parent] = array[child];
+      array[child] = tmp;
+      parent = child;
+      child = 2*parent + 1;
+    }
+    return value;
+  }
+
+  bool empty() {return count==0;}
+
+};
+
+from Heap unravel Heap;

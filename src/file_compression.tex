@@ -1,0 +1,670 @@
+%Master File:lectures.tex
+
+\lesson{Use Smart Encoding!}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{2dwavelet}
+\end{center}
+\keywords{File compression, Huffman codes, wavelets}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Huffman codes}{huffman}
+    \outlineitem{Wavelets}{wavelet}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{2dwavelet}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Huffman coding
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\toptarget{firstoutline}
+
+\begin{slide}
+\section[-1]{File Compression}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item File compression comes in two varieties
+    \begin{itemize}
+    \item Exact compression (e.g. zip used on text files)
+    \item Lossy compression (e.g. jpeg used on pictures---jpeg can also
+      be loss-less or exact)\pause
+    \end{itemize}
+  \item Good exact compression (also known as entropy encodings) can
+    give a compression ratio around 25\%\pause
+  \item Lossy compression can give a compression ratio from 10-1\%\pause
+  \item Important for saving space, but lossy compression can also be
+    used for noise reduction\pause
+  \item Even used for plagiarism detection!\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Entropy Encoding}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Exact encodings use the principle of using short words for
+    frequently occurring sequences (symbols) and longer words for
+    sequences that occur less often\pause
+  \item Claude Shannon showed that for an alphabet of $n$ symbols where the
+    probability of symbol $i$ occurring is $p_i$ no code exists which
+    can transmit information in less than
+    \begin{align*}
+      -\sum_{i=1}^n p_i \log_2(p_i) \,\,\text{bits}
+    \end{align*}
+    asymptotically this compression can be achieved\pause
+  \item Different encoding schemes differ in the way they identify
+    symbols of the alphabet\pause---this is rather specialist and we
+    won't go into this\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Huffman Coding}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given a sequence of symbols and their probabilities of
+    occurance, Huffman code provides a way of coding up the
+    information\pause
+  \item It is an example of a \emph{greedy} strategy that happens to be
+    optimal\pause
+  \item Like many greedy strategies it is easily implemented using a
+    priority queue\pause
+  \item It is used in the UNIX compress program and in the exact part of
+    JPEG\pause
+  \item The idea is to assign short codes to commonly used symbols\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Symbol Frequency}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We start from an alphabet describing the original document\pause
+    \begin{itemize}
+    \item This might be the set of characters\pause
+    \item For an image it might be the set of pixel values\pause
+    \item It might be pairs of pixel values\pause
+    \end{itemize}
+  \item We compute the number of occurrences of each symbol
+    \begin{center}
+      \begin{tabular}{|c|c|} \hline
+        Symbol & \# Occurrences \\ \hline
+        a & 145 \\ \hline
+        b & 67  \\ \hline
+        \vdots & \vdots  \\ \hline
+      \end{tabular}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Encoding}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We want to assign a code to each symbol\pause
+  \item To save space we want to assign short codes to frequently used
+    symbols\pause
+  \item There is a problem:\pause\ decoding\pause
+  \item If we assigned a code
+    \begin{align*}
+      e& \rightarrow 0 & a &\rightarrow 1 & r &\rightarrow 01 \\
+      o& \rightarrow 10 & i &\rightarrow 11 & t &\rightarrow 000
+    \end{align*}
+    etc.  we could compress a document very efficiently but we could
+    never decode it uniquely\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2.5]{Huffman Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Once again tree come to the rescue!\pause
+  \item We assign each symbol to a leaf of a binary tree\pause
+  \item We use the position of the branch as an encoding of the symbol\pause
+    \begin{center}
+      \multiinclude[graphics={width=0.9\linewidth}]{huffman}\pause
+    \end{center}
+  \item The decoding is unique\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2.5]{Generating the Huffman Tree}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}\squeeze
+\item We are left with the problem of constructing the Huffman tree
+  such that frequently occurring letters have short codes\pauseh
+\item A greedy approach is to iteratively build a tree by\pauseh
+  \begin{enumerate}
+  \item combine the two most infrequent symbols into a subtree\pauseh
+  \item Add their scores and treat them as a single symbol\pauseh
+  \end{enumerate}
+  \begin{center}
+    \multiinclude[graphics={width=0.8\linewidth}]{huffman-construct}\pause
+  \end{center}
+\end{itemize}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{English Letters}
+\begin{center}
+  \includegraphics[width=\linewidth]{huffman}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementing Huffman Encoding}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To implement Huffman encoding you need
+    \begin{enumerate}
+    \item A class to build Huffman trees by combining subtrees\pause
+    \item A way to find the least frequently used symbols or symbol
+      combinations\pause
+    \end{enumerate}
+  \item Priority queues are ideal for this application\pause
+  \item They allow you to find the least frequently used symbols
+    (\texttt{removeMin}) and to add new symbols (\texttt{add})\pause
+  \item To decode you follow the Huffman tree\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Code Outline}
+
+\begin{java}
+public abstract class HuffmanNode implements Comparable<HuffmanNode>
+{
+    protected int count;
+    protected HuffmanNode parent;
+
+    public int getCount()
+    {
+        return count;
+    }
+
+    public int compareTo(HuffmanNode rhs)
+    {
+        return getCount()-rhs.getCount();
+    }
+
+    public void setParent(HuffmanNode p)
+    {
+        parent = p;
+    }
+}
+\end{java}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Nodes and Leaves}
+
+\begin{java}
+public class HuffmanSubTree extends HuffmanNode {
+    private HuffmanNode left;
+    private HuffmanNode right;
+    
+    HuffmanSubTree(HuffmanNode l, HuffmanNode r)
+    {   left = l;
+        right = r;
+        count = l.getCount() + r.getCount();
+        l.setParent(this);
+        r.setParent(this);
+    }
+} $\pause$
+
+public class HuffmanLeaf extends HuffmanNode {
+    private char ch;
+
+    HuffmanLeaf(int s, int frequency)
+    {   ch = (char)(s);
+        count = frequency;
+    }
+} $\pause$
+\end{java}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Constructing the Huffman Tree}
+
+\begin{java}
+  Map<Integer,Integer> charCount = new TreeMap<Integer,Integer>();
+  int ch;
+  while ( (ch=input.read()) != -1) {
+      int cnt = 1;
+      if (charCount.containsKey(ch))
+          cnt += charCount.get(ch);
+      charCount.put(ch, cnt);
+  } $\pause$
+  Set<Map.Entry<Integer, Integer>> setView = charCount.entrySet(); $\pause$
+
+  PQ<HuffmanNode> pq = new HeapPQ<HuffmanNode>();
+  for (Map.Entry<Integer, Integer> entry: setView)
+      pq.add(new HuffmanLeaf(entry.getKey(), entry.getValue())); $\pause$
+
+  while (pq.size()>1) {
+      HuffmanNode ht1 = pq.removeMin();
+      HuffmanNode ht2 = pq.removeMin();
+      pq.add(new HuffmanSubTree(ht1,ht2));
+  }
+  HuffmanNode ht = pq.removeMin(); $\pause$
+\end{java}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Greedy Strategy}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Huffman encoding is an example of a \emph{Greedy solution
+      pattern}\pause
+  \item That is we look for local optimality (i.e. we combine the two
+    least frequently used symbols)\pause
+  \item In this case, we obtain global optimality (i.e. the Huffman tree
+    obtained gives an optimal Huffman code)\pause
+  \item There are a number of important problems where greedy algorithms
+    lead to global optimality (we see some later)\pause
+  \item For these algorithms priority queues commonly are used for
+    implementing the algorithm\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Advanced Techniques}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Huffman code is optimal given the frequency of symbols\pause
+  \item However, there is considerable art in identifying which
+    'symbols' to use\pause
+  \item Advanced compression algorithms (LZ78, LZW Lempel-Ziv-Welch) build
+    dictionaries of sequences seen in the files---they tend to be rather
+    specialised\pause
+  \item Some recent algorithms (e.g. Burrows-Wheeler) transform the file
+    in such a way that similar symbols are mapped to adjacent
+    sites---depends on the generating mechanism of the language\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{File Compression and Plagiarism Detection}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One way of spotting plagiarism is to compare the compressed
+    lengths of two files and the length of the compressed file when the
+    two files are concatenated first\pause
+  \item If the files have the same structure the concatenated version
+    can often be significantly reduced\pause
+  \item Also used in identifying closeness of species in constructing
+    phylogenetic trees\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Wavelets
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Signals and Energies}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We consider compressing a signal $\bm{x} = (x_0,\,x_1,\,
+    \ldots,\, x_{n-1})$\pause
+    \begin{center}
+      \includegraphics[width=0.7\linewidth]{signal}
+    \end{center}
+  \item We can define the ``energy'' as the squared deviations
+    \begin{align*}
+      E = \sum_{i=1}^n x_i^2\pause
+    \end{align*}
+  \item Our strategy in lossy compression is to transmit as much
+    ``energy'' in as few bits as possible\pause
+  \item There are different strategies to achieve good compress\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2.5]{Wavelets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item With wavelets we try to re-represent the signal so as to squeeze
+    as much energy as possible into fewer bits\pause
+  \item The easiest way to do this is with Haar wavelets
+    \begin{align*}
+      a_i &= \frac{x_{2i} + x_{2i+1}}{\sqrt{2}} &
+      d_i &= \frac{x_{2i} - x_{2i+1}}{\sqrt{2}}\pause
+    \end{align*}
+  \item Define new signal $(a_0, a_1, a_2, \ldots, a_{n/2-1}, d_0, d_1,
+    \ldots, d_{n/2-1})$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{haar}\pause   
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Carrier and Difference Signals}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The terms $a_i = (x_{2i} + x_{2i+1})/\sqrt{2}$ takes the
+    ``average'' of the signal, but compresses it in half the space\pause
+  \item The terms $d_i = (x_{2i} - x_{2i+1})/\sqrt{2}$ takes the
+    difference and is small if the signal does not change much\pause
+  \item The energy is conserved since 
+    {\small
+      \begin{align*}
+        a_i^2 + d_i^2 &= \left(\frac{x_{2i} + x_{2i+1}}{\sqrt{2}}\right)^2
+        + \left(\frac{x_{2i} - x_{2i+1}}{\sqrt{2}}\right)^2 \\
+        &= \frac{x_{2i}^2 + 2 x_{2i}x_{2i+1} + x_{2i+1}^2 + x_{2i}^2 - 2
+          x_{2i}x_{2i+1} + x_{2i+1}^2}{2} = x_{2i}^2 + x_{2i+1}^2\pause
+      \end{align*}}
+  \item Attempt to push all the energy into the carrier signal, $a_i$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Inverse Transform}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The wavelet transform can be easily reversed
+    {\small
+      \begin{align*}
+        a_i &= \frac{x_{2i} + x_{2i+1}}{\sqrt{2}} &
+        d_i &= \frac{x_{2i} - x_{2i+1}}{\sqrt{2}}
+        \\
+        x_{2i} &= \frac{a_i + d_i}{\sqrt{2}} &
+        x_{2i+1} &= \frac{a_i - d_i}{\sqrt{2}}\pause
+      \end{align*}}
+  \item Can compute transform using vectors (wavelets)
+    \begin{align*}
+      a_i &= \bm{V_i} \cdot \bm{x} & d_i &= \bm{W_i}\cdot \bm{x}\pause
+    \end{align*}
+  \item These vectors are orthogonal to each other ($\bm{V_i} \cdot
+    \bm{V_j}=0$, $\bm{V_i} \cdot \bm{W_j}=0$, etc.)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{And So On\ldots}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can repeat the process again to concentrate the energy
+    further\pause
+  \item We apply the Haar transform just to the carry part $\bm{a} =
+    (a_0,a_1,\ldots, a_{n/2-1})$
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{haar2}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Daubechies Wavelets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Ingrid Daubechies suggested a host of wavelets which do better
+    than Haar for smooth signals\pause
+  \item The simplest is Daub4 defined by
+    {\small
+      \begin{align*}
+        a_i &= c_0 x_{2i} + c_1 x_{2i+1} + c_2 x_{2i+2} + c_3 x_{2i+3} \\
+        d_i &= c_3 x_{2i} - c_2 x_{2i+1} + c_1 x_{2i+2} - c_0 x_{2i+3}
+      \end{align*}
+      \begin{align*}
+        c_0 &= \frac{1+\sqrt{3}}{4\sqrt{2}} &
+        c_1 &= \frac{3+\sqrt{3}}{4\sqrt{2}} &
+        c_2 &= \frac{3-\sqrt{3}}{4\sqrt{2}} &
+        c_3 &= \frac{1-\sqrt{3}}{4\sqrt{2}}\pause
+      \end{align*}
+    }
+  \item Again conserves energy
+    \begin{align*}
+      \sum_{i=1}^{n/2} a_i^2 + b_i^2 = \sum_{i=1}^{n} x_i^2\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Properties of Daub4}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Similar to the Haar transform
+    \begin{align*}
+      c_0 + c_1 + c_2 + c_3 &= \sqrt{2}, &
+      c_3 - c_2 + c_1 - c_0 &= 0
+    \end{align*}
+    so the carrier signal ($a_i$) is approximately $\sqrt{2}$ times the
+    original and the difference part ($d_i$) is equal to 0 for a flat
+    signal, $\bm{x}$\pause
+  \item However in addition
+    \begin{align*}
+      0 c_3 - 1 c_2 + 2 c_1 - 3 c_0 = 0
+    \end{align*}
+    so the difference part ($d_i$) is equal to 0 for any linear signal,
+    $\bm{x}$ \pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Daub4}
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{daub4}  
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Signal Compression}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To compress the signal we can set all components of the
+    transformed signal whose magnitude lies below a threshold to 0\pause
+  \item We transmit the non-zero magnitude together with a binary mask
+    showing the position of the non-zero magnitude\pause
+  \item We can reduce the accuracy (number of decimal places) of the
+    non-zero magnitudes (quantisation)---this is repaired on inverting
+    transform\pause
+  \item We can compress the binary mask using Huffman encoding or other
+    scheme\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Daub6}
+\pb\pause\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.9\linewidth]{daub6}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Noise Reduction}
+
+\pb\pause\pauselevel{=1}
+\begin{itemize}
+\item Can also be used in noise reduction\pause
+\end{itemize}
+\begin{center}
+  \multipdf[width=0.9\linewidth]{noiseReduction}\pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Wavelets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Can use high-order wavelets which captures more energy in the
+    carrier signal, e.g. Daub10 or Daub20\pause
+  \item Many other wavelets capture other properties (e.g. Coiflets
+    capture properties of a continuous signal sampled at discrete
+    points)\pause
+  \item Efficiency of wavelets depend on how well the capture underlying
+    properties of signals\pause
+  \item Can also construct 2-d wavelets for image compression
+    (jpeg-2000)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{2-D Wavelets}
+
+\begin{center}
+  \includegraphics[width=0.6\linewidth]{2dwavelet}
+\end{center}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Summary}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item File compression is an important task in its own right\pause
+  \item Files may either be compressed losslessly or lossily\pause
+  \item Lossy compression is typically much more efficient (e.g. an
+    order of magnitude smaller)\pause
+  \item Huffman encoding often lies at the lowest level in many
+    compression algorithms\pause
+  \item Wavelets illustrate a strategy of changing the representation to
+    concentrate the energy of a signal\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+

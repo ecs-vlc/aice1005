@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <string>
+using namespace std;
+
+int main(int argc, char** argv) {
+  ifstream in(argv[1]);
+  map<string, int> words;
+
+  string s;
+  while(in >> s) {
+    ++words[s];
+  }
+
+  for(auto w=words.begin(), w<words.end(), ++w) {
+    cout << w->first << " occurs " << w->second << " times\n";
+  }
+  
+}

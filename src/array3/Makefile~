@@ -1,0 +1,4 @@
+main: main.cc array.h
+	g++ main.cc -o main
+	./main
+

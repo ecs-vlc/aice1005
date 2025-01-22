@@ -1,0 +1,631 @@
+%Master File:lectures.tex
+
+\lesson{Know What's Important}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{strategise}
+\end{center}
+\keywords{Optimising code, strategies}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Time Complexity}{timecomp}
+    \outlineitem{Strategies}{strategies}
+    \begin{itemize}
+    \item \toplink{bruteforce}{Brute Force Methods}
+    \item \toplink{divideandconq}{Divide and Conquer}
+    \item \toplink{greedy}{Greedy Algorithms}
+    \item \toplink{dynamicprogramming}{Dynamic Programming}
+    \item \toplink{linearprogramming}{Linear Programming}
+    \item \toplink{backtracking}{Backtracking}
+    \item \toplink{heuristics}{Heuristic Search}
+    \end{itemize}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{strategise}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Designing Algorithms from Scratch}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In writing code you will come across new problems\pause---at
+    least if your lucky\pauseb
+  \item Your first task is to see if you can map this onto a problem
+    with a well known solution\pause
+  \item If not you are going to have to come up with a solution\pause
+  \item Two questions you need to ask yourself are
+    \begin{itemize}
+    \item How efficient does my solution need to be?\pause
+    \item How do I go about solving the problem?\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Is Solving the Problem Time Critical?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The majority of code is not time critical\pause
+  \item Even when programs are slow there is usually only one part of the
+    code which takes almost all the time\pause
+  \item However there are times when solving the problem na\"{\i}vely is going to
+    take too long\pause
+  \item Advice on improving the performance of your code is not hard to
+    come by\ldots\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Advice on Optimising Code}
+
+\begin{PauseHighLight}
+  \begin{itemize} \squeeze
+  \item ``More computing sins are committed in the name of efficiency
+    (without necessarily achieving it) than any other single
+    reason---including blind stupidity'' \hfill W. Wulf\pause
+  \item ``We \textit{should} forget about small efficiencies, say about
+    97\% of the time: premature optimization is the root of all evil.''
+    \hfill D. Knuth\pause
+  \item ``We follow two rules in the matter of optimization:
+    \begin{itemize}
+    \item Rule 1. Don't do it
+    \item Rule 2 (for experts only).  Don't do it yet---that is, not
+      until you have a perfectly clear and unoptimized solution''
+    \end{itemize}
+    \ \hfill M. A. Jackson\pause
+  \item ``Strive to write good programs rather than fast ones'' \hfill
+    J. Block\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Ignoring this good advice, your next job is to
+    decide what is the time complexity of your algorithm and whether you
+    can tolerate that time complexity?\pause
+  \item Typically your algorithm will be
+    \begin{itemize}
+    \item constant or (log)-linear time {\Large \Smiley}
+    \item quadratic/cubic,\ldots
+    \item exponential time {\Large \Frowny}\pause
+    \end{itemize}
+  \item Lets deal with this in inverse order\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Exponential Time}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item You can often tolerate this if your problem is small\pause
+  \item E.g. you're trying to solve a small puzzle\pause
+  \item or planning a short sequence of actions\pause
+  \item However, in many cases exponential is just too long
+    \begin{itemize}
+    \item Look for an efficient solution (e.g. dynamics programming)\pause
+    \item Redefine the problem (e.g. use a linear approximation)\pause
+    \item Settle for a sub-optimal solution  (e.g. using heuristic
+      search)\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Quadratic and Cubic Time}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are algorithms which are cubic (e.g. LP, inverting a
+    matrix)\pause
+  \item For many applications this is acceptable because there is no
+    hurry for the solution or the problem isn't that big\pause
+  \item For large data sets these algorithms might just be
+    impractical\pause
+  \item Often taking advantage of the structure of the problem
+    (e.g. sparsity) can speed things up (e.g. a good LP package)\pause
+  \item Sometimes quadratic algorithms can be made log-linear using a
+    divide and conquer or a greedy strategy\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Sub-Quadratic Algorithm}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If you have to run an algorithm on any data of arbitrary size
+    you want a sub-quadratic algorithm\pause
+  \item We have seen this in practice with sorting\pause
+  \item The fast Fourier transform revolutionised digital signal
+    processing when it was introduced (reducing a quadratic algorithm to
+    a log-linear algorithm)\pause
+  \item An active area of research is \emph{big data} where the only
+    algorithms that can be used are sub-quadratic algorithms\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Good Code is Fast Code}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Using appropriate data structures and algorithms is by far the
+    best way of speeding up code\pause
+  \item Many coders wedded to arrays try to simulate sets and maps very
+    inefficiently often using code that does not scale\pause
+  \item Changing the structure of a program can lead to huge speed
+    ups\pause
+  \item If you require more speed then concentrate on the inner loop
+    where almost all the work is done (usually gives less than a factor
+    of two)---optimising code in outer loops is pointless\pause
+  \item Using the right strategy will give the biggest speed-up\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Strategies
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Algorithmic Strategies}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Good algorithms are difficult to invent\pause
+  \item However, many algorithms follow particular patterns or
+    strategies\pause
+  \item Understanding these strategies is important for deriving new
+    algorithms\pause
+  \item We have seen the classic strategies throughout the course\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Brute Force}
+\toptarget{bruteforce}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many problems have obvious \emph{brute force} solutions\pause
+  \item E.g. in sorting; selection sort, insertion sort and bubble sort
+    are fairly simple algorithm that do the obvious\pause
+  \item Similarly searching an array using sequential search provides an
+    obvious solution\pause
+  \item Sometimes, brute force methods are the best you can
+    do\pause---e.g. sequential search on an unordered array\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Exhaustive Search}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For optimisation problems such as the travelling salesperson
+    problem, the brute force method is to try all possible
+    solutions\pause
+  \item This \emph{exhaustive search} starts to hurt very quickly and
+    becomes intractable for moderate size problems (e.g. tours of length
+    20)\pause
+  \item Even for sorting, brute force methods become unattractive when
+    the inputs are long\pause
+  \item We really want to do better\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Divide and Conquer}
+\toptarget{divideandconq}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Another strategy we have met is \emph{divide and conquer}\pause
+    \begin{itemize}
+    \item Divide the problem into two or more parts
+    \item Solve the parts
+    \item Combine the parts to obtain a full solution\pause
+    \end{itemize}
+  \item This needs to be quicker than solving the original problem by
+    brute force\pause
+  \item We can do this division recursively until the problems are
+    trivial to solve\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Divide and Conquer Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Algorithms based on this idea include
+    \begin{itemize}
+    \item Computing the integer power of a number
+    \item Binary search
+    \item Merge sort
+    \item Quick sort
+    \item Fast Fourier transform\pause
+    \end{itemize}
+  \item Often implemented using recursion\pause
+  \item It's nice when it works---but not all problems allow this\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Fast Fourier Transform}
+\toptarget{fft}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The Fourier Transform provides a different ``view'' of a
+    sequence such as a signals, images, etc.
+    \begin{align*}
+      \tilde{f}(\bm{k}) = \sum_{x_1=0}^{n-1}\cdots \sum_{x_d=0}^{n-1} f(\bm{x})\,\e{2\pi\mathrm{i}
+        \bm{k}\cdot\bm{x}/n}\pause
+    \end{align*}
+  \item The \emph{Fast Fourier Transform} was an algorithm divised by
+    John Tukey and James Cooley in 1965 to compute the Fourier
+    Transform quickly\pause
+  \item Gauss had used exactly this idea in a paper in 1805 to save
+    himself work computing a Fourier transform by hand\pause
+  \item It is based on a divide-and-conquer strategy and takes
+    $O(n\log(n))$ operation compared to the $O(n^2)$ brute force
+    method\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Applications of FFT}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The application of FFT are enormous\pause
+  \item It lies at the heart of digital signal processing\pause
+  \item It is frequently used in image analysis\pause
+  \item It is a type of wavelet transform used in JPEG\pause
+  \item It is even used in fast multiplication of very large
+    integers---with important applications in cryptography\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Greedy Algorithms}
+\toptarget{greedy}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The \emph{greedy strategy} is to build a solution to a problem by
+    choosing the best available option\pause
+  \item If you are lucky this will give an optimal solution\pause
+  \item Example of optimal algorithms based on the greedy strategy
+    include
+    \begin{itemize}\squeeze
+    \item Constructing Huffman trees
+    \item Prim's algorithms
+    \item Kruskal's algorithm
+    \item Dijkstra's algorithm\pause
+    \end{itemize}
+  \item Often uses priority queues\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Non-optimal Greedy Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Greedy algorithms can also be used to solve optimisation
+    problems such as the travelling salesperson problem\pause
+  \item In the TSP we can start at some city and move to the nearest
+    as-yet-unvisited city\pause
+  \item The algorithm is guaranteed to find a solution no longer than
+    $0.5(\lfloor \log_2(n)\rfloor +1)$ times the optimal tour length\pause
+  \item It usually does substantially better, but it is very unlikely to
+    find the optimal for very long tours\pause
+  \item It is more the exception rather than the rule that Greedy
+    algorithms find an optimal solutions\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Dynamic Programming}
+\toptarget{dynamicprogramming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Dynamic programming can be used for solving many problems\pause
+  \item It requires some (partial) ordering so that you can assign costs
+    to partial solutions from previous solutions\pause
+  \item Requires imagination to think how to do this\pause
+  \item Used in inexact matching, shortest paths, line breaks, etc.\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Uses of Dynamic Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}\small\squeeze
+  \item Recurrent solutions to lattice models for protein-DNA binding
+  \item Backward induction as a solution method for finite-horizon
+    discrete-time dynamic optimization problems 
+  \item Method of undetermined coefficients can be used to solve the
+    Bellman equation in infinite-horizon, discrete-time, discounted,
+    time-invariant dynamic optimization problems 
+  \item Many string algorithms including longest common subsequence,
+    longest increasing subsequence, longest common substring,
+    Levenshtein distance (edit distance) 
+  \item Many algorithmic problems on graphs can be solved efficiently
+    for graphs of bounded treewidth or bounded clique-width by using
+    dynamic programming on a tree decomposition of the graph. 
+  \item The Cocke–Younger–Kasami (CYK) algorithm which determines
+    whether and how a given string can be generated by a given
+    context-free grammar 
+  \item Knuth's word wrapping algorithm that minimizes raggedness when
+    word wrapping text 
+  \item The use of transposition tables and refutation tables in
+    computer chess 
+  \item The Viterbi algorithm (used for hidden Markov models)
+  \item The Earley algorithm (a type of chart parser)
+  \item The Needleman–Wunsch and other algorithms used in
+    bioinformatics, including sequence alignment, structural alignment,
+    RNA structure prediction 
+  \item Floyd's all-pairs shortest path algorithm
+  \item Optimizing the order for chain matrix multiplication
+  \item Pseudo-polynomial time algorithms for the subset sum and
+    knapsack and partition problems 
+  \item The dynamic time warping algorithm for computing the global
+    distance between two time series 
+  \item The Selinger (a.k.a. System R) algorithm for relational database
+    query optimization 
+  \item De Boor algorithm for evaluating B-spline curves
+  \item Duckworth–Lewis method for resolving the problem when games of
+    cricket are interrupted 
+  \item The value iteration method for solving Markov decision processes
+  \item Some graphic image edge following selection methods such as the
+    "magnet" selection tool in Photoshop 
+  \item Some methods for solving interval scheduling problems
+  \item Some methods for solving word wrap problems
+  \item Some methods for solving the travelling salesman problem, either
+    exactly (in exponential time) or approximately (e.g. via the bitonic
+    tour) 
+  \item Recursive least squares method
+  \item Beat tracking in music information retrieval
+  \item Adaptive-critic training strategy for artificial neural networks
+  \item Stereo algorithms for solving the correspondence problem used in
+    stereo vision 
+  \item Seam carving (content aware image resizing)
+  \item The Bellman–Ford algorithm for finding the shortest distance in
+    a graph 
+  \item Some approximate solution methods for the linear search problem
+  \item Kadane's algorithm for the maximum subarray problem
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Programming}
+\toptarget{linearprogramming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Look out for problems with linear objectives or where a
+    linearisation approximation is acceptable\pause
+  \item These can often be turned in linear programs which can be solved
+    efficiently\pause
+  \item The constraints have to be linear and the variables take on
+    continuous values\pause
+  \item Sometimes by being careful we can force integer solutions (see
+    linear assignment in last lecture)\pause
+  \item Applications in planning, but also in many areas of
+    optimisation\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Solving Linear Programming}
+
+\pb\pause \pauselevel{=1}
+\begin{minipage}{0.5\linewidth}
+\begin{center}
+  \multipdf[width=\linewidth]{normalForm}\pause
+\end{center}  
+\end{minipage}\hfil
+\begin{minipage}{0.45\linewidth}
+  \begin{itemize}
+  \item The basic feasible points for LP problems with $n$ variables and
+    $m$ constraints have at least $n-m$ zero variables\pause
+  \item Typical number of basic feasible solutions is
+    $\binom{n}{m}\geq\left(\frac{n}{m}\right)^m$\pause
+  \item Simplex algorithm organises iterative search for global solutions\pause
+  \end{itemize}
+\end{minipage}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Backtracking}
+\toptarget{backtracking}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Backtracking is in many ways a brute force method\pause
+  \item It is just a way of exploring a search space\pause
+  \item However, when we solving problems with constraints then we can
+    vastly reduce the number of solutions that we visit\pause
+  \item Used in many game playing, planning, verification, puzzle
+    solving situations\pause
+  \item For optimisation we can use branch and bound which is
+    backtracking using the best solution as a constraint\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Computer Chess}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Computer chess algorithms explore the search tree of possible
+    moves using backtracking with pruning\pause
+  \item Although they cannot look at all possible moves, they can look
+    deep enough to play good chess\pause
+  \item In 1968 International Master David Levy bet that he would not be
+    beaten by a computer in the next decade, a bet he won\pause
+  \item He was beaten in 1989 by Deep Thought\pause
+  \item In 1997 Deep Blue beat Gary Kasparov the reigning world
+    champion\pause
+  \item Modern chess engines such as Deep Rybka and Houdini have a chess
+    rating of around 3200 (c.f. Magnus Carsen's 2872---the top human
+    player)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Heuristic Search}
+\toptarget{heuristics}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When all else fails we have to settle for finding a good
+    solution, not the best\pause
+  \item In fact, because so many problems that we are interested in turn
+    out to be NP-hard this is quite common\pause
+  \item There are many strategies
+    \begin{itemize}\squeeze
+    \item Neighbourhood search (hill-climbing, descent)
+    \item Simulated annealing
+    \item Evolutionary algorithms, etc.\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many applications bring up interesting programming challenges\pause
+  \item Some are dealt with by using sensible data structures and
+    common algorithms\pause
+  \item However, often you face a new challenge requiring thought\pause
+  \item Thinking in terms of strategies and having a feel for time
+    complexity is part of armoury of a professional programmer\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

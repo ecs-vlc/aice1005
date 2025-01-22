@@ -1,0 +1,546 @@
+%Master File:lectures.tex
+
+\lesson{Point to where you are going: links}
+
+\vspace*{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{pointing}
+\end{center}
+\keywords{Linked lists}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{14cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{References}{intro}
+    \outlineitem{Singly Linked List}{sll}
+    \outlineitem{Stacks and Queues}{stacks}
+    \outlineitem{Doubly Linked List}{dll}
+    \outlineitem{Using Linked Lists}{use}
+    \outlineitem{Skip Lists}{skip}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{8cm}
+  \includegraphics[width=8cm]{pointing}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Non-Contiguous Data}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item So far we have considered arrays where the data is stored in a
+    contiguous chunk of memory\pause
+  \item This has the great advantage of allowing random access\pause
+  \item It has the disadvantage that it is expensive to add or remove
+    data from the middle of the list or to rearrange the data\pause
+  \item A different approach is to use units of data that point to
+    other units\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Non-Contiguous Data Structures}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are a lot of important data structures using
+    non-contiguous memory
+    \begin{itemize}
+    \item Binary trees
+    \item Graphs\pause
+    \end{itemize}
+  \item In this lecture we consider \emph{linked-lists}\pause
+  \item This is a classic data structure\pause, which is almost entirely
+    useless\pauseb
+  \item However, it serves as a good introduction to much more useful
+    data structures\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Self-Referential Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The building block for a linked list is a node class
+    \begin{java}
+      struct Node<T>
+      {
+        Node(U value, Node<U> *node): value(value), next(node) {}
+        T element;
+        Node<T> *next;
+      }      
+    \end{java}\pause
+    \vspace{-1cm}
+  \item We create new nodes\\
+    \jl$Node<int> *node = new Node<int>(10, pt_to_next)$\pause
+  \item Note that \jl$node$ is the address of this node\pause
+  \item I make it a \texttt{struct} as this is a class where I want
+    public access to the element and next\pause
+  \item I can make this class a private class of my linked list\pause 
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Singly Linked List}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can build a linked list by stringing nodes together\pause
+    \begin{center}
+      \includegraphics[height=1.5cm]{linked-list}\pause
+    \end{center}
+    We don't show the ``pointer'' to \texttt{element}\pause
+  \item A singly linked list has a single ``pointer'' to the next
+    element\pause
+  \item A doubly linked list has ``pointers'' to the next and previous
+    element---we will see this later\pause
+  \item We should be able to create a linked list, add elements, remove
+    elements, see if an element exists, etc.\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We consider a lightweight implementation\pause
+  \item The class will have a head, a size counter and have a
+  \texttt{Node} as a  nested class
+  \begin{cpp}
+class MyList {
+private:
+  template <typename U>
+  struct Node{
+    Node(U value, Node<U> *node): value(value), next(node) {}
+    U value;
+    Node<U> *next;
+  };
+  Node<T> *head;
+  unsigned noElements;
+  \end{cpp}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Simple Methods}
+
+\vspace{-1cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The constructor is simple (and not strictly necessary)
+    \begin{cpp}
+  MyList(): n(0), head(0) {}
+    \end{cpp}\pause \vspace{-1cm}
+  \item Other simple methods are
+    \begin{cpp}
+  unsigned size() const {return noElements;}
+
+  bool empty() const {
+    return head == 0;
+  }
+    \end{cpp}\pause
+  \end{itemize}\vspace{-1cm}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Adding elements}
+
+\pausebuild
+\begin{cpp}
+    void add(T element)$\hl{3}$ 
+    {$\hll$
+        Node<T> *newNode = new Node<E>(); $\hl{4}$ 
+        newNode.element = element; $\hl{5}$
+        newNode.next = head; $\hl{6}$
+        head = newNode; $\hl{7}$
+        noElements++; $\hl{8}$
+        return true;
+    }$\hll$
+\end{cpp}\pauselevel{=2}
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{linked-list-add}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Remove Head of List}
+
+\vspace{-1cm}
+\begin{java}$\pauselevel{build}$
+    void remove_head()$\hl{3}$
+    {
+        Node<T> *dead= head.next;$\hll$
+        head = dead->next$\hl{4}$
+        noElements--;
+        delete head;$\hl{5}$
+    }$\hll$
+\end{java}\pause\pauselevel{=2}
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{linked-list-remove}\pause
+\end{center}
+\vspace{-1cm}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Methods}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can easily implement many other methods\pause
+    \begin{itemize}
+    \item \texttt{get(int i)}---return $i^{th}$ item in list\pause
+    \item \texttt{remove(T obj)}-remove \texttt{obj} from list\pause
+    \item \texttt{insert(int position, element)}
+    \end{itemize}
+  \item Note that \texttt{get(int i)} requires moving down the list so
+    is $O(n)$ (i.e. not random access)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Stack}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is easy to implement a stack using a linked list\pause
+    \begin{java}
+template <typename T>
+class Stack<E>
+{
+  private Mylist<T> list = new mylist<T>();
+
+  boolean push(E obj) {list.add(obj);}
+  
+  E top() {return list.get_head();} // throw exception
+
+  E pop() {
+    T tmp = list.get_head();
+    list.remove_head();
+    return tmp;
+  }
+
+  boolean empty() {return list.empty();}
+}
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Complexity of Stack}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item All operations of the stack is constant time, i.e. $O(1)$\pause
+  \item This is the same time complexity as an array
+    implementation\pause
+  \item Memory requirement is approximately $2\times n$ reference and
+    $n$ objects\pause---same as worst case for an array\pause
+  \item However, hidden cost of creating and destroying \texttt{Node}
+    objects\pause
+  \item The array implementation is therefore slightly faster\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Point to the Back}
+
+\vspace{-1.5cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To find the end of the queue takes $n$ jumps\pause
+  \item Thus our linked list isn't the right data structure to
+    implement a queue\pause
+  \item However, we could include a pointer to the end of the queue
+    \begin{center}
+      \includegraphics[height=6cm]{linked-list2}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementing a Queue}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can then add elements to the tail in constant time\pause
+  \item We can the implement a queue in $O(1)$ time by
+    \begin{itemize}
+    \item \texttt{enqueue}ing at the back\pause
+    \item \texttt{dequeue}ing at the head\pause
+    \end{itemize}
+  \item I leave the implementation details as an exercise for you\pause
+  \item Note that although adding an element to the tail is constant
+    time, removing an element from the tail is $O(n)$ as we have to find
+    the new tail\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+% %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{slide}
+% \section[-2]{Stacks and Queues}
+% \pb
+% \begin{itemize}
+% \item Stack\pause
+%   \begin{center}
+%     \includegraphics[width=0.8\linewidth]{llstack0}\mypl{1}
+%     \multido{\ia=1+1,\ib=2+1}{15}{%
+%       \llap{\includegraphics[width=0.8\linewidth]{llstack\ia}}\mypl{\ib}}
+%   \end{center}
+% \item Queue\pauselevel{build =1 40, highlight =17}\pause
+%   \begin{center}
+%     \includegraphics[width=0.8\linewidth]{llqueue0}\mypl{17}
+%     \multido{\ia=1+1,\ib=18+1}{15}{%
+%       \llap{\includegraphics[width=0.8\linewidth]{llqueue\ia}}\mypl{\ib}}
+%   \end{center}
+% \end{itemize}
+% \end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Doubly linked list}
+
+\vspace{-1.5cm}
+\begin{PauseHighLight}
+\begin{itemize}\squeeze
+\item In a more powerful linked list we would like to navigate the
+  list in either direction\pause
+\item To achieve this it uses a doubly-linked lists with elements to
+  next and previous
+\begin{java}
+  class Node<T>
+  {
+    T element;
+    Node<T> *next;
+    Node<T> *previous;
+  }
+\end{java}\pause
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[width=\linewidth]{double-entry}\pause
+\end{center}
+\vspace{-1cm}
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Dummy Node}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item List includes a dummy node\pause---this make the
+    implementations slicker\pause
+    \begin{center}
+      \includegraphics[width=\linewidth]{doubly-linked-list}\pause
+    \end{center}
+  \item Symmetric data structure so processing head and tail is equally
+    efficient\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item \texttt{add} and \texttt{remove} from head and tail $O(1)$\pauseh
+\item \texttt{find} $O(n)$ and slow\pauseh
+\item \texttt{insert} and \texttt{delete} $O(1)$ (faster than an array
+  list) once position is found\pauseh
+\end{itemize}\color{TextColor}
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{doubly-linked-list-insert}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{When To Use Linked Lists}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is difficult to think of applications where linked lists are
+    the best data structure\pause
+  \item lists---variable length arrays are usually better\pause
+  \item queues---linked list OK, but circular arrays are probably better\pause
+  \item sorted lists---binary trees much better\pause
+  \item linked lists have efficient insertion and deletion but it is
+    difficult to think of an application where this matters\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Line Editor}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One application where efficient insertion and deletion matters
+    is a line editor\pause
+  \item We are usually working at a particular location in the
+    text\pause
+  \item We often want to add or delete whole lines\pause
+  \item Storing the lines as strings in a linked list would allow a
+    fairly efficient implementation\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Skip Lists}
+\pb
+
+\begin{itemize}
+\item Linked lists have the disadvantage that to get to anywhere in
+  the list takes on average $\Theta(n)$ steps\pauseh
+\item Even if you kept an ordered list you still need to traverse it\pauseh
+\item Skip lists are hierarchies of linked lists which allow binary
+  search
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{skiplist0}\pauselevel{=1
+      , highlight =3 :3}\pause
+    \llap{\includegraphics[width=0.9\linewidth]{skiplist1}}\mypl{4}
+    \llap{\includegraphics[width=0.9\linewidth]{skiplist2}}\mypl{5}
+  \end{center}
+\end{itemize}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Efficiency of Skip Lists}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Skip lists provide $\Theta(\log_2(n))$ search as opposed to
+    $\Theta(n)$\pause
+  \item They have the similar time complexity to binary trees, although
+    binary trees are slightly faster\pause
+  \item They have one advantage over binary trees---they allow efficient concurrent
+    access\pause
+  \item The standard template library provides a doubly linked list,
+    \jl$list<T>$\pause, as well as a slingly linked-list \jl$slist<T>$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Node structures that point to other Node structures are used
+    in many important data structures\pause
+  \item Linked lists are the simplest examples of this kind of structure
+    and consequently has a dominant position in most DSA books\pause
+  \item In practice linked lists are seldom the data structure of
+    choice\pause---before choosing to use a linked list consider the
+    alternatives\pause
+  \item There are some important uses for linked lists, e.g. skip lists
+    and hash tables (see lecture on hashing)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}

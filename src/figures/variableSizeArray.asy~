@@ -1,0 +1,14 @@
+import myutil;
+size(200,0);
+
+draw(box((-5,-3), (8,1)), white);
+
+void emptyArray(int n, pair pos) {
+  draw(pos+(-0.5,-0.5)--pos+(n-0.5, -0.5));
+  draw(pos+(0.5,-0.5)--pos+(n-0.5, 0.5));
+  for(int i=0; i<=n; i++) {
+    draw(pos+(i-0.5, -0.5)--pos+(i-0.5, -0.5));
+  }
+}
+
+wait(2);

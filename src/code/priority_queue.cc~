@@ -1,0 +1,22 @@
+#include "heapPQ.h"
+
+#include <iostream>
+using namespace std;
+
+int main() {
+  heapPQ<string, int> pq;
+
+  pq.push("hello", 10);
+  pq.push("world", 6);
+  pq.push("how", 15);
+  pq.push("are", 3);
+  pq.push("you", 5);
+  pq.push("today", 12);
+  pq.push("I'm", 1);
+  pq.push("fine", 2);
+
+  while(!pq.empty()) {
+    cout << pq.top() << " ";
+    pq.pop();
+  }
+}

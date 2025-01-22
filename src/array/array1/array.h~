@@ -1,0 +1,13 @@
+#ifndef ARRAY_H
+#define ARRAY_H
+
+class Array {
+private:
+  int *data;
+private:
+  Array(int n);
+  void set(int index, int value);
+  int get(int index);
+};{}
+
+#endif

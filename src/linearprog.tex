@@ -1,0 +1,506 @@
+%Master File:lectures.tex
+\renewcommand{\class}[1]{\textsf{#1}}
+
+\lesson{Use Linear Programmings}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{feasibleSolutions-4}
+\end{center}
+\keywords{linear programming, applications}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Examples}{applications}
+    \outlineitem{Linear Programs}{linearp}
+    \outlineitem{Properties of Solution}{properties}
+    \outlineitem{Normal Form}{normalform}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{Simplex_description.png}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Examples
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Going Shopping}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Suppose we have a number of food stuffs which we label with
+    indices $f\in\mathcal{F}$\pause
+  \item The price of food stuff $f$ per kilogram we denote $p_f$\pause
+  \item We are interested in buying a selection of foods $\bm{x} = (x_f
+    | f\in\mathcal{F})$ where $x_f$ is the quantity (in kg) of food
+    $f$\pause
+  \item We want to minimise the total price $\sum_f p_f\, x_f =
+    \bm{p}\cdot\bm{x}$\pause
+  \item However we want to ensure that the food has enough vitamins\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Nutrition}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We consider the set of vitamins $\mathcal{V}$\pause
+  \item Let $A_{vf}$ be the quantity of vitamin $v$ in food stuff $f$\pause
+  \item Let $b_v$ be the minimum daily requirement of vitamin $v$\pause
+  \item We therefore require
+    \begin{align*}
+      \forall v \in \mathcal{V} \quad\quad \sum_{f\in\mathcal{F}} A_{vf}\,x_f
+      \geq b_v\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Optimisation Problem}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can write the food shopping problem as
+    \begin{align*}
+      \min_{\bm{x}} \bm{p} \cdot \bm{x}  \quad \text{subject to}
+      \quad \mat{A} \bm{x} \geq \bm{b} \quad \text{and} \quad \bm{x} \geq \bm{0}\pause
+    \end{align*}
+  \item Note that the inequalities involving vectors means that each
+    component must be satisfied, i.e.
+    \begin{align*}
+     \mat{A} \bm{x} \geq \bm{b} \quad &\Rightarrow \quad  \forall v \in  \mathcal{V}
+     \quad \sum_{f\in\mathcal{F}} A_{vf}\,x_f \geq b_v \\
+     \bm{x} \geq \bm{0} \quad  &\Rightarrow \quad \forall f \in \mathcal{F}
+     \quad x_f \geq 0 \pause
+    \end{align*}
+  \item This is an example of a ``\emph{linear program}''\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Transportation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We consider a set of factories $\mathcal{F}$ producing a set of
+    commodities $\mathcal{C}$\pause
+  \item The amount of commodity $c$ produced by factory $f$ we denote by
+    $x_{cf}$\pause
+  \item The shipping cost of commodity $c$ from factory $f$ to the
+    retailer of $c$ we denote by $p_{cf}$\pause
+  \item We want to choose $x_{cf}$ to minimise the transportation costs
+    \begin{align*}
+      \sum_{c\in\mathcal{C}, f\in\mathcal{F}} p_{cf}\, x_{cf}\pause
+    \end{align*}
+  \item However, we have constraints\ldots\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Constraints}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Each factory can only produce a certain overall tonnage of
+    commodities
+    \begin{align*}
+      \sum_{c\in\mathcal{C}} x_{cf} \leq b_f \quad \quad \forall f \in \mathcal{F}\pause
+    \end{align*}
+    where $b_f$ is the maximum production capacity of factory $f$\pause
+  \item The total demand for each commodity is $d_c$ so
+    \begin{align*}
+      \sum_{f\in\mathcal{F}} x_{cf} = d_c \quad \quad \forall c \in \mathcal{C}\pause
+    \end{align*}
+  \item We can only produce positive amounts, i.e. $x_{cf}\geq0$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Program}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can write the full problem as
+    \begin{align*}
+     & \min_{\bm{x}} \sum_{c\in\mathcal{C}, f\in\mathcal{F}} p_{cf}\,
+      x_{cf} \pause \\
+      \text{subject to}& \\
+      &\sum_{c\in\mathcal{C}} x_{cf} \leq b_f \quad \quad \forall f \in
+      \mathcal{F} \\
+      &\sum_{f\in\mathcal{F}} x_{cf} = d_c \quad \quad \forall c \in
+      \mathcal{C} \\
+      &x_{cf} \geq 0 \quad \quad \forall c \in \mathcal{C}, \quad
+      \forall f \in \mathcal{F}\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Linear Programs
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{General Linear Programs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear programs are problems that can be formulated as follows
+    \begin{align*}
+      &\min_{\bm{x}} \bm{c}\cdot \bm{x} \\
+      \text{subject to}&\\
+      &\mat{A}^{\scriptscriptstyle \leq} \bm{x} \leq
+      \bm{b}^{\scriptscriptstyle \leq},  \quad
+      \mat{A}^{\scriptscriptstyle \geq} 
+      \bm{x} \geq \bm{b}^{\scriptscriptstyle \geq}, \quad 
+      \mat{A}^{\scriptscriptstyle =} \bm{x} = \bm{b}^{\scriptscriptstyle
+        =}, \quad \bm{x} \geq \bm{0}\pause 
+    \end{align*}
+  \item Note in the previous example it was convenient to use two
+    indices $c$ and $f$ to denote the components $x_{cf}$, however, it
+    still has this structure\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Maximising}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can also maximise rather than minimise\pause
+  \item Whether we want to maximise or minimise will depend on the
+    application\pause
+  \item Note that
+    \begin{align*}
+      \max_{\bm{x}}\bm{c}\cdot \bm{x} \quad \equiv \quad \min_{\bm{x}}
+      (-\bm{c}) \cdot \bm{x}\pause
+    \end{align*}
+  \item We can thus always reformulate a maximisation problem as a
+    minimisation problem and vice versa\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Program Applications}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A huge number of problems can be mapped to linear programming problems\pause
+  \item Or modelled as linear (even when they're not, e.g. oil
+    extraction)\pause
+  \item Realistic problems might have many more constraints and large
+    number of variables\pause
+  \item State of the art solvers can deal with problems with hundreds of
+    thousands or even millions of variables\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Key Features}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are three key features of linear programs
+    \begin{enumerate}
+    \item The cost (objective function) is linear in $x_i$ ($\bm{c}\cdot
+      \bm{x}$)
+    \item The constraints are linear in $x_i$ (e.g. $\mat{A}_1 \bm{x}
+      \leq b_1 $)
+    \item The component of $\bm{x}$ are non-negative (i.e. $x_i \geq 0)$\pause
+    \end{enumerate}
+  \item These are very special features, very often they don't apply,
+    but a surprising large number of problems can be formulated as
+    linear programming problems\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{History}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear programming was ``invented'' by Leonid Kantorovich in
+    1939 to help Soviet Russia maximise its production\pause
+  \item It was kept secret during the war, but was finally made public
+    in 1947 when George Dantzig published the \emph{simplex method}
+    which still today is a standard method for solving linear
+    programs\pause
+  \item John von Neumann developed the idea of duality (you can turn a
+    maximisation problem for a set of variables $\bm{x}$ into a
+    minimisation problem for a dual set of variables $\bm{\lambda}$
+    associated with each constraint)\pause
+  \item von Neumann used this idea as the basis for ``game theory''\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Linear Programs
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Structure of Linear Programs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Before we go into the details of solving linear programs its
+    useful to consider the structure of the solutions\pause
+  \item The set of $\bm{x}$ that satisfy all the constraints is known as
+    the set of \emph{feasible solutions}\pause
+  \item The set of feasible solutions may be empty in which case it is
+    impossible to satisfy all the constraints\pause
+  \item This is rather disappointing, but usually doesn't happen if we
+    have formulated a sensible problem\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{The Space of Feasible Solutions}
+
+\pb
+\pause \pauselevel{=1}
+\begin{center}
+  \multipdf[width=\linewidth]{feasibleSolutions}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Vertices of Polytope}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The space of feasible solutions is a polyhedra or polytope\pause
+  \item The maximum or minimum solution will always lie at a vertex of
+    the polytope\pause
+  \item Our solution policy will be to start at a vertex and move
+    to a neighbouring vertex that gives the best improvement in cost\pause
+  \item When this isn't possible then we are finished\pause
+  \item However, there is still a lot of work to realise this solution
+    strategy\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Optimal Solution}
+
+\pb
+\pause \pauselevel{=1}
+\begin{center}
+  \multipdf[width=\linewidth]{lpImprove}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Unbounded Solutions}
+
+\pb \pause
+\begin{itemize}
+\item If you are unlucky you might not have a bounded solution\pauseh \pauselevel{=1}
+  \begin{center}
+    \multipdf[width=0.7\linewidth]{unboundedSolution}\pause
+  \end{center}
+\item But usually this would not happen because of the problem definition\pause
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Multiple Solutions}
+
+\pb \pause
+\begin{itemize}
+\item You can also get multiple solutions if a constraint is orthogonal
+  to the objective function\pauseh \pauselevel{=1}
+  \begin{center}
+    \multipdf[width=0.7\linewidth]{multipleSolutions}\pause
+  \end{center}
+\item Nevertheless the optimal will be at a vertex\pause
+\end{itemize}
+\end{slide}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Normal Form
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Converting Linear Programs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Solving full linear programs is difficult\pause
+  \item However, it is much easier to solve linear programs in
+    \emph{normal form}\pause
+  \item This is basically a form where we get rid of all
+    inequalities and rewriting the equalities\pause
+  \item Fortunately its rather easy to convert linear programs to normal
+    form\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Slack Variables}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can change an inequality into an equality by introducing a
+    new ``\emph{slack}'' variable\pause
+  \item E.g.
+    \begin{align*}
+      \bm{a}_1\cdot\bm{x} &\geq 0 &\Rightarrow& &
+      \bm{a}_1\cdot\bm{x} - z_1 &=0 \quad z_1 \geq 0 \\ 
+      \bm{a}_2\cdot\bm{x} &\leq 0 &\Rightarrow& &
+      \bm{a}_2\cdot\bm{x} + z_2 &=0 \quad z_2 \geq 0
+    \end{align*}
+    $z_1$ (the excess) and $z_2$ (the deficit) are known as slack
+    variables\pause
+  \item We eliminate inequalities at the expense of increasing the
+    number of variables\pause
+  \item We can treat the slack variables on an equivalent footing to the
+    normal variables (they just provide a different way of describing
+    the original problem)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Normal Form}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A linear program with only equality constraints is said to be in
+    \emph{normal form}\pause
+  \item We will find in the next lecture that this is a convenient form
+    for solving linear programs\pause
+  \item An equality constraint restricts the solutions to a subspace
+    (some lower dimensional space)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Solving Linear Programming}
+
+\pb\pause \pauselevel{=1}
+\begin{minipage}{0.5\linewidth}
+\begin{center}
+  \multipdf[width=\linewidth]{normalForm}\pause
+\end{center}  
+\end{minipage}\hfil
+\begin{minipage}{0.45\linewidth}
+  \begin{itemize}
+  \item The basic feasible points for LP problems with $n$ variables and
+    $m$ constraints have at least $n-m$ zero variables\pause
+  \item Typical number of basic feasible solutions is
+    $\binom{n}{m}\geq\left(\frac{n}{m}\right)^m$\pause
+  \item Simplex algorithm organises iterative search for global solutions\pause
+  \end{itemize}
+\end{minipage}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+ 
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are a huge number of problems that can be set up as linear
+    programs\pause
+  \item They are particularly useful in resource allocation where the
+    resources are all positive\pause
+  \item The solution to linear programming problems is at the vertex of
+    the feasible space (intersection of constraints)\pause
+  \item We can search for solutions by moving from vertex to vertex\pause
+  \item We can transform inequality constraints to equality constraints
+    using slack variables\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+

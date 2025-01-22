@@ -1,0 +1,656 @@
+%Master File:lectures.tex
+\renewcommand{\class}[1]{\textsf{#1}}
+
+\lesson{Settle For Good Solutions}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{\figs/GAroulette/GAroulette}
+\end{center}
+\keywords{neighbourhood search, heuristics, simulated annealing,
+  GA}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Heuristic Search}{heuristic}
+    \begin{itemize}
+    \item \toplink{constructive}{Constructive algorithms}
+    \item \toplink{neighbour}{Neighbourhood search}
+    \end{itemize}
+    \outlineitem{Simulated Annealing}{simannealtt}
+    \outlineitem{Evolutionary Algorithms}{eastt}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{\figs/GAroulette/GAroulette}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline %
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Heuristic Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given that we know of no efficient algorithms for finding the
+    optimal solution to NP-hard problems we must content ourselves with
+    either\pause
+    \begin{itemize}
+    \item Spending a very long time (e.g. using branch and bound)\pause
+    \item Accepting good solutions which aren't necessarily optimal\pause
+    \end{itemize}
+  \item Algorithms for finding good solutions are often called
+  \emph{approximation algorithms} or \emph{heuristic algorithms}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Heuristics}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The idea behind heuristic algorithms is to use a rough guide or
+    \emph{heuristic} pointing you in reasonable direction\pause
+  \item If this heuristic is good you should find good solutions much
+    faster than exhaustive search\pause
+  \item Two commonly used heuristics are
+    \begin{itemize}
+    \item A greedy heuristic (take the best move)\pause
+    \item Believe that good solutions are `close' to each other\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Constructive Algorithms}
+\toptarget{constructive}
+
+\pb
+\begin{minipage}{0.67\linewidth}
+  \begin{itemize}
+  \item Constructive algorithms build-up a solution\pauseh
+  \item They usually rely on a greedy heuristic\pauseh
+  \item They are very fast\pauseh
+  \item Once you have got a solution that's it\pauseh
+  \item They can give reasonable solutions quickly, but they are not
+    usually very good\pauseh
+  \end{itemize}
+\end{minipage}
+\begin{minipage}{0.3\linewidth}
+  \multipdf[width=0.9\linewidth]{greedy_tsp}\pause
+\end{minipage}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Neighbourhood search}
+\toptarget{neighbour}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An alternative to constructive algorithms are search algorithms
+    relying on good solutions being close to each other\pause
+  \item In neighbourhood search we\pause
+    \begin{enumerate}
+    \item Start from some solution\pause
+    \item Examine the neighbouring solutions \label{examine}\pause
+    \item Move to a neighbour if it is better or, at least, not worse\pause
+    \item Repeat \ref{examine} until some stopping criteria\pause
+    \end{enumerate}
+  \item If we are maximising this is often called a
+    \emph{hill-climber}\pause
+  \item If we are minimising it is often called \emph{descent}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Iterative Improvement at its Best}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are times when a neighbourhood algorithm will find the
+    optimal solution\pause
+  \item The classic example of this is in \emph{linear programming}
+    where the simplex method leads to the optimal solution\pause
+  \item Other examples include
+    \begin{itemize}
+    \item Maximum Flow
+    \item Maximum Matching in Bipartite Graphs\pause
+    \end{itemize}
+  \item Unfortunately, this doesn't always work\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Local Optima}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Neighbourhood search is usually much slower than a constructive
+    algorithm but tends to find better quality solutions\pause
+  \item However, it will often get stuck
+  \begin{center}
+    \includegraphics[height=8cm]{\figs/twopeaks}\pause
+  \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Simple Fixes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One simple fix is to restart from many different starting
+    positions\pause
+  \item Or perturb the current solution and restart\pause
+  \item These give improvements over doing nothing, but aren't
+    necessarily great strategies\pause
+  \item You can also increase the size of the neighbour to decrease the
+    chance of getting stuck (e.g. in TSP swap more cites)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Simulated Annealing
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Simulated Annealing}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Simulated annealing is an example of a stochastic
+    hill-climber\pause 
+  \item Sometimes you go in the wrong direction (down-hill)\pause
+  \item Historically it is an idea from physics\pause---where you tend
+    to minimise energy\pause
+  \item Idea is to obtain a (low energy) crystalline material you very
+    slowly let the material cool from a liquid state (opposite of
+    quenching)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Stochastic Descent}
+
+\pb
+\begin{itemize}
+\item It is easier to fall down hill than to go back up\pause\pauselevel{=1}
+  \begin{center}
+    \includegraphics[width=\linewidth]{simulated_annealing-0}\mypl{1}
+    \multido{\ia=1+1,\ib=2+1}{39}{%
+      \llap{\includegraphics[width=\linewidth]{simulated_annealing-\ia}\mypl{\ib}}}
+  \end{center}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Simulated Annealing}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Algorithm to minimise energy $E(\bm{X})$ where
+    $\bm{X}=(X_1,X_2,\ldots,X_N)$\pause
+  \item Starting from a random configuration $\bm{X}$\pause
+  \item Choose a neighbour $\bm{X}'$\pause
+  \item If the neighbour is better (lower energy) move to it\pause
+  \item Otherwise move to the neighbour with some probability\pause
+  \item The parameter $\beta$ controls the probability of moving to a
+    neighbour\pause
+  \item We increase $\beta$ to reduce the probability of going uphill
+    over time\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+\begin{slide}
+\section{Cooling Schedule}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The parameter $\beta$ is known as the inverse temperature
+    because of an analogy with physics\pause
+  \item Over time we have to increase $\beta$ (decrease the temperature)
+    so that the system will remain in the low energy state\pause
+  \item The way you reduce the temperature (increase $\beta$) is known
+    as the cooling schedule\pause
+  \item Choosing a good cooling schedule can be critical\pause
+  \item Choosing a good cooling schedule is something of a black
+    art\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Convergence Theorem}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There is a theorem that says if you choose a slow enough cooling
+    schedule you will end up in the global minimum eventually\pause
+  \item Unfortunately eventually is a very long time\pause
+  \item It is quicker to search all possible states\pause
+  \item Still people get very excited about convergence proofs\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % EAs
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Genetic Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Genetic algorithms are methods to evolve a population of
+    potential candidates to find a good solution to an optimisation
+    problem\pause
+  \item There are a whole set of related methods that go by the name of
+    evolutionary algorithms, GAs are a subspecies of EAs\pause
+  \item They can be viewed as an engineering approach to solving hard
+    problems\pause
+  \item I'm going to present my, highly prejudiced view of what's
+    important in making a GA work\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{A Canonical GA}
+
+\begin{PauseHighLight}
+\begin{enumerate}
+\item \textit{Initialise population}\pause
+\item \textbf{for} $t=1$ \textbf{to} $T$\pause
+  \begin{enumerate}
+  \item \textit{Evaluate fitness}\pause
+  \item \textit{Select} a new population based on fitness\pause
+  \item \textit{Mutate} members of the population\pause
+  \item \textit{Crossover} members of the population\pause
+  \end{enumerate}
+\item Return best member of the population\pause
+\end{enumerate}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-2]{E.g. Graph Colouring}
+\toptarget{graphcolouring}
+
+\begin{PauseHighLight}
+  \begin{center}
+    \includegraphics[width=14cm]{ColourConflicts.0}\pause
+    \llap{\includegraphics[width=14cm]{ColourConflicts.1}}\pauselevel{=3}\pauseb
+  \end{center}
+  \vspace*{-2cm}
+  \begin{itemize}\pauselevel{=1}
+  \item  Given a graph $G=(\mathcal{V},\mathcal{E})$\pause
+  \item Assign colours, $c(v)$, to the vertices of the graph
+    $v\in\mathcal{V}$\pause 
+  \item Minimise the number of edges $e=(v,v')\in\mathcal{E}$ with the same
+  coloured vertices $c(v)=c(v')$ (colour conflicts)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Initialise Population}
+
+\pb
+Generate random colourings\pause. E.g.
+\color{TextColor}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{graph-colouring/GC_0}\pause
+  \llap{\includegraphics[width=0.9\linewidth]{graph-colouring/GC_1}}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Selection}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Select a new population of $P$ members preferentially choosing the
+  fitter members\pause
+\item Let $w_\alpha$ be a measure of the fitness of member $\alpha$\pause
+\item E.g. choose members $\alpha$ with a probability
+  \begin{displaymath}
+    p_\alpha = \frac{w_\alpha}{\displaystyle \sum_{\alpha'=1}^P
+      w_{\alpha'}}\pause
+  \end{displaymath}
+\item Many different ways of doing this\pause\ (some better than
+  others)\pause 
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\renewcommand{\@mpm@format}[1]{#1.\the\@mpm@count}
+\makeatother
+
+\begin{slide}
+\section[-2]{Mutation}
+
+\pb
+Change the colour of one or more of the vertices\pause. E.g.
+\color{TextColor}
+\begin{center}
+  \multiinclude[graphics={width=0.9\linewidth}]{GraphMutation}\pause
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\pb
+\section{Crossover}
+Take two solutions and combine them to form a new solution\pause. E.g.
+\color{TextColor}
+\begin{center}
+  \includegraphics[width=22cm]{\figs/graph-colouring/crossover}\pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Crossover Operators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Single-point crossover
+    \begin{itemize}
+    \item Take two strings and cut them at some random site
+      {\scriptsize\[
+        \hspace{-2em}\begin{array}{c}
+          (GRBGBR\big|BGGBGBG)\\ (RRBRGB\big|RGRBBGB)
+        \end{array} \bigg\}\, \longrightarrow \, \bigg\{
+        \begin{array}{c}
+          (GRBGBR\big|RGRBBGB)\\
+          (RRBRGB\big|BGGBGBG)
+        \end{array}
+        \pause\]}
+    \end{itemize}
+  \item Multi-point crossover
+    \begin{itemize}
+    \item Take two strings and cut them at several sites
+      {\scriptsize\[
+        \hspace{-2em}\begin{array}{c}
+          (GRBGBR\big|BGGB\big|GBG)\\ (RRBRGB\big|RGRB\big|BGB)
+        \end{array} \bigg\}\, \longrightarrow \, \bigg\{
+        \begin{array}{c}
+          (GRBGBR\big|RGRB\big|GBG)\\
+          (RRBRGB\big|BGGB\big|BGB)
+        \end{array}
+        \pause\]}
+    \end{itemize}
+  \item Uniform Crossover
+    \begin{itemize}
+    \item Take two strings and create children by a random shuffle
+      {\scriptsize\[
+        \hspace{-2em}\begin{array}{c}
+          (GRBGBRBGGBGBG)\\
+          (RRBRGBRGRBBGB)
+        \end{array} \bigg\}\, \longrightarrow \, \bigg\{
+        \begin{array}{c}
+          (GRBRGBRGRGGGB)\\
+          (RRBGBRBGGBBBG)
+        \end{array}
+        \pause\]}
+    \end{itemize}
+  \item Any of these crossover can be biased towards one parent\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\pb
+\section[-2]{Cost of Crossover}
+\color{TextColor}
+\begin{center}
+  \multiinclude[graphics={width=0.8\linewidth}]{graph-colouring/Crossover}
+  \pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\pausebuild
+\section[-1]{GA}
+
+\begin{center}
+  \begin{picture}(230,140)
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_0}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_1}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_2}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_3}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_4}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_5}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_6}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_7}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_8}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_9}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_10}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_11}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_12}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_13}}\pause
+    \put(0,0){\includegraphics[width=23cm]{graph-colouring/GC_14}}\pause
+  \end{picture}    
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Bit Simulated Crossover}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Choose each variable independently with the probability
+    proportional to the frequency of the allele in the population\pause
+    \begin{center}
+      \begin{tabular}{ccc}
+      $(\cdots, B, \cdots)$ & $(\cdots, R, \cdots)$ & $(\cdots, G, \cdots)$ \\
+      $(\cdots, R, \cdots)$ & $(\cdots, B, \cdots)$ & $(\cdots, G, \cdots)$ \\
+      $(\cdots, B, \cdots)$ & $(\cdots, G, \cdots)$ & $(\cdots, B, \cdots)$ \\
+      $(\cdots, B, \cdots)$
+      \end{tabular}\pause
+    \end{center}
+    \begin{displaymath}
+      p_i(B) = 0.5, \hspace{1em} p_i(G) = 0.3, \hspace{1em} p_i(R) = 0.2\pause
+    \end{displaymath}
+  \item New algorithms built on this idea, ``Estimation of Distribution
+    Algorithms'' EDAs\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section[-1]{Galinier and Hao's Crossover Operator}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Choose two parents\pause
+  \item Sort nodes into colour-groups\pause
+    \begin{center}
+      \begin{tabular}{|c|c|c|} \hline
+        & Parent 1 & Parent 2  \\ \hline
+        B & \{1,3,4,8,\ldots\} & \{3,5,7,10, \ldots \} \\
+        G & \{2,6,7,10,\ldots\} & \{1,11,12,13, \ldots \} \\
+        R & \{5,9,11,12,\ldots\} & \{2,3,6,8, \ldots \} \\
+        \vdots & \vdots & \vdots \\
+        \hline
+      \end{tabular}\pause
+    \end{center}
+  \item Choose largest colour-group in parent~1\pause
+  \item Eliminate all nodes from that colour-group in parent~2\pause
+  \item Choose largest colour-group in parent~2\pause
+  \item etc.\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Cost of Crossover}
+
+\pb
+\color{TextColor}
+\begin{center}
+  \multiinclude[graphics={width=0.8\linewidth}]{graph-colouring/GalinierHao}
+  \pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section[-2]{Other Heuristics}
+\toptarget{saga}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are many extensions to neighbourhood search, simulated
+    annealing and genetic algorithms\pause
+  \item There are other techniques such as Tabu search
+    \begin{itemize}
+    \item Construct a list of place you cannot go to (usually the last
+      few configurations)\pause
+    \item Make the best move you are allowed to make\pause
+    \item Rather a large number of \textit{ad hoc} rules to make it
+      work\pause
+    \item Often very fast but runs out of steam\pause
+    \end{itemize}
+  \item Many other EAs including particle swarm optimisations (PSO), ant
+    colony optimisation (ACO), evolutionary strategies, \ldots\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Which Heuristic is Best?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The best heuristic depends on the application\pause
+  \item Descent is very fast, but only finds local optima---good
+    starting place\pause
+  \item Tabu search is often very fast, but sometimes fails to find
+    really good solutions\pause
+  \item Simulated annealing and Genetic Algorithms are slow, but often
+    find good solutions\pause
+  \item The best algorithms tend to be special purpose algorithms
+    designed for the problem\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For many problems the best strategy is to find a good solution,
+    but not the best\pause
+  \item Iterative search usually give good quality solutions\pause
+  \item There are many variants of heuristic search\pause
+  \item Heuristic search algorithms aren't fast (don't use these
+    techniques in an interactive program if you want to keep
+    customers)\pause
+  \item For large combinatorial optimisation problems this is often the
+    only choice\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}

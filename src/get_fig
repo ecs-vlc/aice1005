@@ -1,0 +1,3 @@
+#! /bin/bash
+
+cp ~/teaching/courses/comp1201/new-lectures/figures/$1 figures/

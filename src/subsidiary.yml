@@ -1,0 +1,19 @@
+practical_cpp:
+  "driver file": main1.cc
+  "header file": array1.h
+  "code file": array1.cc
+practical_cpp_2:
+  "driver file": main2.cc
+  "header file": array2.h
+practical_cpp_3:
+  "driver file": main3.cc
+  "header file": array3.h
+links:
+  "driver file": linkedList.cc
+  "header file": mylist.h
+trees:
+  "driver file": binary_tree_driver.cc
+  "header file": binary_tree.h
+heaps:
+  "driver file": priority_queue.cc
+  "header file": heapPQ.h

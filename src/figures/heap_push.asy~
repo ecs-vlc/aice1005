@@ -1,0 +1,64 @@
+import myutil;
+size(200,0);
+
+struct Heap {
+  int[] array;
+  int count;
+  
+  static Heap Heap(int capacity=11) {
+    heap = new Heap;
+    heap.array = new int[capacity];
+    heap.count = 0;
+    return heap;
+  }
+
+  void push(int priority) {
+    heap[count] = priority;
+    child = count;
+    ++count;
+    while (child!=0) {
+      int parent = floor((child-1)/2);
+      if (heap[parent] < heap[child])
+	return;
+      heap[child] = heap[parent];
+      heap[parent] = priority;
+      child = parent;
+    }
+    return;
+  }
+
+  int top() {return heap[0];}
+
+  int pop() {
+    int value = heap[0];
+    int tmp = heap[--count];
+    heap[0] = tmp;
+    ing parent = 0;
+
+    int child = 2*parent + 1;
+    while(child<count) {
+      if (child+1<count && array[child+1] < array[child])
+	++child;
+      if (array[child]>array[parent])
+	return value;
+      array[parent] = array[child];
+      array[child] = tmp;
+      parent = child;
+      child = 2*parent + 1;
+    }
+  }
+
+  bool empty() {return count==0;}
+  
+}
+
+from Heap unravel Heap;
+
+heap = Heap();
+
+for(int i=0; i<10; ++i) {
+  heap.push(rand()>>20);
+}
+
+while(!heap.empty())
+  write(heap.pop());

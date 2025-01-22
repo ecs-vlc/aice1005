@@ -1,0 +1,55 @@
+%Master File:lectures.tex
+
+\lesson{Writing an Arrays}
+
+\vspace*{-2cm}
+\begin{center}
+  \includegraphics[height=11cm]{array}
+\end{center}
+\vspace*{-1cm}
+\keywords{Writing data structures in C++, common errors}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+  \section{Introduction}
+
+
+  \begin{itemize}
+  \item These are notes on the tutorial session on writing
+    a resizeable array
+  \item We did not get very far with them in the first lecture
+  \item In this lecture we are going to make are code more solid
+  \item Add some functionality
+  \item Make the code generic
+  \end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Copy Constructor}
+
+\begin{itemize}
+\item C++ conveniently generates a copy constructor
+  \begin{cpp}
+    Array b(a);
+  \end{cpp}
+\item Unfortunately this copies the address to \jl$data$ and the
+  \jl$length$
+\item But his is a \textit{shallow copy} which means that both arrays
+  work on the same data array
+\item This would be deeply confusing.  Instead we have to write our
+  own \textit{copy constructor} to do a deep copy
+\end{itemize}
+\begin{cpp}
+Array::Array(Array& other) {
+  data = new int[other.size()];
+  length = other.size();
+  for(int i=0; i<size(); ++i) {
+    data[i] = other[i];
+  }
+}
+\end{cpp}
+\end{slide}

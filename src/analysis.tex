@@ -1,0 +1,698 @@
+%Master File:lectures.tex
+
+\lesson{Analyse!}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{artofcomputerprogramming}\hfil
+  \includegraphics[height=10cm]{knuth}
+\end{center}
+
+\keywords{Pseudo code, binary search, insertion sort, selection sort, lower bound complexity}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\vfill
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Algorithm Analysis}{aa}
+    \outlineitem{Search}{search}
+    \outlineitem{Simple Sort}{sort}
+    \begin{itemize}
+    \item \toplink{insertion}{Insertion Sort}
+    \item \toplink{selection}{Selection Sort}
+    \end{itemize}
+    \outlineitem{Lower Bound}{lb}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{artofcomputerprogramming}
+\end{minipage}
+\vfill
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Algorithm Analysis}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We've covered most of the basic data structures\pause
+  \item The rest of the course is going to focus more on
+    algorithms\pause
+  \item We will look predominantly at
+    \begin{itemize}
+    \item Searching
+    \item Sorting
+    \item Graph Algorithms\pause
+    \end{itemize}
+  \item Emphasise general solution strategies\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Code and Pseudo Code}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ code is often difficult to read---there are often
+    programming details we don't care abour\pause
+  \item It contains details such as throwing exception which are
+    repetitive and often depends on who you are writing the code
+    for\pause
+  \item Algorithms are not language dependent (data structures are a bit
+    more language dependent)\pause
+  \item To focus on what is important we will use a stylised programming
+    language called \emph{pseudo code}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Pseudo Code}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There is no standard for pseudo code\pause
+  \item The commands are not too dissimilar to C++\pause
+  \item The one strange convention is that assignments use an arrow
+    $\leftarrow$\pauseh
+  \item Arrays are written in bold $\bm{a}$ with elements $a_i$\pause
+  \item In pseudo-code you are free to invent any operations that can be
+    easily interpreted\pauseh
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Search
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Dumb Search}
+
+\pausebuild
+\color{TextColor}
+\begin{minipage}{10cm}
+\begin{pseudo}
+#\textsc{DumbSearch}#($\bm{a}$, x)
+{
+  /* search array $\bm{a}=(a_1, \ldots a_n)\ $ */
+  /* for x return true */
+  /* if successful else false */
+  for i:=1 to n
+    if ($a_i$ = x)
+      return true
+    endif
+  endfor
+
+  return false
+} #\pause#
+\end{pseudo}
+\end{minipage}\hfill
+\begin{minipage}{12cm}
+\begin{cpp}
+bool search(T a[], T x)
+{
+  for (int i=0; i<n; i++) {
+    if (a[i] == x)
+      return true;
+  }
+  
+  return false;
+} $\pause$
+\end{cpp}
+\end{minipage}
+\begin{center}
+\multiinclude[graphics={height=5cm}]{dumbSearch}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2.5]{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Worst case:\pause
+    \begin{itemize}\squeeze
+    \item The worst case for a successful search is when the element is
+      in the last location in the array\pause
+    \item This takes $n$ comparisons: worst case is $\Theta(n)$\pause
+    \end{itemize}
+  \item Best case:\pause
+    \begin{itemize}\squeeze
+    \item The best case is when the element is in the first location\pause
+    \item This takes $1$ comparison: best case is $\Theta(1)$\pause
+    \end{itemize}
+  \item Average case:\pause
+    \begin{itemize}\squeeze
+    \item Assume every location is equally likely to hold the key
+      \begin{align*}
+        \frac{1+2+\ldots+n}{n}\pause = \frac{1}{n} \sum_{i=1}^n i \pause
+        = \frac{1}{n} \times \frac{n(n+1)}{2}\pause = \frac{n+1}{2}\pause
+      \end{align*}
+    \end{itemize}
+  \item For an unsuccessful search $n$ comparison are necessary\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Binary Search}
+
+\begin{PauseHighLight}
+\begin{itemize}
+\item If the array is ordered we can do better\pause
+\item At each step we bisect the array\pause\\
+\begin{minipage}{7cm}
+\begin{pseudo}
+#\textsc{BinarySearch}#($\bm{a}$, x)
+{
+  low := 1
+  high := n#\pause#
+  while (low <= high)#\pause#
+    mid := $\lfloor (\mbox{low} + \mbox{high})/2 \rfloor$#\pause#
+    if $x > a_{\mbox{mid}}$
+      low := mid + 1
+    elseif $x < a_{\mbox{mid}}$
+      high := mid -1
+    else
+      return true
+    endif#\pause#
+  endwhile
+  return false
+}#\pause#
+\end{pseudo}
+\end{minipage}\hfill
+\begin{minipage}{15cm}\raggedright
+  \begin{itemize}
+  \item Based on a \emph{divide-and-conquer} strategy\pause
+  \item We check the middle of the array
+    \begin{align*}
+      \underbrace{a_1, a_2, \cdots, a_{m-1}}_{x<a_m}, \overbrace{a_m}^{x=a_m}, 
+      \underbrace{a_{m+1}, \cdots a_n}_{x>a_m}\pause
+    \end{align*}
+  \item Based on a recursive idea\pause
+  \end{itemize}
+\end{minipage}
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[2]{Binary Search in Action}
+\pb
+\pause
+
+\begin{center}
+  \includegraphics[width=\linewidth]{binary-search0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{42}{%
+    \llap{\includegraphics[width=\linewidth]{{binary-search\ia}}\mypl{\ib}}}
+%\multiinclude[graphics={width=\linewidth}]{binarySearch}\pause
+\end{center}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Analysis}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We count the number of comparisons (counting each
+    \texttt{if/else if} statement as a single comparison)\pause
+  \item Let $C(n)$ be the number of comparisons needed to search in an
+    array of size $n$\pause
+  \item After one comparison we are left (in the worst case) with having
+    to search an array not larger than $\lfloor n/2 \rfloor$\pause, thus
+    \begin{align*}
+      C(n) < C(\lfloor n/2 \rfloor) + 1\pause
+    \end{align*}
+  \item We've seen this relation before (lesson on Recursion)\pause
+  \item Easy to show $C(n) < \lfloor \log_2(n) \rfloor+1 = O(\log(n))$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Sort
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Sort Characteristics}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sort is one of the best studied algorithms\pause.  We care about
+    stability, space and time complexity\pause
+  \item A sort algorithm is said to be \emph{stable} if it does not
+    change the order of elements that have the same value\pause
+  \item Space Complexity.  Sort is said to be
+    \begin{itemize}
+    \item \emph{In-place} if the memory used is $O(1)$\pause
+    \end{itemize}
+  \item Time Complexity.  In particular we are interested in
+    \begin{itemize}
+    \item Worst case
+    \item Average case
+    \item Best case\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Insertion Sort}
+\toptarget{insertion}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item In insertion sort we keep a subsequence of elements on the left in
+  sorted order\pauseh
+\item This subsequence is increased by \textit{inserting} the next
+  element into its correct position\pauseh\\
+  \begin{minipage}{10cm}
+    \begin{pseudo}
+#\textsc{InsertionSort}#($\bm{a}$)
+{
+  for i:=2 to n
+    v:=$a_i$
+    j:=i-1
+    while j >=1 and $a_j$>v
+      $a_{j+1}$:=$a_j$
+      j:=j-1
+    endwhile
+    $a_{j+1}$:=v
+  endfor
+}#\pauseh#      
+    \end{pseudo}
+  \end{minipage}\hfil
+  \begin{minipage}{13cm}
+    \multiinclude[graphics={width=\linewidth}]{insertionsort}\pause
+  \end{minipage}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Properties of Insertion Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Insertion sort is \emph{stable}.  We only swap the ordering of
+    two elements if one is strictly less than the other\pause
+  \item It is \emph{in-place}\pause
+  \item Worst time complexity\pause
+    \begin{itemize}
+    \item Occurs when the array is in inverse order\pause
+    \item Every element has to be moved to front of the array\pause
+    \item Number of comparisons for an array of size $C_w(n)$
+      \begin{align*}
+        C_w(n) = \sum_{i=2}^n (i-1) \pause= 1 + 2 + \cdots n-1 \pause
+        = \frac{n(n-1)}{2}\pause \in \Theta(n^2) \pause
+      \end{align*}
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Average Time Complexity\pause
+    \begin{itemize}
+    \item On average we can expect that each new element being sorted
+      moves half the way down sorted list\pause
+    \item This gives us an average time complexity, $C_a(n)$ of half the
+      worst time
+      \begin{align*}
+        C_a(n) = \frac{n(n-1)}{4}\pause\in \Theta(n^2)\pause
+      \end{align*}
+    \end{itemize}
+  \item Best Time Complexity\pause
+    \begin{itemize}
+    \item This occurs if the array is already sorted\pause
+    \item In this case we only need $C_b(n)=n-1\in \Theta(n)$
+      comparisons\pause
+    \end{itemize}
+  \item Insertion sort is a good sort for small arrays because it is
+    stable, in-place and is efficient when the arrays are almost sorted\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Selection Sort}
+\toptarget{selection}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item A more direct \emph{brute force} method is to find the least
+  element iteratively\pauseh
+\item We can make this an in-place method by swapping the least element
+  with the first element, the second least element with the second
+  element, etc.\pauseh\\
+  \begin{minipage}{8cm}
+    \begin{pseudo}
+#\textsc{SelectionSort}#($\bm{a}$)
+{
+  for i:=1 to n-1
+    min := i
+    for j:=i+1 to n
+      if $a_{j}$<$a_{min}$
+        min:=j
+      end if
+    end for
+    swap $a_i\ $ and $a_{min}$
+  end for
+}#\pauseh#      
+    \end{pseudo}
+  \end{minipage}\hfil
+  \begin{minipage}{13cm}
+    \multiinclude[graphics={width=\linewidth}]{selectionSort}\pause
+  \end{minipage}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Analysis of Selection Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Selection sort is in-place\pause
+  \item It isn't stable
+    \begin{center}
+      \includegraphics[height=2cm]{unstable}\pause
+    \end{center}
+  \item Selection sort always requires $n(n-1)/2$ comparisons so has the
+    same worst case, but worse average case and best case complexity as
+    insertion sort\pause
+  \item It only performs $n-1$ swaps---this makes it attractive
+    (insertion sort moved more elements)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Insertion versus Selection Sort}
+
+\begin{center}
+  \includegraphics[height=16cm]{slow-sort-times}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Bubble Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are many other simple sort strategies\pause
+  \item One popular one is bubble sort\pause---keep on swapping
+    neighbours until the array is sorted\pause
+  \item It is stable and in-place\pause
+  \item This again has $O(n^2)$ complexity\pause
+  \item This isn't bad for a simple sort, but it does do more work than
+    insertion sort and selection sort\pause
+  \item Apart from its name it just doesn't have anything going for
+    it\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Lower Bounds
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{How Well Can You Do?}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Given a problem we would like to know what is the time
+    complexity of the best possible program\pause
+  \item Usually there is no way of knowing this\pause
+  \item We can get an upper bound---if we know the time complexity of
+    any algorithm that solves the problem we have an upper bound\pause
+  \item Lower bounds are far trickier\pause
+  \item A lower bound of $f(n)$ is a guarantee that we spend at least
+    $f(n)$ operations to solve the problem\pause
+  \end{itemize}
+  \begin{center}
+    \includegraphics[height=5cm]{bestperformance}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{slide}
+\section{Decision Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Decision trees are a way to visualise (at least, in principle)
+    many algorithms\pause
+  \item They will eventually give us a lower bound on the time
+    complexity of sort using binary decisions\pause
+  \item A decision tree shows the series of decisions made during an
+    algorithm\pause
+  \item For sort based on binary comparisons the decision tree shows
+    what the algorithm does after every comparison\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Decision Tree for Insertion Sort}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{decisionTree.0}\pause
+\end{center}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Note there is one leaf for every possible way of sorting the list\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Decision Trees and Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The time taken to complete the task is the depth of the tree at
+    which we finish (i.e. the leaf nodes)\pause
+  \item We can thus read of the time complexity
+    \begin{itemize}\squeeze
+    \item worst case time: depth of the deepest of leaf\pause
+    \item best case time: depth of the shallowest of leaf\pause
+    \item average case time: average depth of leaves\pause
+    \end{itemize}
+  \item Different sort strategies will have different decision trees\pause
+  \item Decision trees are usually far too large to write out \Frowny
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{decision_tree}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Requirements of Correct Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Any sort based on binary comparisons must have a leaf of the
+    tree for every possible way of sorting the list\pause
+  \item The array $[a,b,c]$ must be arranged differently for all combinations
+    \begin{align*}
+      [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]\pause
+    \end{align*}
+  \item That is they must go through a different path of the decision
+    tree\pause
+  \item If not sort won't work\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Minimum Number of Leaves}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item There must be, at least, one leaf node of the decision tree for each
+    possible permutation of the list\pause
+  \item How many permutations are there of a list of size $n$?\pause
+  \item Start with a sequence $(a_1, a_2, \ldots, a_n)$\pause
+  \item To create a new permutation we can choose any member of the list
+    as the first element\pause
+  \item We can choose any of the remaining $n-1$ elements of the list as
+    the second element of the permutation\pause
+  \item The total number of permutation is
+    $n\times(n-1)\times(n-2)\times \cdots \times 2 \times 1 = n!$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Lower Bound Time Complexity for Sorting}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Any sort algorithm using binary comparisons must have a decision
+    tree with at least $n!$ leaf nodes\pause
+  \item This will be a binary tree with some depth $d$\pause
+  \item The number of leaves at depth $d$ is $2^d$\pause
+  \item Thus the smallest depth tree must have a depth $d$ such that
+    $2^d\geq n!$\pause
+  \item That is, the depth of the decision tree satisfies $d\geq
+    \log_2(n!)$\pause
+  \item But this is the number of comparisons needed in our sort\pause
+  \item We are left with a lower bound on the time complexity of
+    $\log_2(n!)$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{How Big is $\log_2(n!)$}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item We showed in the second lecture that
+    \begin{align*}
+      \left( \frac{n}{2} \right)^{n/2} < n! <  n^n \pause
+    \end{align*}
+  \item It is not too difficult to show that asymptotically (i.e. as
+    $n\rightarrow\infty$) that $n!$ approaches $\sqrt{2 \pi n}
+    \left(\frac{n}{e}\right)^n$\pause---this is known as
+    \emph{Stirling's approximation}\pause
+  \item Thus
+    \begin{align*}
+      \log_2(n!) &\approx n \log_2(n) - n \log_2(e) + \frac{\log_2(n)}{2} +
+      \frac{\log_2(2\pi)}{2} \pause\\
+      &= \Theta(n\log_2(n))\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Complexity of Sorting}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We therefore have a lower bound on the time complexity of
+    $\Omega(n \log(n) )$\pause
+  \item This is true for any sort using binary comparisons\pause
+  \item We will see in the next lecture there exists algorithms with
+    time complexity $O(n \log(n) )$\pause
+  \item This means our lower bound is tight\pause---i.e. it is
+    the true cost of the best algorithm\pause
+  \item Having a lower bound we know we are not going to obtain a
+    substantially faster algorithm\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Analysis of algorithms is hard\pause
+  \item Analysis is important: without it we don't know if we have a good
+    algorithm or whether we should try to find a more efficient one\pause
+  \item Lower bounds are particularly important
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{lower-bound}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

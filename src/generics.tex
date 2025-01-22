@@ -1,0 +1,678 @@
+%Master File:lectures.tex
+
+\lesson{Make it Generic}
+\vspace*{-2cm}
+\begin{center}
+  \includegraphics[height=11cm]{swissarmy}
+\end{center}
+\vspace*{-1cm}
+\keywords{Inheritance, generic programming, Java Collection classes, STL}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Generic Programming}{intro}
+    \outlineitem{Old Style}{old}
+    \outlineitem{New Style}{new}
+    \outlineitem{Collection Classes and STL}{collections}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{swissarmy}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Why Generic Programming?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+\item We don't want to write a data structure for every type
+  \begin{itemize}
+  \item IntArrayList
+  \item DoubleArrayList
+  \item WidgetArrayList
+  \end{itemize}\pause
+\item Nor do we want to have different sort algorithms for integers, doubles,
+  strings, etc.\pause
+  \item Want to create data structures and algorithms which can work for
+    any object type\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Generics Through Inheritance}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One way to implement generics is using inheritance hierarchies\pause
+  \item Inheritance is used to model the \emph{is a} relationship
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{Object}\pause
+    \llap{\includegraphics[width=0.9\linewidth]{Object1}}\pauseb
+  \end{center} 
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Inheriting Methods}
+\vspace{-2cm}
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item A \texttt{Square} is a \texttt{Rectangle} which is a
+    \texttt{Shape} which is a \texttt{Object}\pause
+  \item \texttt{Square} may have more member functions than
+    \texttt{Rectangle} and \texttt{Shape}\pause
+  \item The implementation for the member function of \texttt{Square}
+    may be different from \texttt{Rectangle} and \texttt{Shape}\pause
+  \item The classes \texttt{Shape} and \texttt{Regular} may not contain
+    implementations of all their methods in which case they are
+    \emph{abstract classes}\pause
+  \item A class that contains no implementations is an
+    \emph{interface}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Polymorphism}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can create an instance of a \texttt{Shape}
+    \begin{java}
+      Shape shape1 = new Square();
+    \end{java}
+    (note that you can only call \texttt{new} on a concrete
+    class---i.e. a non-abstract class)\pause
+  \item We can then call any method of \texttt{Shape}
+    (e.g. \jl$area()$) ---this will call
+    the method of that name for \texttt{Square}\pause
+  \item We can also convert \texttt{Shape} back to an \texttt{Square}
+    using a `cast'
+    \begin{java}
+      Square square = (Square) shape1;
+    \end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Object}
+\vspace{-2cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In Java all classes inherit the property of \jl$Object$\pause
+  \item This allows us to create a generic container\pause
+  \item We did this in the previous lecture
+\begin{java}
+public class MyArrayList implements MyList
+{
+    protected Object[] data;
+    protected int no_elements;
+
+    public MyArrayList()
+    {
+        data = new Object[10];
+        no_elements = 0;
+    }
+
+    // etc.
+}
+\end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Comparable}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To perform \texttt{sort} we have to compare two objects to see if
+    the lhs is `less than', `equal to', or `greater than' the rhs\pause
+  \item Java defined an interface \jl$Comparable$ with the single method
+    \begin{java}
+      public int compareTo(Object rhs)
+    \end{java}
+    which returns a negative number, zero or a positive number if the
+    lhs is `less than', 'equal to', or `greater than' the rhs\pause
+  \item Sort can be carried out on any type that implements the
+    \jl$Comparable$ interface\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Wrapper Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Primitive types, \texttt{byte, short, int, long, float, double,
+      char} and \texttt{boolean} aren't classes and so aren't
+    \texttt{Object}\pause
+  \item To create collections of these types Java has Wrapper classes,
+    \texttt{Integer, Double}, etc.\ which are classes and store
+    primitive types\pause
+  \item Java 1.5+ performs `autoboxing and unboxing' which converts from
+    \texttt{Integer} to \texttt{int} automatically, etc.\ and the other
+    way around without using casts\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Disadvantage with Using Inheritance}
+
+\vspace{-2cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Java is a strongly typed programming language\pause
+  \item This means that all object know what type they are at compile
+    time\pause
+  \item This catches many errors before a program runs\pause
+  \item Deep inheritance breaks strong typing\pause
+  \item Errors that should be caught at compile time become run
+    time errors
+\begin{java}
+        MyList a = new MyArrayList();
+        a.add(new Double(2.3));
+        if (blueMoon)
+            Integer b = (Integer) a.get(0);  // causes a runtime error
+\end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Generics Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Java 1.5 onwards allows you to write generic classes\pause
+  \item \jl$public class MyClass<T>$
+    \begin{itemize}
+    \item Depends on some unspecified type \jl$T$
+    \item \jl$MyClass<String>$ creates an instance of a specific class
+    \end{itemize}\pause
+  \item Follows similar syntax to \textit{templates} in C++\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{A Generic List}
+
+\begin{java}
+public interface GenericList<T>
+{
+    public void add(T obj);
+    // post: add new element to the end of List
+
+    public T get(int index);
+    // pre: 0 <= index < size()
+    // post: return element in location given by index
+
+    public void set(int index, T obj);
+    // pre: 0 <= index < size()
+    // post: set element in location given by index to obj
+
+    public T removeLast();
+    // pre: non-empty List
+    // post: return last element and remove this from List
+
+    public int size();
+    //post: return size of List
+}
+\end{java}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{A Generic ArrayList}
+\pb
+\begin{java}
+public class GenericArrayList<T> implements GenericList<T>
+{
+    private T[] data;
+    private int no_elements;
+
+    $\pause$
+    @SuppressWarnings("unchecked") $\pause \pauselevel{=1}$
+    public GenericArrayList()
+    {
+        data = (T[]) new Object[10]; // unchecked cast
+        no_elements = 0;
+    }
+
+  // etc.
+}
+\end{java}\pause
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Using Generics}
+
+\vspace*{-2cm}
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item To make a class generic add \jl$<T>$ to its name\pause---we
+    could use any identifier rather than  \jl$T$\pause
+  \item Replace \jl$Object$ by the identifier \jl$T$\pause
+  \item You cannot create an array of type \jl$T$ so we create an array
+    of its bound (i.e. \jl$Object$) and then cast to \jl$T$, e.g.
+    \begin{java}
+      data = (T[]) new Object[10];
+    \end{java}\pause
+    \vspace*{-1cm}
+  \item You still can't create generics for primitive types\pause
+  \item You can also write member functions that act on a class with an
+    unspecified type\pause
+  \item We achieve this using a wildcard \jl$<?>$, e.g.
+    \begin{java}
+      public static double doSomething(ArrayList<?> arr);
+    \end{java}\pause
+    \vspace*{-1cm}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section{Bounded Wildcard}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We may require the type to extend some other type\pause
+  \item Suppose we want to compute the total area of some shapes
+\begin{java}
+  public static double totalArea(ArrayList<? extends Shape> arr)
+  {
+    double total = 0.0;
+
+    for(Shape s: arr)
+        total += s.area();
+
+    return total;
+  }$\pause$
+\end{java}
+  \item If \jl$Rectangle$ extends the \jl$Shape$ interface this
+    would work for \jl$ArrayList<Rectangle>$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Generic Methods Type Name}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sometimes we need an identifier for the generic type in a
+    method\pause
+  \item This can be important when
+    \begin{itemize}
+    \item The type is used in more than one parameter type
+    \item The type is used as a return type
+    \item The type is used to declare a local variable\pause
+    \end{itemize}
+  \item We can create a generic method using
+    \begin{java}
+      public static <T> double myMethod(T arg1, T arg2) {
+        // do something
+      }$\pause$
+
+      public static <T> T firstElement(List<T> list) {
+        return list.get(0);
+      }$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Contains}
+
+\begin{PauseHighLight}
+Here is a generic \texttt{contains} method
+\begin{java}
+public class ArrayStuff
+{
+    public static <T> boolean contains(T[] arr, T x)
+    {
+        for (T val: arr)
+            if ( x.equals(val) )
+                return true;
+        
+        return false;
+    }
+}$\pause$
+\end{java}
+so that
+\begin{java}
+        Integer[] arr = {1, 4 ,7, 2};
+        System.out.println(ArrayStuff.contains(arr, 4));
+        System.out.println(ArrayStuff.contains(arr, 5));  
+\end{java}
+returns \texttt{true} and \texttt{false} \pause
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Difficult Type}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Occasionally generics become a bit complicated\pause
+  \item Suppose we want to implement a \texttt{findMax} method that works on
+    any type
+\begin{java}
+    public static <T> T findMax(T[] arr)
+    {
+        int maxIndex = 0;
+        for(int i=1; i< arr.length; i++)
+            if (arr[i].compareTo(arr[maxIndex])>0)
+                maxIndex = i;
+
+        return arr[maxIndex];
+    }$\pause$      
+\end{java}
+  \item Won't compile because doesn't know that type \texttt{T}
+  implements the Comparable interface\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Type Bound}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We need an array of \texttt{Comparable}s
+\begin{java}
+public static <T extends Comparable<T>> T findMax(T[] arr)
+\end{java}\pause\vspace*{-3ex}
+\item Works when
+  \begin{center}
+    \includegraphics[width=0.3\linewidth]{findmax}\pause
+  \end{center}\vspace*{-2ex}
+\item But fails if
+  \begin{center}
+    \includegraphics[width=0.3\linewidth]{findmax1}\pause
+  \end{center}\vspace*{-2ex}
+\item Need
+\begin{java}
+public static <T extends Comparable<? super T>> T findMax(T[] arr)$\pause$
+\end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Get and Put Principles}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The wildcard \jl$<?>$ allows any type\pause
+  \item \jl$<? extends T>$\hfill\includegraphics[width=0.3\linewidth]{extends}
+    \begin{itemize}
+    \item used when we want to \emph{get} a value from a structure
+    \item we need the type \jl$?$ to implement a method of type
+      \jl$T$
+    \item \jl$A extends B$ if \jl$A$ is a subclass of \jl$B$ (\jl$A$ might
+      extend or implement \jl$B$)\pause
+    \end{itemize}
+  \item \jl$<? super T>$\hfill\includegraphics[width=0.2\linewidth]{super}
+    \begin{itemize}
+    \item used when we want to \emph{put} a value into a structure\pause
+    \end{itemize}
+  \end{itemize}
+\begin{java}
+public static <T> void copy(List<? super T> dest, List<? extends T> src)
+\end{java}\pause
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{C++ Templates}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ templates look like Java generics\pause
+  \item They are implemented very differently\pause
+    \begin{itemize}
+    \item In Java generics uses old style inheritance behind the scenes
+      (erasure)\pause
+    \item In C++ a template defines how a class should look---for each
+      instance of the class with a different template parameter a
+      different class is compiled (you can't pre-compile template
+      classes)\pause
+    \end{itemize}
+  \item C++ templates work with primitive types\pause
+  \item C++ doesn't use any kind of inheritance\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Don't roll your own}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Most language provide commonly used data structures and
+    algorithms\pause
+  \item Java has the Collection Framework\pause
+  \item C++ has the Standard Template Library STL\pause
+  \item These are efficient, well tested, container classes\pause
+  \item Use them!\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Java Collection Framework}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The Java Collection Framework provides many classes including
+    \begin{itemize}
+    \item \jl$ArrayList<T>$---A list implemented by an array\pause
+    \item \jl$Vector<T>$---Another list implemented by an array
+      (depreciated)\pause
+    \item \jl$LinkedList<T>$---A list implemented by a linked list\pause
+    \item \jl$TreeSet<T>$---A set implemented by a binary tree\pause
+    \item \jl$HashSet<T>$---A set implemented by a hash table\pause
+    \item \jl$TreeMap<K,V>$---A map implemented by a binary tree\pause
+    \item \jl$HashMap<K,V>$---A map implemented by a hash table\pause
+    \end{itemize}
+  \item Also have bunch of algorithms in \jl$Collections$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Collection Interface}
+
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=14cm]{java-collection}
+\end{center}
+\vspace{-1cm}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Collection Classes}
+\begin{center}
+  \includegraphics[width=\linewidth]{collection}
+\end{center}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Shows some of the interfaces and classes\pause
+  \item There are 5 \jl$BlockingQueues<T>$'s, a \jl$PriorityQueue<T>$, and
+    \jl$ConcurrentLinkedQueue<T>$\pause
+  \item  There are lots of intermediate abstract classes\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\vspace{-1cm}
+
+\vspace{-1cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lists and Sets}
+\pb
+\pause
+\begin{center}
+  \includegraphics[height=14cm]{java-list}\mypl{1}\pause
+  \llap{\includegraphics[height=14cm]{java-set}}\mypl{2}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Maps}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=14cm]{java-map}
+\end{center}
+\vspace{-1cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{STL}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ provides an equivalent set of classes known as the Standard
+    Template Library\pause
+  \item Includes
+    \begin{itemize}
+    \item \jl$vector<T>$---dynamic resizable array
+    \item \jl$deque<T>$---a ``deck'' or double ended array
+    \item \jl$list<T>$---a doubly linked list
+    \item \jl$set<T>$ and \jl$multiset<T>$---a set and multiset
+      implemented by a binary tree
+    \item \jl$map<K,V>$ and \jl$multimap<K,V>$--a map and multimap
+      implemented by a binary tree
+    \item \jl$unordered_X$ hash based \jl$set$, \jl$multiset$,
+      \jl$map$,  \jl$multimap$
+    \item queues, stacks, priority queues, \ldots
+    \end{itemize}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item For data structures and algorithms to be really useful they must
+    be made generic\pause
+  \item You can make classes generic using inheritance (i.e. by making
+    them act on \texttt{Object})\pause
+  \item This is bad form because it breaks strong typing---errors are
+    missed at compile time\pause
+  \item Java 1.5 introduced a new way to make things generic ``generic
+    classes''\pause
+  \item Generic classes are simple to implement (although there are a
+    few subtleties to master)\pause
+  \item Generic classes for common data structures and algorithms exist
+    both for Java and C++\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}

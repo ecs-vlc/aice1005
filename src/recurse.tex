@@ -1,0 +1,781 @@
+%Master File:lectures.tex
+
+\lesson{Recurse!}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{spk_carpet}
+\end{center}
+\keywords{Induction, integer power, towers of hanoi, analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+
+\begin{minipage}{12cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Simple Recursion}{intro}
+    \outlineitem{Programming Recursively}{prog}
+    \begin{itemize}
+    \item \toplink{examples}{Simple Examples}
+    \item \toplink{progthink}{Thinking about Recursion}
+    \end{itemize}
+    \outlineitem{Analysis of Recursion}{progan}
+    \begin{itemize}
+    \item \toplink{power}{Integer Powers}
+    \item \toplink{hanoi}{Towers of Hanoi}
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=8cm]{spk_carpet}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Recursion}
+\pb
+\begin{itemize}
+\item Recursion is a strategy whereby we reduce a problem to a smaller
+  problem of the same type\pauseh
+\item We repeat this until we reach a trivial case we can solve by
+  some other means\pauseh
+\item Recursion can also be used to describe situations in a succinct
+  manner using references to itself.\pauseh\ E.g.
+  \begin{minipage}{0.6\linewidth}
+    \begin{itemize}\squeeze
+    \item Definition of factorial:\\ $n! = n \times (n-1)!$ with $0!=1$\pauseh
+    \item Definition of ancestor: X is the ancestor of Y if X is the
+      parent of Y or Z is the parent of Y and X is the ancestor of Z\pauseh
+    \end{itemize}    
+  \end{minipage}\hfill
+  \begin{minipage}{0.3\linewidth}
+    \multipdf[width=0.5\linewidth]{ancestors}\pause
+  \end{minipage}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Structure of Recursion}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Notice that these are \textit{self-referential} definitions\pause
+  \item A recursive definition consists of two elements\pause
+    \begin{itemize}
+    \item \emph{The Base Case:} or boundary cases where the problem is
+      trivial\pause
+    \item \emph{The Recursive Clause:} which is a self-referential part
+      driving the problem towards the base case\pause
+    \end{itemize}
+  \item This should be reminiscent of proofs by induction\pause---indeed
+    the two are very closely related (many mathematical functions are
+    defined recursively and there properties are proved by
+    induction)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide} 
+\section[-2]{Recap on Proof by Induction}
+
+\pausebuild
+\begin{itemize}\squeeze
+\item Let us prove
+  \begin{align*}
+    S_n = \sum_{i=0}^n 2^i\pause = 1 + 2 + 4 +\cdots + 2^n\pause = f(n)\pause =
+    2^{n+1}-1 \pause
+  \end{align*}
+\item We use induction\pause
+  \begin{itemize}
+  \item \emph{Base Case:} $S_0 = \sum_{i=0}^0 2^i = 1\pause$ and $f(0)
+  = 2^{0+1} -1\pause=1$ \pause so $S_0 = f(0)$\pause\tick\pause 
+  \item \emph{Recursive Case:} We assume $S_n = f(n)\pause = 2^{n+1}
+    -1$\pause, we want to prove that $S_{n+1} = f(n+1)\pause =
+    2^{(n+1)+1} -1\pause= 2^{n+2}-1$\pause\ now 
+    \begin{align*}
+      S_{n+1} &= \sum_{i=0}^{n+1} 2^i\pause = \sum_{i=0}^n 2^i +
+      2^{n+1}\pause = S_n + 2^{n+1}\pause = f(n) + 2^{n+1}\pause\\ &= 2^{n+1} -1 +
+      2^{n+1}\pause = 2\times2^{n+1} -1\pause = 2^{n+2} -1 \pause
+      \hspace{1em} \mbox{\tick}\pause 
+    \end{align*}
+  \end{itemize}
+\end{itemize}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Programming Recursively}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Most modern programming languages, including C++, allow you to
+    program recursively\pause
+  \item That is they allow functions/methods to be defined in terms of
+    themselves
+    \begin{cpp}
+    long factorial(long n)
+    {
+        if (n<0)
+            throw new IllegalArgumentException();
+        else if (n==0)
+            return 1;
+        else
+            return n*factorial(n-1);
+    }$\pause$
+    \end{cpp}
+  \item This will work, is very intuitive, but is certainly not the best
+    way to code a factorial function\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Integer Powers}
+\toptarget{examples}
+
+\pausebuild
+\begin{itemize}\squeeze
+\item How do we compute $0.95^{25}$?\pause
+\item One way is to multiply together 0.95 twenty five times\pause
+\item A more efficient way is to observe
+  \begin{align*}
+    x^{2n} &= (x^n)^2 \\
+    x^{2n+1} &= x\times x^{2n}\pause
+  \end{align*}\vspace{-1cm}
+\item We can repeat this until we reach $x^1=x$\pause
+  \begin{align*}
+    \hspace{-1cm}0.95^{25}\pause &= 0.95\times(0.95)^{24}\pause 
+    = 0.95\times\bigl((0.95)^{12}\bigr)^2\pause
+    = 0.95\times\Bigl(\bigl((0.95)^6\bigr)^2\Bigr)^2\pause \\
+    &=0.95\times\Bigl(\Bigl(\bigl((0.95)^3\bigr)^2\Bigr)^2\Bigr)^2\pause
+    =0.95\times\Bigl(\Bigl(\bigl(0.95\times(0.95)^2\bigr)^2\Bigr)^2\Bigr)^2
+    \pause
+  \end{align*}
+  six multiplications rather than 24!\pause
+\end{itemize}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Implementing Integer Power}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Integer power looks rather intimidating to code\pause
+  \item However, the recursive definition is easy\pause
+  \item We can easily code this function recursively
+    \begin{java}
+    double power(double x, long n)   //  (Overflow is possible)
+    {
+        return  n <  0  ? 1 / power(x,-n)          //  Negative power 
+            :  n == 0   ? 1                        //  Special case
+            :  n == 1   ? x                        //  Base case
+            :  n%2 == 0 ? (x = power(x, n/2)) * x  //  Even power
+            :              x * power(x, n-1);      //  Odd power
+    }$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Helper Functions}
+
+\begin{PauseHighLight}\squeeze
+  \begin{itemize}
+  \item This is a slick implementation from the web, but not
+    terribly efficient\pause
+  \item We only need to do the first two checks once\pause
+  \item A more efficient implementation would use a helper function
+    \begin{java}
+    double power(double x, long n) { //  (Overflow is possible)
+        return  n <  0  ? power_recurse(1.0/x,-n)  //  Negative power 
+            :  n == 0   ? 1                        //  Special case
+            : power_recurse(x,n);
+
+    }$\pause$
+
+    double power_recurse(double x, long n) {
+       return  n == 1  ? x                               //  Base case
+           : n%2 == 0 ? (x = power_recurse(x, n/2)) * x  //  Even power
+           :             x * power_recurse(x, n-1);      //  Odd power
+    }$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Writing Recursive Programs}
+\toptarget{progthink}
+
+\begin{PauseHighLight}
+\begin{itemize}
+\item You need to make sure that you catch the base case \textbf{before}
+  you recurse\pause
+\item The recursive case can call itself, possibly many times, provided
+  the inductive argument is closer to the base case\pause
+\item That is,
+  \begin{itemize}
+  \item Ensure that you use a `smaller problem'\pause
+  \item Assume that you can solve the `smaller problem'\pause
+  \end{itemize}
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Cost of Recursion}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Recursion acts just like any other function call\pause
+  \item The values of all local variables in scope are put on a stack\pause
+  \item The function is called and\pause
+    \begin{itemize}
+    \item returns a value\pause\ or
+    \item change some variable or object\pause
+    \end{itemize}
+  \item When the function returns, the values stored on the stack are
+    popped and the local variables restored to their original state\pause
+  \item Although this operation is well optimised it is time consuming\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Unrolling Recursion}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Recursion can frequently be replaced\pause
+  \item E.g. we can easily write a factorial function
+    \begin{java}
+    long factorial(long n)
+    {
+        if (n<0)
+            throw new IllegalArgumentException();
+        long res = 1;
+        for (int i=2; i<=n; i++)
+            res *= i;
+        return res;
+    }$\pause$
+    \end{java}
+    with no function calls this will run much faster than the recursive
+    version\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Greatest Common Denominator}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One of the most famous algorithms is Euclid's algorithm for
+    calculating the greatest common denominator\pause
+  \item The greatest common denominator of $A$ and $B$ is the largest
+    integer, $C$, which exactly divides $A$ and $B$\pause
+  \item E.g. the greatest common denominator of 70 and 25 is 5\pause
+  \item Euclid's algorithms uses the fact that
+    \begin{itemize}
+    \item $\gcd(A, B) = \gcd(B, A \mod B)$
+    \item $\gcd(A, 0) = A$\pause
+    \end{itemize}
+  \item Thus $\gcd(70, 25)\pause = \gcd(25, 20)\pause = \gcd(20,
+  5)\pause = \gcd(5, 0)\pause =5\pause$ 
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation of GCD}
+
+\begin{itemize}
+  \item The implementation of gcd is trivial using recursion
+    \begin{java}
+      long gcd(long a, long b)
+      {
+
+           if (b==0) {
+              return a;
+           }
+           return gcd(b, a%b);
+      }
+    \end{java}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation of GCD}
+
+\begin{itemize}
+  \item The implementation of gcd is trivial using recursion
+    \begin{java}
+      long gcd(long a, long b)
+      {
+
+           if (b==0) {
+              return a;
+           }
+           long c = a%b;
+           a = b;
+           b = c;
+           return gcd(a, b);
+      }
+    \end{java}
+  \item Example of tail recursion
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation of GCD}
+
+\begin{itemize}
+  \item The implementation of gcd is trivial using recursion
+    \begin{java}
+      long gcd(long a, long b)
+      {
+        while(true) {
+           if (b==0) {
+              return a;
+           }
+           long c = a%b;
+           a = b;
+           b = c;
+         }
+      }
+    \end{java}
+  \item Example of tail recursion
+\end{itemize}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{When Definitely not to Recurse}
+
+\begin{PauseHighLight}
+\begin{itemize}
+\item A classic recursively defined sequence is the Fibonacci series
+  \begin{itemize}
+  \item $f_n = f_{n-1} + f_{n-2}$
+  \item $f_1 = f_2 = 1$\pause
+  \end{itemize}
+\item We might be tempted to write a recursive function to define the
+  series
+  \begin{java}
+    long fibonacci(long n)
+    {
+      if (n<=2)
+         return 1;
+      return fibonacci(n-1) + fibonacci(n-2);
+    }$\pause$
+  \end{java}
+  \emph{Why shouldn't you want to do this?}\pause
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Fibonacci}
+
+\pb
+\begin{java}
+  long fib(long n)
+  {
+    if (n<=2)
+    return 1;
+    return fib(n-1) + fib(n-2);
+  }
+\end{java}\pause
+
+\begin{center}
+  \multipdf[width=0.8\linewidth]{fibonacci}\pause
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Why Use Recursion At All?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Both \texttt{factorial} and \texttt{gcd} could be written
+    without using recursion\pause
+  \item The programs would probably run faster\pause
+  \item The \texttt{gcd} program would be less clear\pause
+  \item The cost of the additional function calls is often
+    insignificant\pause
+  \item It would considerably harder to write many programs such as
+    \jl$power$ non-recursively\pause
+  \item Later we will see algorithms like \texttt{quick sort} which rely on
+    recursion\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Analysis}
+
+\begin{PauseHighLight}
+\begin{itemize}\squeeze
+\item We can use recursion to compute the time complexity of a recursive
+  program!\pause
+\item To do this we denote the time taken to solve a problem of size $n$
+  by $T(n)$\pause
+\item To compute the time complexity of factorial, we note that to
+  compute $n!$ we have to multiply $n$ by $(n-1)!$\pause
+\item That is, the number of multiplications we need to compute is
+  \begin{align*}
+    T(n) = T(n-1) +1\pause
+  \end{align*}
+\item Now $T(0)=0$ so
+  \begin{align*}
+    T(n) = T(n-1) +1\pause = T(n-2) +2\pause = \cdots = T(0) +n\pause =
+    n\pause
+  \end{align*}
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Time to Compute Power}
+\toptarget{power}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item How long does it take to compute $x^n$?\pause
+  \item Remember
+  \begin{align*}
+    x^{2n} &= (x^n)^2 \\
+    x^{2n+1} &= x\times x^{2n}\pause
+  \end{align*}\vspace{-1cm}
+  \item Thus
+    \begin{align*}
+      T(n) &= \left\{
+      \begin{array}{lll}
+        T(n/2) + 1 & \quad & \mbox{if $n$ is even}\\
+        T((n-1)/2) + 2 & \quad & \mbox{if $n$ is odd}\pause
+      \end{array}\right. \\
+    &\leq T(\lfloor n/2 \rfloor) + 2
+    \end{align*}
+  \item Where $T(1) = 0$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{How many times?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We want to solve $T(n)\leq T(\lfloor n/2 \rfloor) + 2$ with
+    $T(1)=0$\pause
+  \item How many times do we divide $n$ by two until we reach 1?\pause
+  \item Denoting $n$ by a binary number $n=b_m b_{m-1} \cdots b_2 b_1$
+    \begin{itemize}\squeeze
+    \item $b_i\in\{0,1\}$\pause
+    \item $b_m=1$ \pause
+    \item $m$ is the number of digits in the binary representation of
+    $n$\pause
+    \item $\lfloor n/2 \rfloor=b_m b_{m-1} \cdots b_2$\pause
+    \item After $m-1$ `divides' we reach $1$\pause
+    \end{itemize}  
+  \item Thus $T(n) \leq 2 (m-1)$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Big is $m$}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item How many binary digits do you need to represent an integer $n$\pause
+  \item Note that an $m$ digit number can represent a number from $2^m$ to
+    $2^{m+1}-1$\pause
+  \item Thus
+    \begin{align*}
+      2^m &\leq n < 2^{m+1} \pause\\
+      m &\leq \log_2(n) < m+1\pause
+    \end{align*}
+  \item But $T(n) \leq 2 (m-1)\pause \leq 2 (\log_2(n)-1)\pause = \Theta(\log_2(n))$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Towers of Hanoi}
+\toptarget{hanoi}
+
+\begin{PauseHighLight}
+\begin{quote}
+In an ancient city, so the legend goes, monks in a temple had to move a
+pile of 64 sacred disks from one location to another. The disks were
+fragile; only one could be carried at a time. A disk could not be placed
+on top of a smaller, less valuable disk. In addition, there was only one
+other location in the temple (besides the original and destination
+locations) sacred enough for a pile of disks to be placed there.\pause
+
+Using the intermediate location, the monks began to move disks back and
+forth from the original pile to the pile at the new location, always
+keeping the piles in order (largest on the bottom, smallest on the
+top). According to the legend, before the monks could make the final
+move to complete the new pile in the new location, the temple would turn
+to dust and the world would end. \pause
+\end{quote}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{A Smaller Tower of Hanoi}
+\pb
+\pausebuild
+\begin{itemize}
+\item Here is a smaller problem of just four disks\pauseh
+\end{itemize}
+\begin{center}
+  \multipdf[width=\linewidth]{hanoi}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Algorithms in the Real World}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We require an algorithm to solve the towers of Hanoi\pause
+  \item Algorithms don't just apply to computers!\pause
+  \item If you try to solve the problem by hand you will discover that
+    its quite fiddly\pause
+  \item There is a simple recursive solution which turns out to be
+    optimal\pause
+  \item Let \jl$move(X,Y)$ denote the procedure of moving the top disk from
+  peg \jl$X$ to peg \jl$Y$\pause
+  \item Let \jl$hanoi(n,X,Y,Z)$ denote the procedure of moving the top
+    \jl$n$ disks from peg \jl$X$ to peg \jl$Z$ using peg \jl$Y$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Solving Towers of Hanoi}
+\pausebuild
+\begin{java}
+  hanoi(n, A, B, C)
+  {
+    if (n>0) {$\hll$
+       hanoi(n-1, A, C, B);$\hl{3}$
+       move(A, C);$\hl{4}$
+       hanoi(n-1, B, A, C);$\hl{5}$
+    }
+  }$\hll$
+\end{java}\pauselevel{=2}
+\begin{center}
+  \multipdf[width=\linewidth]{solve_hanoi}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Optimality of Solution}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item This is optimal\pause\ because
+    \begin{itemize}
+    \item You have to move the largest disk from peg A to peg C\pause
+    \item We do this only once\pause
+    \item To make this move all the other disks must be on peg B\pause
+    \item Assuming that we solve the $n-1$ disk problem optimally then we
+      solve the $n$ disk problem optimally\pause
+    \item We solve the one disk problem optimally (i.e. we move it to
+      where it should go)\pause
+    \item This completes a proof by induction!\pause 
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Long Does It Take?}
+\pausebuild
+\begin{itemize}
+\item How many moves does it take to transfer $n$ disks?\pause
+\item We can use the same procedure as before
+\begin{java}
+  hanoi(n, A, B, C)
+  {
+    if (n>0) {
+       hanoi(n-1, A, C, B);
+       move(A, C);
+       hanoi(n-1, B, A, C);
+    }
+  }$\pause$
+\end{java}
+\begin{itemize}
+\item $T(n) = 2\,T(n-1) + 1$
+\item $T(0) = 0$\pause
+\end{itemize}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lets Enumerate}
+
+\begin{itemize}\squeeze
+\item $T(n) = 2\,T(n-1) + 1$\pause
+\item $T(0) = 0$\pause
+\item $T(1) = 2\times0 + 1 = 1$\pause
+\item $T(2) = 2\times1 + 1 = 2+1 = 3$\pause
+\item $T(3) = 2\times3 + 1 = 6+1 = 7$\pause
+\item $T(4) = 2\times7 + 1 = 14+1 = 15$\pause
+\item Looks like $T(n) = 2^n-1$\pause
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Proof by Recursion}
+
+\begin{itemize}
+\item $T(n) = 2\,T(n-1) + 1$
+\item $T(0) = 0$\pause
+\item We want to prove $T(n) = 2^n-1$\pause
+\item Base case: $T(0) = 2^0-1\pause=1-1\pause=0$\pause\,\tick\pause
+\item Recursive case:\pause\ Assume $T(n-1) = 2^{n-1}-1$\pause\ then
+  \begin{align*}
+    T(n) &= 2\,T(n-1) + 1\pause\\
+    T(n) &= 2\times(2^{n-1}-1) + 1\pause\\
+    T(n) &= 2^n - 2 + 1 \pause = 2^n - 1\pause\,\mbox{\tick}\pause
+  \end{align*}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Time Complexity of Recursion}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The time complexity for recursion can be tricky to
+    calculate\pause
+  \item The procedure is to calculate the time, $T(n)$, taken for a
+    problem of size $n$ in terms of the time taken for a smaller
+    problem\pause
+  \item The difficulty is to solve the recursion\pause
+  \item Recursive programs can be very quick (e.g. $O(\log n)$ for
+    computing integer powers)\pause
+  \item Recursive programs can also be very slow, (e.g. $O(2^n)$ for
+    towers of Hanoi)\pause
+  \item In case your interested, if it takes 1 second to move a disk it
+    will take almost $585\,000\,000\,000$ years to move 64 disks\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Recursion is a powerful tool for writing algorithms\pause
+  \item It often provides simple algorithms to otherwise complex
+    problems\pause
+  \item Recursion comes at a cost (extra function calls)\pause
+  \item There are times when you should avoid recursion (computing
+    Fibonacci numbers)\pause
+  \item You need to be able to analyse the time complexity of
+    recursion\pause
+  \item Used appropriately, recursion is fantastic!\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}

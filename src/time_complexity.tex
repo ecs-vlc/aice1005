@@ -1,0 +1,630 @@
+%Master File:lectures.tex
+
+\lesson{Know How Long A Program Takes}
+\vspace*{-1cm}
+\begin{center}
+\includegraphics[height=10cm]{timing}  
+\end{center}
+\keywords{TSP, Sorting, time complexity, Big-Theta, Big-O, Big-Omega}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{TSP}{intro}
+    \outlineitem{Sorting}{sort}
+    \outlineitem{Big O}{bigO}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{timing}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Travelling Salesperson Problem}
+
+\begin{itemize}
+\item Given a set of cities\pause
+\item A table of distances between cities\pause
+\item Find the shortest tour which goes through each city and returns to
+  the start\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Example of Distance Table}
+
+\begin{center}
+  \includegraphics[width=\textwidth]{tsp_table}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Example Tour}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=14cm]{tsp-europe}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Brute Force}
+
+\begin{minipage}{14cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item I wrote a program to solve TSP by enumerating every path and
+    finding the shortest\pause
+  \item I checked that it worked on some problems with 10 cities\pause
+  \item It takes just under half a second to solve this problem\pause
+  \item I set the program running on a 100 city
+      problem\pause---\emph{How long will it take to finish?}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{minipage}\hfill
+\begin{minipage}{9cm}
+\includegraphics[height=9cm]{tsp10}
+\end{minipage}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Many Possible Tours Are There?}
+
+\pausebuild
+\begin{minipage}{9cm}
+  \begin{center}
+    \includegraphics[width=9cm]{tsp_120}
+  \end{center}
+\end{minipage}\hspace{1cm}
+\begin{minipage}{12cm}\raggedright
+\begin{itemize}
+\item For 100 cities how many possible tours are there?\pause
+\item It doesn't matter where we start\pause
+\item Starting from Berlin there are 99 cites we can try next\pause
+\end{itemize}
+\end{minipage}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Counting Tours}
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{tsp-count0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{5}{%
+    \llap{\includegraphics[width=0.8\linewidth]{tsp-count\ia}}\mypl{\ib}}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Long Does It Take?}
+
+\begin{itemize}
+\item The direction we go in is irrelevant\pause
+\item Total number of tours is $99!/2$\pause
+\item \emph{Any more guesses how long it will take?}\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Big is 99 Factorial?}
+
+\begin{itemize}
+  \item $99!=99\cdot98\cdot97\cdots2\cdot1=?$\pause
+  \item Upper bound\pause
+    \begin{eqnarray*}
+      99! &=& 99\cdot98\cdot97\cdots2\cdot1\\
+      99! &<& \pause 99\cdot99\cdot99\cdots99\cdot99\pause = 99^{99}\pause
+    \end{eqnarray*}
+  \item Lower bound\pause
+    \begin{eqnarray*}
+      99! &=&        99\cdot98\cdot97\cdots50\cdot49\cdots2\cdot1 \\
+      99! &>& \pause 50\cdot50\cdot50\cdots50\cdot1\cdots1\cdot1
+      = 50^{50}\pause
+    \end{eqnarray*}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{How Long Does It Take?}
+\begin{itemize}
+\item For $N>1$
+  \begin{displaymath}
+    \left(\frac{N}{2}\right)^{N/2} < N! < N^N\pause
+  \end{displaymath}
+\item $99!/2 = 4.666\times10^{155}$\pause
+\item How long does it take to search all possible tours?\pause
+  \begin{itemize}
+  \item We computed about $200\,000$ tours in half a second\pause
+  \item $3.15\times10^7 \mbox{sec}=1$ year\pause
+  \item Age of Universe $\approx 15$ billion years\pause
+  \end{itemize}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Answer}
+\pause
+
+\begin{itemize}
+\item $2.72\times10^{132}$ ages of the universe!\pause
+\item Incidental
+  \begin{eqnarray*}
+    99!/2 &=&
+    46663107721972076340849619428133350\\
+    &&24535798413219081073429648194760879\\
+    &&99966149578044707319880782591431268\\
+    &&48960413611879125592605458432000000\\
+    &&0000000000000000
+  \end{eqnarray*}\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Record TSP Solved---$15\,112$ and $24\,978$ Cities}
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=17cm]{record_tsp}\hspace{1cm}
+  \includegraphics[height=17cm]{swtour}
+\end{center}
+\vspace{-2cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{In Case You're Curious}
+\begin{itemize}
+\item Number of tours: $15111!/2 = 7.3\times10^{56592}$\pause
+\item Current record $24\,978$ cities with $1.9\times10^{98992}$ tours\pause
+\item The algorithm for finding the optimum path does not look at every
+  possible path\pause
+\item If your interested look for the TSP homepage on the web\\
+  \texttt{http://www.math.uwaterloo.ca/tsp/}\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+\vspace{-1cm}
+\begin{itemize}
+\item Even relatively small problems can take you an astronomical
+  time to solve using simple algorithms\pause
+\item As a professional programmer you need to have an estimate for
+  how long an algorithm takes\pause---otherwise you can look silly\pause
+\item For the 100 city problem, if 
+  \begin{itemize}
+  \item I had $10^{87}$ cores\pause, one for every particle in
+    the Universe\pause
+  \item I could compute a tour distance in $3\times10^{-24}$ seconds\pause,
+    the time it takes light to cross a proton\pause
+  \item It would still take $10^{39}\times$ the age of the universe\pause
+  \end{itemize}
+\item Smart algorithms can make a much larger difference than fast
+  computers!\pause
+\end{itemize}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Sort}
+
+\begin{itemize}
+\item Comparison between common sort algorithms
+  \begin{itemize}
+  \item Insertion sort---an easy algorithm to code
+  \item Shell sort---invented in 1959 by Donald Shell
+  \item Quick sort---invented in 1961 by Tony Hoare
+  \end{itemize}\pause
+\item These take an array of numbers and returns a sorted array\pause
+\item Sort is very commonly used algorithm\pause\ so you care about how
+  long it takes\pause
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Empirical Run Times}
+
+\begin{center}
+  \includegraphics[height=15cm]{sortTimes}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There is a right and wrong way to do easy problems\pause
+  \item You only really care when you are dealing with large inputs\pause
+  \item Good algorithms are difficult to come up with, but they
+    exist\pause
+  \item We would like to quantify the performance of an
+    algorithm\pause---how much better is quick sort than insertion
+    sort?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Estimating Run Times}
+
+\vspace{-1cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We would like to estimate the run times of algorithms\pause
+  \item This depends on the hardware (how fast is your computer)\pause
+  \item We could count number of elementary operations\pause, but
+    \begin{itemize}
+    \item different machines have different elementary operations\pause
+    \item many algorithms use complex functions such as \texttt{sqrt}
+      (matrix inversion using Cholesky decomposition) or \texttt{sin} and
+      \texttt{cos} (FFT)\pause
+    \item would need to count memory accesses which you shouldn't need
+      to think about\pause
+    \item code after compiling can be very different from code before
+      compiling \pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Engineering Solution}
+
+\vspace{-1cm}
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Compute the \emph{asymptotic leading functional behaviour}\pause
+  \item Lets take that statement to pieces\pause
+  \item Suppose we have an algorithm that takes $4 n^2 + 12 n + 199$
+    operations (clock cycles)
+    \begin{itemize}
+    \item \emph{asymptotic}: what happens when $n$ becomes very
+      large\pause
+    \item \emph{leading}: ignore the $12 n + 199$ part as it is
+      dominated by $4 n^2$ (i.e. for large enough $n$ we have $4 n^2 \gg
+      12 n + 199$)\pause
+    \item \emph{functional behaviour}: ignore the constant $4$\pause
+    \end{itemize}
+  \item We call this an order $n^2$, or quadratic time, algorithm\pause
+  \item We can write this in `Big-Theta' notation as $\Theta(n^2)$\pause
+  \item This notion of `run time' is known as \emph{time complexity} \pause
+  \end{itemize}
+\end{PauseHighLight}
+\vspace{-1cm}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Advantages of Big-Theta Notation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Doesn't depend on what computer we are running\pause
+  \item Don't need to know how many elementary operations are required for
+    a non-elementary operation\pause
+\item Can estimate run times by measuring run time on a small problem
+  \begin{itemize}
+  \item If I have a $\Theta(n^2)$ algorithm
+  \item It takes $x$ seconds on an input of $100$
+  \item It will take about $\frac{x\times n^2}{100^2}$ seconds on a
+    problem of size $n$\pause\\
+    ($T(100) \approx c\,100^2 = x$ therefore $c = x/100^2$\\
+    \,thus $T(n) = c\,n^2 = x\,n^2/100^2$) 
+  \end{itemize}\pause
+\end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Counting Instructions}
+
+\vspace{-1cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+\item Big-Theta run times are often easy to calculate\pause
+\item a $\Theta(n)$ algorithm
+\begin{java}
+// define stuff
+for(int i=0; i<n; i++)  {
+  // do something
+}
+// clean up $\pause$
+\end{java}\vspace*{-1cm}
+\item a $\Theta(n^2)$ algorithm
+\begin{java}
+// define stuff
+for(int i=0; i<n; i++)  {
+  // do something
+  for (int j=0; j<n; j++) {
+    // do other stuff
+  }
+}
+// clean up $\pause$
+\end{java}\vspace*{-1cm}
+\end{itemize}
+\end{PauseHighLight}
+
+\vspace{-1cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Disadvantage with Big-Theta notation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Can't compare algorithms with the same Big-Theta time
+    complexity\pause
+  \item For small inputs Big-Theta time complexity can be
+    misleading.\pause\  E.g.
+    \begin{itemize}
+    \item algorithm A takes $n^3 + 2n^2+5$ operations
+    \item algorithm B takes $20 n^2 +100$ operations
+    \item algorithm A is $\Theta(n^3)$ and algorithm B is $\Theta(n^2)$
+    \item algorithm A is faster than algorithm B for $n<18$\pause
+    \end{itemize}
+    but who cares?\pause
+  \item In some cases Big-Theta time complexity is hard to compute\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Not So Sure}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Some algorithms are harder to compute
+\begin{java}
+// define stuff
+for(int i=0; i<n; i++)  {
+  // do something
+  if (/* some condition */) {
+    for (int j=0; j<n; j++) {
+      // do other stuff
+    }
+  }
+}
+// clean up $\pause$
+\end{java}\vspace{-0.5cm}
+\item Time complexity now depends on the \texttt{if} statement\pause
+\item If the condition is often satisfied we have a $\Theta(n^2)$
+  algorithm\pause
+\item If the condition is true only rarely then we have a $\Theta(n)$
+  algorithm\pause
+\end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Bounds}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To avoid having to think really hard we define upper and lower
+    bounds\pause
+  \item The upper bound we write using \emph{big-O} notation
+    \begin{itemize}
+    \item The above algorithm is an $O(n^2)$ algorithm
+    \item I.e. it runs in no more than order $n^2$ operations
+    \end{itemize}\pause
+  \item The lower bound we write using \emph{big-Omega} notation
+    \begin{itemize}
+    \item The above algorithm is a $\Omega(n)$ algorithm
+    \item I.e. it runs in no less than order $n$ operations
+    \end{itemize}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Precise Definitions of $O(n)$}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An algorithm that runs in $f(n)$ operations is $O(g(n))$ if
+    \begin{displaymath}
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} = c \qquad
+      \mbox{where $c$ is a constant (could be zero)}\pause
+    \end{displaymath}
+  \item E.g.. $f(n)=3\,n^2 + 2\,n + 12$
+    \begin{align*}
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} &=
+      \lim_{n\rightarrow\infty} \frac{3\,n^2 + 2\,n + 12}{n^2} = 3\pause &
+      \Rightarrow 3\,n^2 + 2\,n + 12 = O(n^2)\pause\\
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} &=
+      \lim_{n\rightarrow\infty} \frac{3\,n^2 + 2\,n + 12}{n^3} = 0\pause
+      &
+      \Rightarrow 3\,n^2 + 2\,n + 12 = O(n^3)\pause\\
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} &=
+      \lim_{n\rightarrow\infty} \frac{3\,n^2 + 2\,n + 12}{n} =
+      \infty\pause &
+      \Rightarrow 3\,n^2 + 2\,n + 12 \neq O(n)\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lower Bound Definition}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An algorithm that runs in $f(n)$ operations is $\Omega(g(n))$ if
+    \begin{displaymath}
+      \lim_{n\rightarrow\infty} \frac{g(n)}{f(n)} = c \qquad
+      \mbox{where $c$ is a constant (could be zero)}\pause
+    \end{displaymath}
+  \item E.g. $f(n)=3\,n^2 + 2\,n + 12$
+    \begin{align*}
+      \lim_{n\rightarrow\infty} \frac{g(n)}{f(n)} &=
+      \lim_{n\rightarrow\infty} \frac{n^2}{3\,n^2 + 2\,n + 12}
+      = \frac{1}{3}\pause &
+      \Rightarrow 3\,n^2 + 2\,n + 12 = \Omega(n^2)\pause
+      \\
+      \lim_{n\rightarrow\infty} \frac{g(n)}{f(n)} &=
+      \lim_{n\rightarrow\infty} \frac{n^3}{3\,n^2 + 2\,n + 12} =
+      \infty\pause &
+      \Rightarrow 3\,n^2 + 2\,n + 12 \neq \Omega(n^3)\pause
+      \\
+      \lim_{n\rightarrow\infty} \frac{g(n)}{f(n)} &=
+      \lim_{n\rightarrow\infty} \frac{n}{3\,n^2 + 2\,n + 12} = 0\pause &
+      \Rightarrow 3\,n^2 + 2\,n + 12 = \Omega(n)\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Big-Theta}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An algorithm that runs in $f(n)$ operations is $\Theta(g(n))$ if
+    \begin{displaymath}
+      \lim_{n\rightarrow\infty} \frac{g(n)}{f(n)} = c \qquad
+      \mbox{where $c$ is a non-zero constant}\pause
+    \end{displaymath}
+  \item That is, $f(n)=\Theta(g(n))$ if
+    \begin{displaymath}
+      f(n) = O(g(n)) \quad \mbox{and} \quad f(n) = \Omega(g(n))\pause
+    \end{displaymath}
+  \item I.e. the lower bound is identical to the upper bound\pause
+  \item Often the most straightforward way of obtaining big-Theta is to
+    show the upper and lower bounds are the same\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Use and Misuse}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Note: big-O notation is most commonly used\pause
+  \item often people say they have a $O(n^2)$ when in fact they mean
+    they have a $\Theta(n^2)$ algorithm (a much stronger result)\pause
+  \item Note that an $O(n^2)$ algorithm is also a $O(n^3)$ algorithm\pause
+  \item Strictly a $O(n^2)$ algorithm \emph{may not} be faster than a
+    $O(n^3)$ algorithm when $n$ becomes larger\pause
+  \item A $\Theta(n^2)$ algorithm \emph{will} be faster than a $\Theta(n^3)$
+    algorithm when $n$ becomes larger\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons to Learn}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Run times (computational time complexity) matters\pause
+  \item Choosing an algorithm with the best time complexity is
+    important\pause
+  \item Understand the meaning of big-Theta, big-O and big-Omega\pause
+  \item Know how to estimate time complexity for simple algorithms (loop
+    counting)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}

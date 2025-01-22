@@ -1,0 +1,717 @@
+%Master File:lectures.tex
+
+\begin{slide}
+\lesson{Keep Trees Balanced}
+
+\vspace*{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{unbalanced_tree}
+\end{center}
+
+\keywords{AVL trees, red-black trees, TreeSet, TreeMap}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Deletion}{deletion}
+    \outlineitem{Balancing Trees}{balance}
+    \begin{itemize}
+    \item \toplink{rotations}{Rotations}
+    \end{itemize}
+    \outlineitem{AVL}{avl}
+    \outlineitem{Red-Black Trees}{rb}
+    \begin{itemize}
+    \item \toplink{treeset}{TreeSet}
+    \item \toplink{treemap}{TreeMap}
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{14cm}
+  \includegraphics[width=14cm]{Lopsided_tree}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Recap}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Binary search trees are commonly used to store data because we
+    need to only look down one branch to find any element\pause
+  \item We saw how to implement many methods of the binary search tree
+    \begin{itemize}
+    \item \texttt{find}
+    \item \texttt{insert}
+    \item \texttt{successor} (in outline)\pause
+    \end{itemize}
+  \item One method we missed was \texttt{remove}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Deletion}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item Suppose we want to delete some elements from a tree\pauseh
+\item It is relatively easy if the element is a leaf node (e.g. 50)
+  \pauselevel{=1, highlight =2 :4}\pause
+\item It is not so hard if the node has one child (e.g. 20)
+  \pauselevel{=1, highlight =5 :7}\pause
+\end{itemize}
+\begin{center}\color{TextColor}\setlength{\unitlength}{1mm}
+  \begin{picture}(160,80)
+    \put(0,0){\includegraphics[width=16cm]{tree1.mps}}\pauselevel{=1 :3}\pause
+    \put(-10,70){\jl$remove(50)$}\pauselevel{=3 :3}\pause
+    \put(80,43){\circle{12}}\pauselevel{=3 :3}\pause
+    \put(0,0){\includegraphics[width=16cm]{tree2.mps}}\pauselevel{=4 :6}\pause
+    \put(-10,70){\jl$remove(20)$}\pauselevel{=6 :6}\pause
+    \put(62,61){\circle{12}}\pauselevel{=6 :6}\pause
+    \put(0,0){\includegraphics[width=16cm]{tree3.mps}}\pauselevel{=7}\pause
+  \end{picture}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Code to remove Node $n$}
+
+\begin{PauseHighLight}
+\begin{minipage}{11cm}
+\begin{java}
+  if (n->left==0 && n->right==0) {
+     if (n == n->parent->left)
+        n->parent->left = 0;
+     else
+        n->parent->right = 0;$\pause$
+  } else if (n->right==0) {
+     if (n == n->parent->left)
+        n->parent->left = n->left;
+     else
+        n->parent->right = n->left;
+     n->left->parent = n->parent;$\pause$
+  } else if (n->left==0) {
+     if (n == n->parent->left)
+        n->parent->left = n->right;
+     else
+        n->parent->right = n->right;
+     n->right->parent = n->parent;
+  }$\pause$
+  delete n;$\pause$
+\end{java}
+\end{minipage}\hspace{1cm}\pauselevel{=1}
+\begin{minipage}{11cm}
+  \multiinclude[graphics={width=10cm}]{tree-remove}\pause
+\end{minipage}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Removing Element with Two Children}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item If an element has two children then
+  \pauselevel{=1, highlight =1}\pause
+  \begin{itemize}
+  \item replace that element by its successor
+  \pauselevel{=1, highlight =2, highlight =5 :6}\pause
+  \item  and then remove the successor using the above procedure
+  \pauselevel{=1, highlight =2, highlight =7}\pause
+  \end{itemize}
+\begin{center}\color{TextColor}\setlength{\unitlength}{1mm}
+  \begin{picture}(160,80)
+    \thicklines
+    \put(0,0){\includegraphics[width=14cm]{tree3.mps}}\pauselevel{=3 :7}\pause
+    \put(-10,80){\jl$remove(80)$}\pauselevel{=4 :7}\pause
+    {    \color{red}
+    \put(82,69){\circle{10}}\pauselevel{=4 :7}\pause
+    \put(96,38){\circle{10}}\pauselevel{=5 :7}\pause
+    \put(94,43){\vector(-1,2){11}}\pauselevel{=6 :6}\pause
+    \put(82,68){\makebox(0,0){\cross}}
+    \put(92,68){\makebox(0,0){\bf 90}}\pauselevel{=6 :7}\pause
+    \put(96,38){\makebox(0,0){\cross}}
+    \put(106,26){\line(1,4){6}}\pauselevel{=7 :7}\pause
+    } \color{TextColor}
+    \put(0,0){\includegraphics[width=14cm]{tree4.mps}}\pauselevel{=8 :8}\pause
+  \end{picture}
+\end{center}
+
+\end{itemize}
+
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Balancing trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Why Balance Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The number of comparisons to access an element depends on the
+    depth of the node\pause
+  \item The average depth of the node depends on the shape of the
+    tree\pause
+    \begin{center}
+      \multiinclude[graphics={width=\linewidth}]{tree_shape}\pause
+    \end{center}
+  \item The shape of the tree depends on the order the elements are
+    added\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In the best situation (a full tree) the number of elements in a
+    tree is $n=\Theta(2^l)$ the depth is $l$ so that the maximum depth is
+    $\log_2(n)$\pause
+  \item It turns out for random sequences the average depth is
+    $\Theta(\log(n))$\pause
+  \item In the worst case (when the tree is effectively a linked list),
+    the average depth is $\Theta(n)$\pause
+  \item Unfortunately, the worst case happens when the elements are
+    added \textit{in order} (not a rare event)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Rotations}
+\toptarget{rotations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To avoid unbalanced trees we would like to modify the
+    shape\pauseh
+  \item This is possible as the shape of the tree is not uniquely
+    defined (e.g. we could make any node the root)\pauseh
+  \item We can change the shape of a tree using \emph{rotations}\pauseh
+  \item E.g. left rotation
+  \begin{center}
+    \includegraphics[height=8cm]{left-rotation}\pause
+  \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Types of Rotations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can get by with 4 types of rotations\pause
+    \begin{itemize}
+    \item Left rotation (as above)\pause
+    \item Right rotation (symmetric to above)
+    \begin{center}
+      \includegraphics[height=8cm]{right-rotation}\pause
+    \end{center}
+    \item Left-right double rotation\pause
+    \item Right-left double rotation\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Coding Rotations}
+
+\begin{minipage}{10cm}
+\begin{java}
+void rotateLeft(Node<T>* e)$\pause$
+{
+  Node<T>* r = e->right;$\pause$
+  e->right = r->left;$\pause$
+  if (r->left != 0)
+     r->left->parent = e;$\pause$
+  r->parent = e->parent;$\pause$
+  if (e->parent == 0)
+     root = r;
+  else if (e->parent->left == e)
+     e->parent->left = r;
+  else
+     e->parent->right = r;$\pause$
+  r->left = e;
+  e->parent = r;
+}$\pause$
+\end{java}
+\end{minipage}
+\begin{minipage}{14cm}
+\vspace*{-1ex}
+\includegraphics[width=14cm]{left-rotation1}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{When Single Rotations Work}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Single rotations balance the tree when the unbalanced subtree is
+    on the outside
+    \begin{center}
+      \includegraphics[width=0.45\linewidth]{left-rotation}\hfil
+      \includegraphics[width=0.45\linewidth]{right-rotation}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Double Rotations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If the unbalanced subtree is on the inside we need a double
+    rotation
+    \begin{center}
+      \includegraphics[width=\linewidth]{left-right-rotation}\pause
+    \end{center}
+    \begin{java}
+      leftRotation(C.left);
+      rightRotation(C);$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % AVL Trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Balancing Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are different strategies for using rotations for balancing
+    trees\pause
+  \item The three most popular are
+    \begin{itemize}
+    \item AVL-trees
+    \item Red-black trees
+    \item Splay trees\pause
+    \end{itemize}
+  \item They differ in the criteria they use for doing rotations\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{AVL Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item AVL-trees were invented in  1962 by two Russian mathematicians
+    Adelson-Velski and Landis\pause
+  \item In AVL trees
+    \begin{enumerate}
+    \item The heights of the left and right subtree differ by at most
+      1\pause
+    \item The left and right subtrees are AVL trees\pause
+    \end{enumerate}
+  \item This guarantees that the worst case AVL tree has logarithmic
+    depth\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Minimum Number of Nodes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Let $m(h)$ be the minimum number of nodes in a tree of height
+  $h$\pause
+  \item This has to be made up of two subtrees: one of height $h-1$; and, in
+    the worst case, one of height $h-2$\pause
+  \item Thus, the least number of nodes in a tree of height $h$ is
+    \begin{minipage}{12cm}
+   \begin{align*}
+      m(h) = m(h-1) + m(h-2) + 1
+    \end{align*}
+    \end{minipage}
+    \begin{minipage}{10cm}
+      \begin{center}
+        \includegraphics[width=9cm]{min-nodes}\pause
+      \end{center}
+    \end{minipage}
+  \item with $m(1)=1$, $m(2)=2$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Proof of Exponential Number of Nodes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We have $m(h) = m(h-1) + m(h-2) + 1$ with $m(1)=1$, $m(2)=2$\pause
+  \item This gives us a sequence $1, 2, 4, 7, 12, \cdots$\pause
+  \item Compare this with Fibonacci $f(h)=f(h-1) + f(h-2)$, with
+    $f(1)=f(2)=1$ \pause
+  \item This gives us a sequence $1, 1, 2, 3 ,5, 8, 13, \cdots$\pause
+  \item It looks like $m(h) = f(h+2) -1$\pause
+  \item Proof by substitution\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Proof of Logarithmic Depth}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item $m(h) = m(h-1) + m(h-2) + 1$ with $m(1)=1$, $m(2)=2$\pause
+  \item We can prove by inductions, $m(h) \geq (3/2)^{h-1}$\pause
+  \item $m(1)=1 \geq (3/2)^0 = 1$, $m(2)=2 \geq (3/2)^1 =3/2$\pause\,
+    \tick\pauseb
+    \begin{align*} \scriptstyle
+      m(h) \geq \left(\frac{3}{2}\right)^{h-3} \left(\frac{3}{2} +1 +
+      \left(\frac{3}{2}\right)^{3-h} \right) \pause \geq
+      \left(\frac{3}{2}\right)^{h-3} \frac{5}{2} \pause =
+      \left(\frac{3}{2}\right)^{h-3} \frac{10}{4} \pause
+      \geq \left(\frac{3}{2}\right)^{h-3} \frac{9}{4} \pause =
+      \left(\frac{3}{2}\right)^{h-1} \pause \, \mbox{\tick}\pauseb
+    \end{align*}
+  \item Taking logs: $\log(m(h)) \geq (h-1) \log(3/2)$ or
+    \begin{align*}
+      h \leq \frac{\log(m(h))}{\log(3/2)} +1 =
+      O\left(\strut\log(m(h))\right)\pause 
+    \end{align*}
+  \item The number of elements, $n$, we can store in an AVL tree is
+    $n\geq m(h)$ thus
+    \begin{align*}
+      h \leq O(\log(n))\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Implementing AVL Trees}
+
+\pb
+\begin{itemize} \small
+\item In practice to implement an AVL tree we include additional
+  information at each node indicating the balance of the subtrees\pauseh
+  \begin{align*}
+    \mbox{\texttt{balanceFactor}} = \left\{
+      \begin{array}{rcl}
+        -1 & & \mbox{right subtree deeper than left subtree} \\
+        0  & & \mbox{left and right subtrees equal}\\
+        +1 & & \mbox{left subtree deeper than right subtree}\pauseh
+      \end{array}\right.
+  \end{align*}
+\end{itemize}
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{avl-0.pdf}\mypl{3}
+  \multido{\ia=1+1,\ib=4+1}{36}{%
+    \llap{\includegraphics[width=0.8\linewidth]{avl-\ia.pdf}}\mypl{\ib}}
+\end{center}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Balancing AVL Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When \texttt{add}ing an element to an AVL tree\pause
+    \begin{itemize}
+    \item Find the location where it is to be inserted\pause
+    \item Iterate up through the parents re-adjusting the
+      \texttt{balanceFactor}\pause
+    \item \textbf{If} the balance factor exceeds $\pm1$ \texttt{then}
+      re-balance the tree and stop\pause
+    \item \texttt{else if} the balance factor goes to zero \textbf{then}
+      stop\pause
+    \end{itemize}
+    \begin{center}
+      \includegraphics[width=\linewidth]{avl-left-rotation}\pause
+    \end{center}
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{AVL Deletions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item AVL deletions are similar to AVL insertions\pause
+  \item One difference is that after performing a rotation the tree may
+    still not satisfy the AVL criteria so higher levels need to be
+    examined\pause
+  \item In the worst case $\Theta(\log(n))$ rotations may be necessary\pause
+  \item This may be relatively slow\pause---but in many applications
+    deletions are rare\pause
+  \end{itemize}
+ \end{PauseHighLight}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{AVL Tree Performance}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Insertion, deletion and search in AVL trees are, at worst,
+    $\Theta(\log(n))$\pause
+  \item The height of an average AVL tree is $1.44\log_2(n)$\pause
+  \item The height of an average binary search tree is
+    $2.1\log_2(n)$\pause
+  \item Despite being more compact insertion is slightly slower in AVL
+    trees than binary search trees without balancing (for random input
+    sequences)\pause
+  \item Search is, of course, quicker\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Red-Black Trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Red-Black Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Red-black trees are another strategy for balancing trees\pause
+  \item Nodes are either \textit{red} or \textit{black}\pause
+  \item Two rules are imposed\pause
+    \begin{description}
+    \item[\textit{Red Rule:}] the children of a red node must be
+      black\pause
+  \item[\textit{Black Rule:}] the number of black elements must be the
+    same in all paths from the root to elements with no children or with
+    one child\pause
+    \end{description}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[height=7cm]{red-black-tree}\pauselevel{build =1}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Restructuring}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}\squeeze
+\item When inserting a new element we first find its position\pause
+\item If it is the root we colour it black otherwise we colour it
+  red\pauseh
+\item If its parent is red we must either relabel or restructure the
+  tree\pauseh
+\end{itemize}
+\begin{center}\color{TextColor}
+  \multiinclude[graphics={height=10cm}]{red-black-tree-insert}\pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Performance of Red-Black Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Red-black trees are slightly more complicated to code than AVL
+    trees\pause 
+  \item Red-black trees tend to be slightly less compact than AVL
+    trees\pause
+  \item However, insertion and deletion run slightly quicker\pause
+  \item Both Java Collection classes and C++ STL use red-black
+    trees\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Set}
+\toptarget{treeset}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The standard template library (STL) has a class
+    \jl$std::set<T>$\pause
+  \item It also has a \jl$std::underordered_set<T>$ class (which uses a
+    hash table covered later)\pause
+  \item As well as \jl$std::multiset<T>$ that implements a multiset
+    (i.e. a set, but with repetitions)\pause
+  \item Using sets you can also implement \emph{maps}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Maps}
+\toptarget{treemap}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One major abstract data type (ADT) we have not encountered is
+    the map class\pause
+  \item The map class \jl$std:map<Key,V>$ contain key-value pairs \jl$pair<Key,V>$\pause
+    \begin{itemize}
+    \item The first element of type \texttt{Key} is the \emph{key}\pause
+    \item The second element of type \texttt{V} is the \emph{value}\pause
+    \end{itemize}
+  \item Maps work as content addressable arrays\pause
+    \begin{java}
+      map<String,Integer> students;
+      student["John Smith"] = 89;
+      student["Terry Jones"] = 98;
+      cout << students["John Smith"];
+    \end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Implementing a Map}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Maps can be implemented using a set by making each node
+    hold a \texttt{pair<K,V>} objects\pause
+    \begin{java}
+      class pair<K,V> 
+      {
+        public:
+        K first;
+        V second;
+      }$\pause$
+    \end{java}
+  \item We can count words using the key for words and value to count
+  \end{itemize}
+  \begin{center}\color{TextColor}
+    \includegraphics[width=\linewidth]{hamlet-cnt.eps}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Binary search trees are very efficient (order $\log(n)$
+    insertion, deletion and search) provided they are balanced\pause
+  \item Balanced trees are achieved by performing rotations\pause
+  \item There are different strategies for deciding when to rotate
+    including
+    \begin{itemize}
+    \item AVL trees
+    \item Red-black trees\pause
+    \end{itemize}
+  \item Binary trees are used for implementing \emph{sets} and
+    \emph{maps}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

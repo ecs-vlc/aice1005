@@ -1,0 +1,591 @@
+%Master File:lectures.tex
+\renewcommand{\class}[1]{\textsf{#1}}
+
+\lesson{Solving Linear Programs}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{Simplex_description.png}
+\end{center}
+\keywords{linear programming, simplex methods, iterative search}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Recap}{recap}
+    \outlineitem{Basic Feasible Solutions}{bfs}
+    \outlineitem{Simplex Method}{simplexMethod}
+    \outlineitem{Classic LP Problems}{lpprobs}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{Simplex_description.png}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline %
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Recap}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear programs are problems that can be formulated as follows
+    \begin{align*}
+      &\min_{\bm{x}} \bm{c}\cdot \bm{x} \\
+      \text{subject to}&\\
+      &\mat{A}^{\scriptscriptstyle \leq} \bm{x} \leq
+      \bm{b}^{\scriptscriptstyle \leq},  \quad
+      \mat{A}^{\scriptscriptstyle \geq} 
+      \bm{x} \geq \bm{b}^{\scriptscriptstyle \geq}, \quad 
+      \mat{A}^{\scriptscriptstyle =} \bm{x} = \bm{b}^{\scriptscriptstyle
+        =}, \quad \bm{x} \geq \bm{0}\pause 
+    \end{align*}
+  \item Where $\bm{x} = (x_1,\,x_2,\,\ldots,\,x_n)$\pause
+  \item $\mat{A}^{*}$ are matrices and we interpret the inequalities to
+    mean
+    \begin{align*}
+      \forall k \quad\quad \sum_{j=1}^n A_{kj}^{\scriptscriptstyle \leq}
+      x_j \leq  b^{\scriptscriptstyle \leq}_k\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Optima and Vertices}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Because the objective function is linear ($\bm{c}\cdot \bm{x}$)
+    there is a direction where the objective is always improving\pause
+  \item Thus, the optima cannot lie in the interior of the search space\pause
+  \item When we meet a constraint that limits the direction we can move,
+    but we can still move along the constraint\pause
+  \item We then meet another constraint which restricts the direction we
+    can move by two degrees of freedom\pause
+  \item Eventually, we will reach $n$ constraints which defines a vertex
+    of the feasible region and is optimal\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Transforming Linear Programs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can always transform an inequality constraint into an
+    equality constraint by adding slack variables
+  \item E.g.
+    \begin{align*}
+      \bm{a}_1\cdot\bm{x} &\geq 0 &\Rightarrow& &
+      \bm{a}_1\cdot\bm{x} - z_1 &=0 \quad z_1 \geq 0 \\ 
+      \bm{a}_2\cdot\bm{x} &\leq 0 &\Rightarrow& &
+      \bm{a}_2\cdot\bm{x} + z_2 &=0 \quad z_2 \geq 0
+    \end{align*}
+    $z_1$ (the excess) and $z_2$ (the deficit) are known as slack
+    variables\pause
+  \item A linear program with just equality constraints is said to be in
+    normal form\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Basic Feasible Solutions
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Basic Feasible Solution}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A \textit{basic feasible solution} or \textit{basic feasible
+      point} is a solution that lies at a vertex of the feasible space\pause
+  \item To solve a linear program we will start at a basic feasible
+    point and move to the neighbour which best improves the objective
+    function\pause
+  \item When we cannot find a better solution we are at the optimal
+    solution\pause
+  \item This is an example of an iterative improvement algorithm which
+    gives an optimal solution\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Constraints}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are two types of constraints
+    \begin{enumerate}
+    \item $n$ non-negativity constraints $x_i>0$
+    \item $m$ additional constraints, which we can take to be equalities
+      $\mat{A}\bm{x} = \bm{b}$\pause
+    \end{enumerate}
+  \item Note that some of the variables might be slack variables\pause
+  \item We consider the case when there are more variables than
+    additional constraints, i.e. $n>m$\pause
+  \item This is usually be the case, but\ldots\pause
+  \item If this isn't true it turns out you can consider an equivalent
+    problem (dual problem) where you have a variable for each constraint
+    and a constraint for each variable\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Basic Variable}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In total we have $n+m$ constraints\pause
+  \item $n$ constraints must be satisfied to be at a vertex of feasible
+    region\pause
+  \item So at least $n-m$ of the non-negativity constraints are
+    satisfied (i.e. $x_i=0$)\pause
+  \item The $n-m$ variables that are zero are said to be \emph{non-basic
+    variables}\pause
+  \item The other $m$ variables are said to be \emph{basic variables}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Initial Basic Feasible Solution}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One of the tricky bits of tackling a linear program is to find
+    an initial feasible solution\pause
+  \item We do this in \emph{phase one} of the simplex program\pause
+  \item To do this for each additional constraint we add a new
+    \emph{auxiliary variable} $\xi_k$, e.g.
+    \begin{align*}
+     \forall\, k\in\{1,2,\ldots, m\} \quad\quad
+     \xi_k + \sum_i A_{ki} x_i &= b_k  \geq 0 \pause
+    \end{align*}
+  \item We then can find a basic feasible solution by setting $x_i=0$ so
+    \begin{align*}
+      \xi_k &= b_k  \quad \forall\, k\in\{1,2,\ldots, m\}\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Eliminating Auxiliary Variables}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In phase one we run a simplex algorithm with an auxiliary cost
+    function
+    \begin{align*}
+      \min f_{\text{\tiny aux}}(\bm{x},\bm{\xi}) = \sum_{k=1}^m \xi_k \pause
+    \end{align*}
+  \item This should find a solution where all the $\xi_k=0$\pause
+  \item If no solution exists it means there is no feasible solution and
+    we're finished\pause
+  \item If there is a solution then we can eliminate the auxiliary
+    variables and we have a feasible solution\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Simplex Method
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Phase Two}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In phase two we now have an initial basic feasible solution
+    (with $n-m$ zero variables)\pause
+  \item We then run the simplex algorithm on the original objective
+    function $f(\bm{x}) = \bm{c} \cdot \bm{x}$\pause
+  \item That is we move to a neighbouring vertex which gives the best
+    increase in the objective function\pause
+  \item To help organise this search we write the objective function and
+    constraints in a \emph{restricted normal form} and then build a
+    \emph{tableau} showing the basic variables and the non-basic
+    variables\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Restricted Normal Form}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To perform the moves between vertices it helps to represent the
+    problem in a \emph{restricted normal form}\pause
+  \item Starting from a basic feasible point we have a constraint for
+    each basic (non-zero) variable\pause
+  \item We write the constraints as an equality between basic and
+    non-basic (zero valued) variables\pause
+  \item Similarly we write the objective function in terms of non-basic
+    variables\pause
+  \item This is always possible as we can use the constraints to
+    eliminate the basic variables\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Tableau}
+
+\pb
+\pause \pauselevel{=1}
+\begin{center}
+  \multipdf[width=\linewidth]{simplexAlg}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Awkward Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If there are any column with all entries positive then this
+    variable can be increase forever---this is a signal that the linear
+    programming problem is unbounded\pause
+  \item You can also find that a basic variable becomes zero---this is
+    known as a degenerate feasible vector\pause
+  \item It can by removed by exchanging variables on the left of the
+    inequality with variables on the right\pause
+  \item This makes the algorithm a bit more complex to implement\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{High Performance Solvers}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Although the tableau method is the ``classic solver'' it doesn't
+    cut the mustard for large scale problems\pause
+  \item The simplex update can also be viewed as solving a linear set of
+    equations which is facilitated by performing an LU-decomposition\pause
+  \item However, the constraints are often very sparse so good solvers
+    try to take advantage of the sparsity\pause
+  \item Top end simplex algorithms are rather complex\pause
+  \item There is a second approach known as the interior point method
+    which is competitive on large problems\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity of Simplex}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The time complexity of the updates is $O(n^2)$\pause
+  \item The critical question is how many updates are necessary\pause
+  \item It turns out that typically this is $O(n)$ making the simplex
+    algorithm $O(n^3)$\pause
+  \item However, it is possible to cook up problems where there is a
+    ``long path'' from the initial solution to the optimum which is
+    exponentially big\pause
+  \item Thus the worst case time is exponential, although this almost
+    never happens in practice\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Interior Point Method}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An alternative to the simplex method is the interior point
+    method which always remains in the feasible region, away from the
+    constraints\pause
+  \item These method iterate towards the constraints and are provably
+    polynomial\pause
+  \item For small linear programming problems they are out-performed in
+    practice by the simplex method\pause
+  \item On large and very large problems they seem to perform as well if
+    not better than the simplex method\pause
+  \item The high-end solvers will have a variety of interior point
+    methods tailored to the particular problem\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Classic LP Problems
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{LP Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Any problem that can be set up as a linear program can be solved
+    in polynomial time\pause
+  \item One way is just to feed it to a LP-solver\pause
+  \item Sometimes the problems are important enough and have such a
+    distinctive formulation that faster specialised algorithms have been
+    developed\pause
+  \item We consider a couple of classic problems: \textit{maximum flow}
+    and \textit{linear assignment}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Maximum Flow}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In maximum flow we consider a directed graph representing a
+    network of pipes\pause
+  \item We choose one vertex as the source and a second vertex as a
+    sink\pause
+  \item Each edge has a flow capacity that cannot be exceeded\pause
+  \item The problem is to maximise the flow between source of sink\pause
+  \item This can be used to model the flow of a fluid, parts in an
+    assembly line, current in an electrical circuit or packets through a
+    communication network\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Example}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Consider a firm that has to ship haggis from Edinburgh to
+    Southampton\pause
+  \item The shipping firm transports this in crates which it sends
+    through intermediate cities\pause
+  \item The number of crates is limited by the size of the lorries it
+    uses\pause
+    \begin{center}
+      \includegraphics[width=0.6\linewidth]{maxFlow}
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Flow}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We are given a directed graph $\mathcal{G} = (\mathcal{V},
+    \mathcal{E})$ where each edge has a capacity $c(i,j)$\pause
+  \item We define the flow from $i$ to $j$ as $f(i,j)$ with $0 \leq
+    f(i,j) \leq c(i,j)$\pause
+  \item For all vertices except the source ($s$) and sink ($t$) we assume
+    \begin{align*}
+      \forall i \in \mathcal{V}/\{s,t\} \quad\quad
+    \sum_{j\in\mathcal{V}| (i,j)\in\mathcal{E}} f(i, j) = 
+    \sum_{j\in\mathcal{V}| (i,j)\in\mathcal{E}} f(j, i)
+    \end{align*}
+    (i.e. no flow is lost from source to sink)\pause
+  \item We want to maximise the flow from the source
+    \begin{align*}
+      \sum_{i\in\mathcal{V}| (s,i)\in\mathcal{E}} f(s,i)\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Solving Maximum Flow}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As set up we have a linear objective function with linear
+    constraints\pause
+  \item We can therefore solve this problem with a LP-solver\pause
+  \item (Note the solution will typically involve a fraction flow)\pause
+  \item However, this is such a classic problem with a distinctive
+    structure that we can solve it more quickly with other
+    algorithms\pause
+  \item The classic algorithm is the Ford-Fulkerson method with run time
+    $O(|\mathcal{E}| \times f_{\max})$ where $f_{\max}$ is the maximum
+    flow, although we
+    won't cover this in the course\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Linear Assignment}
+
+\begin{PauseHighLight}
+  \begin{minipage}{0.7\linewidth}
+    \begin{itemize}
+    \item We are given a set of $n$ agents, $\mathcal{A}$, and $n$ tasks,
+      $\mathcal{T}$\pause
+    \item Each agent has a cost associated with performing a task
+      $c(a,t)$\pause
+    \item We want to assign an agent to one task so as to minimise the
+      total cost\pause
+    \item Consider a taxi firm with taxi's at 5 different locations and 5
+      requests to fulfil.  The cost is the distance to the clients.  Which
+      taxi should go to which client?\pause
+    \end{itemize}
+  \end{minipage}\hfill
+  \begin{minipage}{0.25\linewidth}
+    \includegraphics[width=0.9\linewidth]{linear_assignment}
+  \end{minipage}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{LA as LP}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The linear assignment problem can be set as a linear programming
+    problem
+    \begin{align*}
+      \min_{\bm{x}} \sum_{a\in\mathcal{A}, t\in\mathcal{T}} c(a,t)
+      x_{a,t}\\
+      \text{subject to}\\
+      \forall a\in\mathcal{A} \quad \quad \sum_{t\in\mathcal{T}} x_{a,t}
+      = 1 \\
+      \forall  t\in\mathcal{T} \quad \quad \sum_{a\in\mathcal{A}} x_{a,t}
+      = 1 \\
+      \forall (a,t)\in(\mathcal{A},\mathcal{T}) \quad \quad x_{a,t}\geq 0\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Hungarian Algorithm}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear assignment is another classic problem that is commonly
+    encountered\pause
+  \item Although it can be solved using a generic LP-solver this is not
+    the most efficient algorithm\pause
+  \item The most efficient algorithm is the Hungarian algorithms\pause
+  \item This is rather complex (having once implemented it I can tell
+    you from bitter experience it ain't easy)\pause
+  \item Its worst case time is $O(n^3)$ although it frequently takes
+    $\Theta(n^2)$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Quadratic Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If we have linear constraints and a quadratic objective function
+    then we have a quadratic programming problem\pause
+  \item Again this can be solved in polynomial time\pause
+  \item Many of the ideas used are the same as for linear programming\pause
+  \item This also has important applications in science and
+    engineering\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear programming is a classic problem\pause
+  \item We know a huge number of problems are solvable in polynomial
+    time because they can be formulated as linear programs\pause
+  \item Linear programs occur sufficiently often that they are hugely
+    important\pause
+  \item They aren't easy to solve, although standard simplex is not
+    massively complex\pause
+  \item For particular LP problems with distinctive structure there are
+    sometimes better algorithms than generic LP-solvers\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

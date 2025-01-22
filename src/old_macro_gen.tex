@@ -1,0 +1,66 @@
+\usepackage{hyperref}
+\usepackage[compat2,pdftex]{geometry}
+%\usepackage[pdftex]{geometry}
+\geometry{headsep=-2.5ex,hscale=0.90,textwidth=25cm}
+\usepackage[pdftex]{color}
+\usepackage{pause}
+\usepackage{background}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{cite}
+\usepackage{pifont}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{pp4slide}
+
+\newcommand{\squeeze}{\setlength{\itemsep}{-2pt}}
+%\renewcommand{\familydefault}{cmr}
+%\renewcommand{\labelitemii}{\textcolor{green}{$\star$}}
+\newcommand{\tick}{{\large \ding{51}}}
+\newcommand{\cross}{{\large \ding{55}}}
+\DeclareMathAlphabet{\mat}{OT1}{cmss}{bx}{n}
+\newcommand{\figs}{/home/apb/figures}
+\newcommand{\stimes}{{\scriptstyle \times}}
+\newcommand{\tr}{\textsf{T}}
+\newcommand{\e}[1]{{\rm e}^{#1}}
+\newcommand{\E}[1]{{\rm e}^{{\displaystyle #1}}}
+\newcommand{\av}[1]{\left\langle #1 \right\rangle}
+\newcommand{\Step}{\mathop{\mat{\Theta}}}
+\newcommand\diag{\mathop{\mathrm{diag}}}
+\newcommand{\grad}{\bm{\nabla}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\data}{\mathcal{D}}
+\newcommand{\hypo}{\mathcal{H}}
+\newcommand{\class}{\mathcal{C}}
+\lstnewenvironment{matlab}[1][frame=TB]{\lstset{#1}}{}       
+%\renewcommand{\emph}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\myskip}[1]{}
+\newcommand{\jl}{\lstinline}
+
+\lstloadlanguages{Java}
+\lstset{
+  basicstyle=\bf\footnotesize\ttfamily\color{black},
+  commentstyle=\footnotesize\color{green},
+  language=Java,
+  escapechar=\%}
+
+\lstnewenvironment{java}[1][]{\lstset{#1}}{}
+
+\MyLogo{}
+%\Restriction{}
+\rightfooter{\hyperlink{overview}{$\square$}}
+%\leftheader{}
+
+\raggedright
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

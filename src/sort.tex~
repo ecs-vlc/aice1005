@@ -1,0 +1,634 @@
+%Master File:lectures.tex
+
+\lesson{Sort Wisely}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{sorting}
+\end{center}
+
+\keywords{Merge sort, quick sort and radix sort}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\vfill
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Merge Sort}{merge}
+    \outlineitem{Quick Sort}{quick}
+    \outlineitem{Radix Sort}{radix}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{sorting}
+\end{minipage}
+\vfill
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Merge Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Merge sort is an example of sort performed in log-linear
+    (i.e. $O(n\log(n))$) time complexity\pause
+  \item It was invented in 1945 by John von Neumann\pause
+  \item It is an example of a divide-and-conquer strategy\pause
+    \begin{itemize}
+    \item That is, the problem is divided into a number of parts
+      recursively\pause
+    \item The full solution is obtained by recombining the parts\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[2]{Algorithm}
+
+\begin{minipage}{10cm}
+  \begin{pseudo}
+#\textsc{MergeSort}#($\bm{a}$)
+{
+  if $n>1$
+    copy $\bm{a}[1:\lfloor n/2 \rfloor]\,\,$ to $\bm{b}$
+    copy $\bm{a}[\lfloor n/2 \rfloor+1:n]\,\,$ to $\bm{c}$
+    #\textsc{MergeSort}#($\bm{b}$)
+    #\textsc{MergeSort}#($\bm{c}$)
+    #\textsc{Merge}#($\bm{b}$,$\bm{c}$,$\bm{a}$)
+  endif
+} $\pause$
+  \end{pseudo}
+\end{minipage}\hfil
+\begin{minipage}{12cm}
+  \includegraphics[width=13cm]{mergesort8.mps}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Merge}
+\pausebuild
+\begin{minipage}{10cm}
+  \begin{pseudo}
+#\textsc{Merge}#($\bm{b}[1:p]$,$\bm{c}[1:q]$,$\bm{a}[1:p+q]$)
+{
+  i:=1
+  j:=1
+  k:=1
+  while $i \leq p\,\,$ and $j\leq q\,\,$ do
+    if $b_i \leq c_j$
+      $a_k$ := $b_i$
+      i := i+1
+    else
+      $a_k$ := $c_j$
+      j := j+1
+    endif
+    k := k+1
+  end
+  if i=p
+    copy $\bm{c}[j:q]\,\,$ to $\bm{a}[k:p+q]$
+  else
+    copy $\bm{c}[i:q]\,\,$ to $\bm{a}[k:p+q]$
+} #\pauseh#
+  \end{pseudo}
+\end{minipage}\hfil
+\begin{minipage}{12cm}
+  \multiinclude[graphics={width=14cm}]{merge}\pause
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Properties of Merge Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Merge sort is stable provided we merge carefully (i.e. it
+    preserves the order of two entries with the same value)\pause
+  \item Merge sort isn't in-place\pause---we need an array of at most
+    size $n$ to do the merging\pause
+  \item Merging is quick.\pause\  Given two arrays of size $n$ the most number
+    of comparisons we need to perform is $n-1$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[1]{Time Complexity of Merge Sort}
+
+\pausebuild
+\begin{center}
+  \begin{picture}(230,100)(10,-5)
+    \put(0,20){\includegraphics[width=10cm]{mergesort8.mps}}\pause
+    \put(0,10){\line(0,-1){10}}
+    \put(100,10){\line(0,-1){10}}
+    \put(35,5){\vector(-1,0){35}}
+    \put(65,5){\vector(1,0){35}}
+    \put(50,5){\makebox(0,0){$O(n)$}}\pause
+    \put(110,20){\line(1,0){10}}
+    \put(110,90){\line(1,0){10}}
+    \put(110,55){\line(1,0){10}}
+    \put(115,30){\vector(0,-1){10}}
+    \put(115,45){\vector(0,1){10}}
+    \put(125,37.5){\makebox(0,0){$O\left(\strut\log_2(n)\right)$}}
+    \put(115,65){\vector(0,-1){10}}
+    \put(115,80){\vector(0,1){10}}
+    \put(125,72.5){\makebox(0,0){$O\left(\strut\log_2(n)\right)$}}
+    \pause    
+  \end{picture}
+  $n=8$
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[1]{Time Complexity of Merge Sort}
+
+\begin{center}
+  \begin{picture}(230,100)(10,-5)
+    \put(0,5){\line(0,-1){10}}
+    \put(220,5){\line(0,-1){10}}
+    \put(95,0){\vector(-1,0){95}}
+    \put(125,0){\vector(1,0){95}}
+    \put(110,0){\makebox(0,0){$O(n)$}}
+    \put(225,10){\line(1,0){10}}
+    \put(225,100){\line(1,0){10}}
+    \put(225,55){\line(1,0){10}}
+    \put(230,20){\vector(0,-1){10}}
+    \put(230,45){\vector(0,1){10}}
+    \put(235,32.5){\makebox(0,0){$O\left(\strut\log_2(n)\right)$}}
+    \put(230,65){\vector(0,-1){10}}
+    \put(230,90){\vector(0,1){10}}
+    \put(235,77.5){\makebox(0,0){$O\left(\strut\log_2(n)\right)$}}
+    \put(0,9){\includegraphics[width=22cm]{mergesort16.mps}}\pause
+  \end{picture}
+  $n=16$
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We again measure the complexity in the number of comparisons\pause
+  \item From the above argument $C(n) = O(n \times \log_2(n))$\pause
+  \item We can be a bit more formal
+    \begin{align*}
+      C(n) &= 2 C(\lfloor n/2 \rfloor) + C_{\mbox{merge}}(n) & \mbox{for $n>1$}\\
+      C(0) &= 1 &\pause
+    \end{align*}
+  \item But in the worst case $C_{\mbox{merge}}(n)=n-1$\pause
+  \item Leads to $C_{\mbox{worst}}(n) = n \log_2(n) -n + 1$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{General Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In general if we have a recursion formula
+    \begin{align*}
+      T(n) = a T(n/b) + f(n)\pause
+    \end{align*}
+    with $a\geq1$, $b>1$\pause
+  \item If $f(n) \in \Theta(n^d)$ where $d\geq 0$ then
+    \begin{align*}
+      T(n) \in \left\{
+        \begin{array}{lll}
+          \Theta\left(n^d \right) & & \mbox{if $a<b^d$} \\
+          \Theta\left(n^d \log(n)\right) & & \mbox{if $a=b^d$} \\
+          \Theta\left(n^{\log_d(a)}\right) & & \mbox{if $a>b^d$}
+        \end{array}\right.\pause
+    \end{align*}
+  \item Analogous results hold for the family $O$ and $\Omega$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Mixing Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For very short sequences it is faster to use insertion sort than
+  to pay the overhead of function calls\pause
+  \end{itemize}
+  \begin{center}\color{TextColor}
+    \includegraphics[width=\linewidth]{mergeinsort.mps}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Quick Sort
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Quicksort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The most commonly used fast sorting algorithm is
+    \emph{quicksort}\pause 
+  \item It was invented by the British computer scientist  by
+    C.~A.~R.~Hoare in 1962\pause
+  \item It again uses the divide-and-conquer strategy\pause
+  \item It can be performed in-place, but it is \textbf{not}
+    stable\pause
+  \item It works by splitting an array into two depending on whether the
+    elements are less than or greater than a \emph{pivot} value\pause
+  \item This is done recursively until the full array is sorted\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Partition}
+
+\pausebuild
+\begin{itemize}
+\item We need to partition the array around the pivot $p$ such that
+  \begin{center}
+    \includegraphics[height=1cm]{apartition}\pauseh
+  \end{center}
+\end{itemize}
+\begin{minipage}{6cm}
+\begin{pseudo}
+#\textsc{Partition}#($\bm{a}$, p, left, right)
+{
+  i := left
+  j := right
+  repeat {
+    while $a_i < p$
+       i++
+    while $a_j$ >= $p$
+       j--
+    if i >= j
+       break
+    #\textsc{Swap}#($a_i$,$a_j$)
+  }
+}$\pauseh$
+\end{pseudo}
+\end{minipage}\hfill
+\begin{minipage}{16cm}
+\vfill
+\begin{center}
+  \multiinclude[graphics={width=16cm}]{partition}\pause
+\end{center}
+\vfill
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Optimising Partitioning}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are different ways of performing the partitioning\pause
+  \item We want to minimise the time taken on the inner loop\pause
+  \item This means we want to perform as few checks as possible\pause
+  \item One method of doing this is to place \textit{sentinels} at the
+  ends of the array\pause
+  \item We can also reduce work by placing the partition in its correct
+    position
+  \begin{center}
+    \includegraphics[height=1cm]{anotherpartition}\pause
+  \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Choosing the Pivot}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are different strategies to choosing the pivot\pause
+  \item Choose the first element in the array\pause
+  \item Choose the median of the first, middle and last element of the
+    array\pause
+  \item This increases the likelihood of the pivot being close to the
+    median of the whole array\pause
+  \item For large arrays (above 40) the median of 3 medians is often
+    used\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Quicksort}
+
+\begin{PauseHighLight}
+  We recursively partition the array until each partition is small
+  enough to sort using insertion sort\pause
+  \begin{pseudo}
+#\textsc{QuickSort}#($\bm{a}$, left, right) {
+   if (right-left < threshold)
+      #\textsc{InsertionSort}#($\bm{a}$, left, right)
+   else
+      pivot = #\textsc{ChoosePivot}#($\bm{a}$, left, right)
+      part = #\textsc{Partition}#($\bm{a}$, pivot, left, right)
+      #\textsc{QuickSort}#($\bm{a}$, left, part-1)
+      #\textsc{QuickSort}#($\bm{a}$, part+1, right)
+   endif$\pause$
+}
+  \end{pseudo}
+\vspace{-1cm}
+  \color{TextColor}
+  \begin{center}
+    \includegraphics[width=0.6\linewidth]{quickSortSchematic}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Partitioning an array of size $n$ takes $\Theta(n)$ operations\pause
+  \item If we split the array in half then number of partitions we need
+    to do is $\lceil \log_2(n) \rceil$\pause
+  \item This is the best case thus quicksort is $\Omega\left(\strut
+      n\log(n) \right)$\pause
+  \item If the pivot is the minimum element of the array then we have to
+    partition $n-1$ times\pause
+  \item This is the worst case so quicksort is $O\left(n^2\right)$\pause
+  \item This worst case will happen if the array is already sorted and
+    we choose the pivot to be the first element in the array!\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{QuickSort}
+\pb
+\pause
+
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{quickSort-0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{75}%
+  {\llap{\includegraphics[width=0.9\linewidth]{quickSort-\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Sort in Practice}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Java uses
+    \begin{itemize}
+    \item Quicksort to sort arrays of primitive types\pause
+    \item Mergesort to sort Collections of objects\pause
+    \end{itemize}
+  \item The STL in C++ offers three sorts
+    \begin{itemize}
+    \item \jl$sort()$ implemented using quicksort\pause
+    \item \jl$stable_sort()$ implemented using mergesort\pause
+    \item \jl$partial_sort()$ implemented using heapsort\pause
+    \end{itemize}
+  \item Quicksort is typically fastest but has worst case quadratic time
+    complexity\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Selection}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A related problem to sorting is selection\pause
+  \item That is we want to select the $k^{th}$ largest element\pause
+  \item We could do this by first sorting the array\pause
+  \item A full sort is not however necessary\pause---we can use a
+    modified quicksort where we only continue to sort the part of the
+    array we are interested in\pause
+  \item This leads to a $\Theta(n\log(n))$ algorithm which is
+    considerably faster then sorting\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Radix Sort
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Radix Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Can we get a sort algorithm to run faster than $O\left(\strut
+      n\log(n) \right)$?\pause
+  \item Our proof that this was optimal assumed we were performing
+    binary decisions (is $a_i$ less than $a_j$?)\pause
+  \item If we don't perform pairwise comparisons then the proof doesn't
+    apply\pause
+  \item Radix sort is the classic example of a sort algorithm that
+  doesn't use pairwise comparisons\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Sorting Into Buckets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The idea behind radix sort is to sort the elements of an array
+    into some number of buckets\pause
+  \item This is done successively until the whole array is sorted\pause
+  \item Consider sorting integers in decimals (base 10 or radix 10)\pause
+  \item We can successively sort on the digits\pause
+  \item The sort finishes when we have got through all the digits\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Radix Sort in Action}
+
+\pausebuild
+\color{TextColor}
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{radixSort}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity of Radix Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We need not use base 10 we could use base $r$ (the radix)\pause
+  \item If the maximum number to be sorted is $N$ then the number of
+    iterations of radix sort is $\log_r(N)$\pause
+  \item Each sort involves $n$ operations\pause
+  \item Thus the total number of operations is $O\left(\strut n \lceil \log_r(N)
+    \rceil \right)$\pause
+  \item Since $N$ does not depend on $n$ we can write this as
+  $O\left(n\right)$ \pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Bucket Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A closely related sort is bucket sort where we divide up the
+    inputs into buckets based on the most significant figure\pause
+  \item We then sort the buckets on less significant figures\pause
+  \item Quicksort is a bucket sort with two buckets, but where we choose
+    a pivot to determine which bucket to use\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Minimum Time for Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Can we do better?\pause
+  \item In any sort we need to examine all possible elements in the
+    array\pause
+  \item If there is an element that isn't examined then we don't know
+    where to put it\pause
+  \item Thus the lower bound on any sort algorithm is $\Omega(n)$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-0.5]{Practical Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In practice, radix sort or bucket sort are rarely used\pause
+  \item The overhead of maintaining the buckets make them less efficient
+    than they might appear\pause
+  \item Radix sort is harder to generalise to other data types than
+    comparison based sorts\pause
+  \item In practice quick sort and merge sort are usually
+    preferred\pause
+  \item Having said that there are some very neat implementations of
+    radix sort\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Comparison of Sort Algorithms}
+
+\begin{center}
+  \includegraphics[height=16cm]{sort-times}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sort is important---it is one of the commonest high level
+    operations\pause
+  \item Merge sort and quick sort are the most commonly used sort\pause
+  \item There are sorts that have a better time complexity that
+    quicksort\pause
+  \item In practice it is difficult to beat quicksort\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

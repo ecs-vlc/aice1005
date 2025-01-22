@@ -1,0 +1,14 @@
+#include <iostream>
+#include "array.h"
+using namespace std;
+
+int main() {
+  Array a(3);
+  a.set(0,0);
+  a.set(1,2);
+  a.set(2,4);
+
+  cout << a.get(0) << ", " << a.get(1) << "," << a.get(2) << endl;
+
+  return 0;
+}

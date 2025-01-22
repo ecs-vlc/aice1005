@@ -1,0 +1,608 @@
+%Master File:lectures.tex
+
+\lesson{Make a hash of it}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{hashsign}
+\end{center}
+
+\keywords{Hash tables, separate chaining, open addressing, linear/quadratic probing, double hashing}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Why Hash?}{hash}
+    \outlineitem{Separate Chaining}{sc}
+    \outlineitem{Open Addressing}{oa}
+    \begin{itemize}
+    \item \toplink{qprob}{Quadratic Probing}
+    \item \toplink{dhash}{Double Hashing}
+    \end{itemize}
+    \outlineitem{Hash Set and Map}{hshm}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=8cm]{hashsign}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Content Addressable Memory}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Suppose we have a list of objects which we want to look up
+    according to its contents\pause
+  \item This is often referred to as \emph{associative memory}
+    structures\pause
+  \item A classical example would be a telephone directory\pause
+    \begin{itemize}
+    \item We look up a name
+    \item We want to know the number\pause
+    \end{itemize}
+  \item What data structure should we use?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lists and Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To find an entry in a normal list takes $\Theta(n)$
+    operations\pause 
+  \item If we had a sorted list we could use ``binary search'' to reduce
+    this to $\Theta(\log(n))$\pause
+    \begin{itemize}
+    \item We will study binary search later\pause
+    \item Maintaining an ordered list is costly ($\Theta(n)$ insertions)\pause
+    \end{itemize}
+  \item We could use a binary search tree\pause
+    \begin{itemize}
+    \item Search is $\Theta(\log(n))$\pause
+    \item Insertion/deletion is $\Theta(\log(n))$\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Thinking Outside the Box}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As with many data structures thinking about the problem
+    differently can lead to much better solutions\pause
+  \item Let us consider the content we want to search on as a
+    \emph{key}\pause
+  \item For telephone numbers the key would be the name of the person we
+    want to phone\pause
+  \item We could get $O(1)$ search, insertion and deletion if we used
+    the key as an index into a big array\pause
+  \item That is the key is a string of, say, 100 characters so can be
+    represented by an 800 digit binary number\pause
+  \item We could look up the key in a table of $2^{800}$ items\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Hashing}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item This approach is slightly wasteful of memory\pauseh
+\item Almost all memory locations would be empty\pauseh
+\item We can save on memory by folding up the table up onto
+  itself\pauseh
+\end{itemize}
+\begin{center}
+  \begin{picture}(220,100)\pauselevel{=1 :4}
+    \put(0,0){\includegraphics[width=22cm]{nonhash}}\pause\pauselevel{=5}
+    \put(0,0){\includegraphics[width=22cm]{hashed}}\pause
+  \end{picture}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Hashing Codes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A \emph{hashing function} \texttt{hashCode(x)} takes an object,
+    \texttt{x}, and returns a positive integer, the \emph{hash code}\pause
+  \item To turn the hash code into an address take the modulus of the
+    table size
+    \begin{java}
+      int index = abs(hashCode(x) % tableSize);$\pause$
+    \end{java}
+  \item If \texttt{tableSize} $=2^n$ we can compute this more
+    efficiently using a mask
+    \begin{java}
+      int index = abs(hashCode(x) & (tableSize -1));$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Hashing Functions}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Hashing functions take an object and return an integer\pause
+  \item Hashing functions aren't magic\pause
+    \begin{itemize}
+    \item They tend to add up integers representing the parts of the
+      object\pause
+    \end{itemize}
+  \item We want the integers to be close to random so that similar
+    objects are mapped to different integers\pause
+  \item Sometimes two objects will be mapped to the same
+    address\pause---this is known as a \emph{collision}\pause
+  \item Collision resolution is an important part of hashing\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Hashing Strings}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A strings might be hashed using a function\pause
+    \begin{cpp}
+      unsigned long long hash(string const& s) {
+        unsigned long long results = 12345;
+        
+        for (auto ch = s.begin(); ch != s.end(); ++ch) {
+          results = 127*results + static_cast<unsigned char>(*ch);
+        }
+        return results;
+      }$\pause$
+    \end{cpp}
+  \item The numbers 12345 and 127 is to try to prevent
+    clashes\pause---there are lots of alternatives\pauseb
+  \item What we want is that string that might be similar receive very
+    different hash codes\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{DIY}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The \texttt{unordered\_set<T, Hash<T> >} allows you to define
+    your own hash function\pause
+  \item By default this is set to \texttt{std::hash<T>(T)}\pause
+  \item Not all classes have hash function defined so you will need to
+    do this\pause
+  \item Care is needed to make you hash function produce near random
+    hash codes\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Separate Chaining
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Collision Resolution}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Collisions are inevitable and must be dealt with\pause
+  \item There are two commonly used strategies\pause
+    \begin{itemize}
+    \item Separate chaining---make a hash table of lists\pause
+    \item Open addressing---find a new position in the hash table\pause
+    \end{itemize}
+  \item Collisions add computational cost\pause
+  \item They occur when the hash table becomes full\pause
+  \item If the hash table becomes too full then it may need to be
+    resized\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Resizing a Hash Table}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Resizing a hash table is easy\pause
+    \begin{itemize}
+    \item Create a new hash table of, say, twice the size\pause
+    \item Iterate through the old hash table adding each element to the
+      new hash table\pause
+    \end{itemize}
+  \item Note that you have to recompute all the hash codes\pause
+  \item Resizing a hash table has a small amortised cost, but can give
+    you a very hiccupy performance\pause
+  \item The size of a hash table is a classic example of a memory-space
+    versus execution time trade off\pause---using bigger (sparser) hash
+    tables speeds up performance\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Separate Chaining}
+
+\pausebuild
+\color{TextColor}
+\begin{itemize}
+\item In separate chaining we build a singly-linked list at each table
+  entry\pauseh
+\end{itemize}
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{hash-anim}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Search}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To find an entry in a hash table we again use the hash function
+    on a key to find the table entry and then we search the list\pause
+  \item The time complexity depends on where objects are hashed\pause
+  \item If the objects are evenly dispersed in the table, search (and
+    insertion) is $\Omega(1)$\pause
+  \item If the objects are hashed to the same entry in the hash table
+    then search is $O(n)$\pause
+  \item Provided you have a good hashing function and the hash table
+    isn't too full you can expect $\Theta(1)$ average case performance\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Iterating Over a Hash Table}
+
+\begin{PauseHighLight}
+  \begin{minipage}{12cm}
+    \raggedright
+  \begin{itemize}
+  \item To iterate over a hash table we
+    \begin{itemize}
+    \item Iterate through the array\pause
+    \item At each element we iterate through the linked list\pause
+    \end{itemize}
+  \item The order of the elements appears random\pause
+  \item This becomes more efficient as the table becomes fuller\pause 
+  \end{itemize}
+  \end{minipage}\hfill
+  \begin{minipage}{10cm}
+    \includegraphics[width=10cm]{hash-ex.mps}\\
+    55, 17, 34, 63, 12
+  \end{minipage}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Open Addressing
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Open Addressing}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In open addressing we have a single table of objects (without a
+    linked-list)\pause
+  \item In the case of a collision a new location in the table is
+    found\pause 
+  \item The simplest mechanism is known as \emph{linear probing} where
+    we move the entry to the next available location\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Probing}
+
+\pausebuild
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{linear-probing}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Probing Pile Up}
+
+\begin{PauseHighLight}
+  \begin{minipage}{16cm}
+    \raggedright
+  \begin{itemize}
+  \item The entries will tend to pile up or cluster---this is sometimes
+    referred to as \emph{primary clustering}\pause
+  \item Clusters become worse as the number of entries grow\pause
+  \item Clusters will increase the number of probes needed to find an
+    insert location\pause
+  \item The proportion of full entries in the table is known as the
+    \emph{loading factor}\pause
+  \end{itemize}
+  \end{minipage}\hfill
+  \begin{minipage}{7cm}
+    \includegraphics[width=7cm]{pile-up.mps}    
+  \end{minipage}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Reducing Number of Probes}
+\pb\pause\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.9\textwidth]{probe_no}\pause
+\end{center}
+\begin{itemize}\small
+\item To avoid clustering we can use \emph{quadratic probing}\pause{}
+  and \emph{double hashing}\pause
+\end{itemize}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Quadratic Probing}
+\toptarget{qprob}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In quadratic probing we try the locations $h(x)+d_i$ where
+    $h(x)$ is the original hash code and $d_i=i^2$\pause
+  \item That is we takes steps 1, 4, 9, 16, \ldots\pause
+  \item Quadratic probing prevents primary clustering so dramatically
+    decreases the number of probes needed to find a free location when
+    the table is reasonably full\pause
+  \item One problem is that if we are unlucky we might not be able to
+    add an element to the hash table even if the table isn't full\pause
+  \item However, if the size of the table is prime then quadratic
+    probing will always find a free position provided it is not more
+    than half full\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Double Hashing}
+\toptarget{dhash}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An alternative strategy is to known as double hashing where the
+    locations tried are $h(x)+d_i$ where $d_i = i\times h_2(x)$\pause
+  \item $h_2(x)$ is a second hash function that depends on the
+    key\pause
+  \item A good choice is $h_2(x) = R - (x \mod R)$ where $R$ is a
+    prime smaller than the table size\pause
+  \item It is important that $h_2(x)$ is not a divisor of the
+    table size\pause
+    \begin{itemize}
+    \item Either make sure the table size is prime or\pause
+    \item Set the step size to 1 if $h_2(x)$ is a divisor of the table
+      size\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Problems with Remove}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For all open addressing hash systems removing an entry is a
+    problem\pause
+  \item Remember our strategy to find an input $x$ is\pause
+    \begin{enumerate}
+    \item Compute the array index based on the hash code of $x$\pause
+    \item If the array location is empty then the search fails\pause
+    \item If the array location contains the key the search succeeds\pause
+    \item otherwise find a new location using an open addressing strategy
+      and go to 2\pause
+    \end{enumerate}
+  \item If we remove an entry then find might reach an empty location
+    which was previously full\pause
+  \item This can prevent us finding a true entry\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linear Probing Example}
+
+\pausebuild
+\begin{center}
+  \multiinclude[format=mps,graphics={width=\linewidth}]{hashfind}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lazy Remove}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One easy fix is to mark the deleted table with a special
+    entry\pause
+  \item A find method would consider this entry as full\pause
+  \item An iterator would ignore this entry\pause
+  \item An insert operator could insert a new entry in these special
+    locations\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lazy Remove in Action}
+
+\pausebuild
+\begin{center}
+  \multiinclude[graphics={width=\linewidth}]{lazyremove}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % HashSets and HashMaps
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section{What Strategy to Use?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Most libraries including the STL (and the Java Collection
+    class) use separate chaining\pause
+  \item This has the advantage that its performance does not degrade
+    badly as the number of entries increase\pause
+  \item This reduces the need to resize the hash table\pause
+  \item The C++ standard did not include a hash table until C++11
+    \Frowny\pause---although very good hash tables existed in C++\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Hash Sets and Maps}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ also provides an \texttt{unordered\_map<Key, V>} class
+  \item It's performance is asymptotically superior to \texttt{map},
+    $O(1)$ rather than $O(\log(n))$\pause
+  \item Hash functions can take time to compute (it is often
+    $O(\log(n))$) so \texttt{unordered\_set}s might not be faster than
+    \texttt{set}s\pause
+  \item One major difference is that the iterator for \texttt{set}s
+    return the elements in order, \texttt{undordered\_set}'s iterator
+    doesn't\pause 
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Applications}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Hash tables are used everywhere\pause
+  \item E.g. most databases use hash tables to speed up search\pause
+  \item In many document applications hash tables will be being
+    generated in the background\pause
+  \item Content addressability is ubiquitous to many application where
+    hash tables are used as standard\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Hash tables are one of the most useful tools you have
+    available\pause
+  \item They aren't particularly difficult to understand\pause, but you
+    need to know about
+    \begin{itemize}
+    \item hashing functions\pause
+    \item collision strategies\pause
+    \item performance (i.e. when they work)\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

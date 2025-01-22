@@ -1,0 +1,13 @@
+#include array.h
+
+Array::Array(int n) {
+  data = new int[n];
+}
+
+void Array::set(int index, int value) {
+  data[index] = value;
+}
+
+void Array::get(int index) {
+  return data[index];
+}

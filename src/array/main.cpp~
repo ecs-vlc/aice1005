@@ -1,0 +1,24 @@
+#include <iostream>
+#include "array.h"
+#include "sys/types.h"
+#include "sys/sysinfo.h"
+
+using namespace std;
+
+void print(const Array& a, string name) {
+  cout << name << ": " << a[0];
+  for(int i=1; i<a.length(); ++i) {
+    cout << ", "<< a[i];
+  }
+  cout << endl;
+}
+
+int main(int, char**){
+
+  for(int i=0; i<10000000; ++i) {
+    Array a(1000000);
+  }
+  cout << "Finished\n";
+
+  return 0;
+}
