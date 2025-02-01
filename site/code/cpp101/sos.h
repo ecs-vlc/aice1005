@@ -11,7 +11,7 @@ using namespace std;
 class Sos {
 public:
   Sos() { zero(); }
-  void zero() { aver = nvar = count = 0.0; }
+  void zero() { aver = Q = n = 0.0; }
   void add(double x);
   double operator+=(double x) { add(x); return(x); }
   const Sos& operator+=(const Sos& e);
@@ -21,11 +21,11 @@ public:
   double err() const;
   double sum() const;
   operator Error() const;
-  int number() const { return(int(count)); }
+  int number() const { return(int(n)); }
 private:
   double aver;
-  double nvar;
-  double count;
+  double Q;
+  double n;
 };
 
 ostream& operator<<(ostream& out, const Sos& d);

@@ -8,17 +8,6 @@
 #include "error.h"
 #include <iomanip>
 
-void printFormattedDouble(double value, int precision) {
-    std::cout << std::setprecision(precision);
-    
-    if (value >= 0.001 && value < 1000) {
-        std::cout << std::fixed << value << std::endl;
-    } else {
-        std::cout << std::scientific << value << std::endl;
-    }
-}
-
-
 Sos::operator Error() const
 {
   return Error(av(), err());
@@ -26,19 +15,19 @@ Sos::operator Error() const
 
 void Sos::add(double x)
 {
-  double delta = (x - aver)/(count+1.0);
-  nvar += count*delta*(x - aver);
+  double delta = (x - aver)/(n+1.0);
+  Q += n*delta*(x - aver);
   aver += delta;
-  count++;
+  n++;
 }
 
 const Sos& Sos::operator+=(const Sos& rhs)
 {
-  double total = count + rhs.count;
+  double total = n + rhs.n;
   double diff = rhs.aver-aver;
-  aver += rhs.count*diff/total;
-  nvar += rhs.nvar + count*rhs.count*diff*diff/total;
-  count = total;
+  aver += rhs.n*diff/total;
+  Q += rhs.Q + n*rhs.n*diff*diff/total;
+  n = total;
 
   return rhs;
 }
@@ -46,8 +35,8 @@ const Sos& Sos::operator+=(const Sos& rhs)
 
 double Sos::var() const
 {
-  //  assert(count>1.0);
-  return (count>1.0)? nvar/(count-1.0):0.0;
+  //  assert(n>1.0);
+  return (n>1.0)? Q/(n-1.0):0.0;
 }
 
 double Sos::sd() const
@@ -57,12 +46,12 @@ double Sos::sd() const
 
 double Sos::err() const
 {
-  return sqrt(var()/count);
+  return sqrt(var()/n);
 }
 
 double Sos::sum() const
 {
-  return aver*count;
+  return aver*n;
 }
 
 ostream& operator<<(ostream& out, const Sos& d)
