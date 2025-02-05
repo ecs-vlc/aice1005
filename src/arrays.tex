@@ -388,7 +388,7 @@
     checks whether memory can be accessed and if not it is
     removed\pause
   \item In C++ this is your responsibility\pause
-  \item But the is a standard \emph{programming pattern} to elevate
+  \item But there is a standard \emph{programming pattern} to elevate
     the problem known as \emph{Resource Acquistion is Initialisation
       (RAII)}\pause
     \begin{quote}
@@ -620,8 +620,6 @@ public:
 #include <stack>
 #include <iostream>
 #include <fstream>
-#include <iterator>
-#include <algorithm>
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -654,7 +652,7 @@ int main(int argc, char *argv[]) {
   \item insertion and deletion are expensive, $O(n)$\pause
   \item Arrays are often the simplest way to implement many other
     data structures, e.g. stacks\pause
-  \item Use (dynamically re-sizable) arrays frequently!\pause
+  \item Use (dynamically re-sizable) arrays (vector<T>) frequently!\pause
   \end{itemize}
 \end{PauseHighLight}
 

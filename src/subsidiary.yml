@@ -8,6 +8,10 @@ practical_cpp_2:
 practical_cpp_3:
   "driver file": main3.cc
   "header file": array3.h
+cpp101:
+  "header file": sos.h
+  "code file": sos.cc
+  "python code": sos.py
 links:
   "driver file": linkedList.cc
   "header file": mylist.h

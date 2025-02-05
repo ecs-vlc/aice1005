@@ -37,4 +37,3 @@ if newer(tex, pdf) or newer("macros_gen.tex", pdf):
 os.system(f"evince {pdf}&")
 myengage()
 
-    

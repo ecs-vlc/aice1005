@@ -4,7 +4,7 @@ LDLIBS   = -L$(HOME)/lib/libmyutil.a
 CXXFLAGS = $(INCLUDES) -O3 -Wall 
 CFLAGS=-I/home/adam/c++/include
 
-all: unixSort unixSortDS cntWords stack reverse linkedList binaryTree priority_queue heapSort
+all: unixSort unixSortDS cntWords stack reverse linkedList binaryTree priority_queue test_sos
 
 unixSort: unixSort.cc
 	g++ unixSort.cc -o unixSort
@@ -36,3 +36,8 @@ priority_queue: priority_queue.cc heapPQ.h
 heapSort: heapSort.cc
 	g++ heapSort.cc -o heapSort -lm -lmyutil;
 	./heapSort
+
+
+test_sos: test_sos.cc sos.o sos.h
+	g++ test_sos.cc  -o test_sos -lm -lmyutil;
+	./test_sos 1000

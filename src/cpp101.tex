@@ -1,0 +1,725 @@
+%Master File:lectures.tex
+
+\lesson{C++ 101}
+\vspace*{-2cm}
+\begin{center}
+    \includegraphics[height=11cm]{Cpp}
+\end{center}
+\vspace*{-1cm}
+\keywords{C with classes, new, overloading, templates}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}\raggedright
+    \outlineitem{C with Classes}{classes}
+    \outlineitem{New}{new}
+    \outlineitem{Overloading}{overloading}
+    \outlineitem{Templates}{templates}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{Cpp}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{C}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C was developed in the 1970s by Dennis Ritchie for writing
+    UNIX tools\pause
+  \item It supported structural programming through functions\pause
+  \item It allowed run-time allocation of memory (through
+    \texttt{malloc} and \texttt{free})\pause
+  \item It allowed manipulation of memory through pointers\pause
+  \item This made it efficient\pause, but not safe\pauseb{} or easy to
+    use\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Keeping Things Together}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As soon as you start programming bigger systems you want to
+    keep information together\pause
+  \item C facilitated this through C structures \texttt{struct}
+    \begin{cpp}
+      struct MyStructure {   // $Structure declaration$
+        int myNum;           // $Member (int variable)$
+        char myLetter;       // $Member (char variable)$
+      }; // $End the structure with a semicolon$
+
+      int main() {
+        struct myStructure s1;
+
+        s1.myNum = 13;
+        s1.myLetter = 'B';
+
+        printf("My number: %d\n", s1.myNum);
+        printf("My letter: %c\n", s1.myLetter);
+        return 0;
+      } $\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Estimated Errors in the Mean}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When working with empirical data, $\{X_i, i=1,2,\ldots,n\}$,
+    we want to compute the \textit{mean} and \textit{variance} (from
+    which we can estimate the error in the mean)\pause
+  \item We can do this on the fly by storing
+    \begin{align*}
+      n, && \hat{\mu}_n &= \frac{1}{n} \sum_{i=1}^n X_i,
+      & Q_n &= \sum_{i=1}^n (X_i - \hat{\mu}_n)^2 \pause
+    \end{align*}
+  \item Given $X_{n+1}$ we can update our data using
+    \begin{align*}
+      \Delta &= \frac{X_{n+1} - \hat{\mu}_n}{n+1},\pause
+      & Q_{n+1} &= Q_n + n\,\Delta\,(X_{n+1}-\hat{\mu}_n),\pause
+      & \hat{\mu}_{n+1} = \hat{\mu}_n + \Delta\pause
+    \end{align*}
+    this requires the back of an envelop to verify\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Second Order Statistics in C}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In C we can use a \texttt{struct} to keep this data together
+    \begin{cpp}
+      struct Sos {
+        unsigned n;
+        double mu;
+        double Q;
+      };$\pause$
+    \end{cpp}
+  \item We can write functions that update thos
+    \begin{cpp}
+      void add(struct Sos& sos, double x) {
+        double delta = = (x - mu)/(n+1.0);
+        Q += n*delta*(x - mu);
+        mu += delta;
+        n++;
+      }$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ was developed by Bjarne Stroustrup and released in 1985 as
+    ``C with classes''\pause
+  \item It was syntactic sugar that compiled down to C\pause{} (as
+    such if was intended to be as fast as C)\pause
+  \item You are familiar with classes from python and they are very
+    much the same thing\pause, except C++ is a lot more elegant than
+    python\pauseb
+  \item It has grown since 1985, adding templates and a lot of nice
+    functionality\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Classes by Example}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Define programme in header file \texttt{sos.h}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\begin{cpp}
+  class Sos {
+  private:               // $encapsulate\pause$
+    int n;
+    double mu;
+    double Q;$\pause$
+
+  public:                 // $interface   \pause$
+    Sos();                // $constructor \pause$
+    void add(double x);   // $add data  \pause$
+    double mean();        // $return mean$
+    double var();         // $unbiased estimate of variance$
+    double error();       // $estimated error in mean$
+  }$\pause$
+\end{cpp}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Implementation of sos.cc}
+
+\begin{cpp}
+  Sos::Sos() {n=0; mu=0.0; Q=0.0;}$\pause$ 
+
+  void Sos::add(double x) {
+    double delta = = (x - mu)/(n+1.0);
+    Q += n*delta*(x - mu);
+    mu += delta;
+    n++;
+  }$\pause$
+
+  double Sos::mean() const {return mu;} $\pause$
+  
+  double Sos::var() const
+  {
+    assert(n>1.0);
+    return nvar/(n-1.0);
+  }$\pause$
+
+  double error() const
+  {
+    sqrt(var()/n);
+  }$\pause$
+\end{cpp}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Using Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Classes are easy to use
+    \begin{cpp}
+      #include "sos.h"     $\pause$
+      #include <iostream>
+      using namespace std; $\pause$
+
+      void main() {
+        Sos mean;  $\pause$
+        for(int i=0; i<n; ++i) {
+          // compute X
+          mean.add(X);
+        }
+        cout << mean.mean() << ' ' << mean.error() << endl;$\pause$
+      }$\pause$
+    \end{cpp}
+  \item \texttt{Sos} is the class that I use most (both in C++ and python)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Libraries}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ comes with a lot of in built libraries\pause
+  \item I include libraries using include statements
+    \begin{cpp}
+      #include <iostream>
+      #include <vector>$\pause$
+    \end{cpp}
+    \vspace*{-1cm}
+  \item This is the same as C, but the C++ libraries don't have
+    ``.h\pause
+  \item These are known as the standard library or the standard
+    template library\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Namespaces}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When you are writing very large programmes (possibly involving
+    other peoples code) you might accidentally use the same name for a
+    class, function or variable used elsewhere\pause
+  \item If you are luck this won't compile, or crash\pause. If you are
+    unlucky you will have a weird bug that will be very difficult to
+    find\pause
+  \item To prevent this, C++ invented a new scope called
+    \emph{namespaces}\pause
+  \item By default all the standard library classes and functions are
+    in namespace \jl+std+\pause
+  \item To call the library we write \jl+std::vector<double>+\pause
+  \item We can be lazy and write \jl+using namespace std;+\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Print}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Rather than pesky \texttt{printf} statements C++ allows us to
+    use the opeartor \jl+<<+\pause
+  \item When you get used to it, you will love if
+    \begin{cpp}
+      #include <iostream>      // $header file the defines library$
+      using namespace std;
+
+      void main() {
+        int i = 5;
+        double x = 3.3;$\pause$
+        
+        cout << "hello there" << i << ' ' << x << endl; 
+      }$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Pointers}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In C and C++ we can access an object through its memory
+    address
+    \begin{cpp}
+      int a = 5;    // $creates an object a with value 5\pause$
+      int* b = &a;  // $b is the memory address of object a\pause$
+      *b = 6        // $*b is now a pseudonym for a\pause$
+    \end{cpp}
+  \item \jl+b+ is called a pointer\pause
+  \item The \textit{dereferencing} operator \jl+*+ turns the pointer
+    back into the object\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{New Object}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The operator \jl+new+ will create an object and return a
+    reference
+    \begin{cpp}
+Widget w(arg);                  // $w is an instance of class Widget\pause$
+Widget* wpt = new Widget(args); // $pointer to instance of class Widget\pause$
+    \end{cpp}
+  \item To call a member function of \jl+wp+ use either
+    \begin{cpp}
+(*wpt).func();  // $dereference object and call member function\pause$
+wpt->func();    // $easy to type\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Inheritence}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ allows classes to inherit from other classes\pause
+  \item Suppose \jl+Square+ and \jl+Circle+ inherits from \jl+Shape+
+  \item If \jl+Shape+ has a (virtual) member function \jl+area+ then
+    \jl+Square+ and \jl+Circle+ can redefine this
+    \begin{cpp}
+      class Square: public Shape $\pause${
+        private:
+          double l;
+
+        public:
+          Square(double len) {l=len;}  // $constructor\pause$
+          double area() {return l*l;}  // $define area$
+      }$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Polymorphism}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Polymorphism is a way of using inheritance where we
+    instantiate a parent pointer with a child class
+    \begin{cpp}
+      Shape* shape = new Square(2.5);$\pause$
+
+      cout << shape->area() << endl;$\pause$
+    \end{cpp}
+  \item This provides a clean way of choosing a behaviour depending on
+    the object type\pause
+  \item It is used in \textit{iterator}s which we will come to later
+    in the course\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Arrays}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ also uses \jl+new+ to return arrays (in place of malloc)
+    \begin{cpp}
+      int* pt = new int[20];
+    \end{cpp}
+    creates a pointer to memory location where we can store 20
+    integers\pause
+  \item We can dereference the $i^{th}$ element using \jl+pt[i]+\pause
+    (which is equivalent to \jl$*(pt+i)$)\pauseb---this is the same as C\pauseb
+  \item We can free this up with
+    \begin{cpp}
+      delete[] pt;$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{References}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C and C++ also provides references
+    \begin{cpp}
+      int a = 5;         // $create a memory location called a\pause$
+      int& b = a;        // $b is a pseudonym for a\pause$
+      b = 6              // $both b and a are now 6\pause$
+    \end{cpp}
+  \item References are like dereferenced pointers\pause
+  \item There are many uses of references, one is so we can make
+    functions change their value
+    \begin{cpp}
+      void f(int x) {x += 6;}   // $define function f\pause$
+
+      void g(int& x) {x += 2;}  // $define function g\pause$
+      
+      int a = 5;$\pause$
+      
+      f(a);                      // $does nothing a=5\pause$
+      g(a);                      // $now a=7\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Saving Copying}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When we declare a function \jl+f(Widget w)+ then widget \jl+w+
+    is copied to the function (this is known as passed by value)\pause
+  \item If widget is big, even if we don't want to change it we might
+    not want to copy it
+    \begin{cpp}
+      void f(const Widget& w);$\pause$
+      void g(Widget w);$\pause$
+    \end{cpp}
+  \item In both cases \jl$w$ is a Widget, but function \jl$f$ avoids
+    copying its input\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Overloading}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C and C++ allow you to define different functions with the
+    same name but different arguments
+    \begin{cpp}
+      void func(int a);     // $called if argument is an \texttt{int}$
+      void func(double a);  // $called if argument is a \texttt{double}\pause$
+    \end{cpp}
+  \item Needs to be used sensibly, but provides flexibility\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Example}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In the second order statistics class we could define a member
+    function
+    \begin{cpp}
+      void add(const Sos& rhs);
+    \end{cpp}
+  \item With an implementation
+    \begin{cpp}
+void Sos::add(const Sos& rhs)
+{
+  double total = n + rhs.n;
+  double diff = rhs.mu-mu;
+  mu += rhs.n*diff/total;
+  Q += rhs.Q + n*rhs.n*diff*diff/total;
+  n = total;
+
+  return rhs;
+}
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Overloading Continued}
+  
+  \begin{itemize}
+  \item This allows us to add second order statistics
+    \begin{cpp}
+      Sos total;
+      for(int i=0; i<10; ++i) {
+        Sos local;
+        for(int j=0; j<100; ++j) {
+          // compute X
+          cout << local.mean() << ',' << local.error() << endl;
+          local.add()
+        }
+        total.add(local)
+        cout << total.mean() << ',' << total.error() << endl;
+      }
+    \end{cpp}
+  \end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Opeartor Overloading}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ like python allows us to overload operators\pause
+  \item Rather than using add I might prefer to use
+    \begin{cpp}
+      class Sos {
+        ...
+        double operator+=(double x) { add(x); return(x); }
+      }$\pause$
+    \end{cpp}
+  \item Then we can write
+    \begin{cpp}
+      Sos sos;
+      sos += X;$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Overloading \jl+<<+}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To print an object of type \texttt{Sos} we define
+    \begin{cpp}
+      ostream& operator<<(ostream& out, const Sos& d)
+      {
+        out << d.mean() << " " << d.error();
+        return(out);
+      }$\pause$
+    \end{cpp}
+  \item We can then print
+    \begin{cpp}
+      Sos sos;
+      ...
+
+      cout << sos << endl; $\pause$
+    \end{cpp}
+  \item I've made \texttt{sos.h} and \texttt{sos.cc} available on the
+    web site\pause---I use them a lot, you might want to keep them around\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Templates}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many algorithms and data structures can be applied to a wide
+    range of types\pause
+    \begin{cpp}
+      vector<double> double_vec; // $resizable array of doubles\pause$
+      vector<int>    int_vec;    // $resizable array of int\pause$
+      map<string, int>  mymap    // $map with string keys and int values\pause$
+    \end{cpp}
+  \item C++ allows us to define a template class
+    \begin{cpp}
+      template <typename T>
+      class myclass {
+        private T data;
+      }$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Templates}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Templates work very simply\pause
+  \item They provide a template for same type (e.g. \jl+T+)\pause
+  \item When you ask for an instance of that object
+    \begin{cpp}
+      myclass<int> instance;$\pause$
+    \end{cpp}
+    the C++ compiler takes your template and substitutes the \jl+T+
+    with \jl+int+\pause
+  \item This is both simple and powerful\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Template Functions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As well as classes I can create template functions
+    \begin{cpp}
+      template <typename T>
+      T accumulate(const vector<T>& vec) {
+        T sum = 0;
+        for(int i=0; i<vec.size(); ++i) {
+          sum += vec[i];
+        }
+        return sum
+      }$\pause$
+    \end{cpp}
+  \item This will work with \jl$vector<int>$, \jl+vector<double>+\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Summary}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ is a rich language\pause
+  \item You should learn some C++ in low-level programming\pause
+  \item There are a lot of resources\pause
+  \item I'm afraid you will only get good at it by writing
+    programs\pause
+  \item The lab session are to help you learn C++\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+

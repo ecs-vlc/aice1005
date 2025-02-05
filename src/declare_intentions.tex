@@ -327,7 +327,7 @@
   \item You can have repetitions of elements\pause
   \item It has random access, e.g. \jl$v[i]$\pause
   \item You can \jl$push_back(i)$, \jl$insert$, \jl$erase$, etc.\pause
-  \item C++ has a linked list class \jl$List<T>$\pause
+  \item C++ has a linked list class \jl$list<T>$\pause
   \end{itemize}
 \end{PauseHighLight}
 
@@ -410,8 +410,9 @@
 \begin{PauseHighLight}
   \begin{itemize}
   \item A map provides a content addressable memory for pairs
-  \textit{keyword: data}\pause
-  \item It provides fast access to the data through the keyword\pause
+  \textit{key: value}\pause
+  \item It provides fast access to the \textit{value} through the
+    \textit{key}\pause
   \item Implement as tree or hash table\pause
   \item Multimaps allows different data to be stored with the same
     keyword\pause
@@ -469,11 +470,11 @@
 \begin{java}
 set<Node> findCluster(Node startNode, Graph graph)$\pause$
 {
-  stack<Node> uncheckedNodes = new Stack<Node>();
-  set<Node> clusterNodes = new HashSet<Node>();$\pause$
+  stack<Node> uncheckedNodes;
+  set<Node> clusterNodes;$\pause$
 
   uncheckedNodes.push(startNode);
-  clusterNodes.add(startNode);$\pause$
+  clusterNodes.insert(startNode);$\pause$
 
   while (!uncheckedNodes.empty()) {$\pause$
     Node next = uncheckedNodes.top();   uncheckedNodes.pop();
