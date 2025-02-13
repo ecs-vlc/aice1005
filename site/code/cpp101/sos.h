@@ -5,8 +5,7 @@
 #ifndef __SOS__
 #define __SOS__
 
-#include <iostream>
-
+#include <error_estimate.h>
 using namespace std;
 
 class Sos {
@@ -21,6 +20,7 @@ public:
   double sd() const;
   double err() const;
   double sum() const;
+  operator Error() const;
   int number() const { return(int(n)); }
 private:
   double aver;
