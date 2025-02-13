@@ -5,7 +5,6 @@
 #include <iostream>
 #include <math.h>
 #include "sos.h"
-#include "error.h"
 #include <iomanip>
 
 Sos::operator Error() const

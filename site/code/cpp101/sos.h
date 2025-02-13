@@ -5,7 +5,6 @@
 #ifndef __SOS__
 #define __SOS__
 
-#include <error_estimate.h>
 using namespace std;
 
 class Sos {
