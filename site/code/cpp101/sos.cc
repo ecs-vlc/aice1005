@@ -7,11 +7,6 @@
 #include "sos.h"
 #include <iomanip>
 
-Sos::operator Error() const
-{
-  return Error(av(), err());
-}
-
 void Sos::add(double x)
 {
   double delta = (x - aver)/(n+1.0);
