@@ -13,15 +13,12 @@ int main() {
 
   tree.show_tree();
   tree.print_tree();
-  int cnt = 0;
   for (int element: tree) {
     cout << element << ' ';
   }
   cout << endl;
   
   for (auto pt=tree.find(5); pt!=tree.find(9); ++pt) {
-    if (++cnt==10)
-      break;
     cout << *pt << ' ';
   }
   cout << endl;

@@ -5,13 +5,7 @@
 #include <iostream>
 #include <math.h>
 #include "sos.h"
-#include "error.h"
 #include <iomanip>
-
-Sos::operator Error() const
-{
-  return Error(av(), err());
-}
 
 void Sos::add(double x)
 {
