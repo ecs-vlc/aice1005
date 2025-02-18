@@ -108,7 +108,7 @@ function ringsize() {
 };
 
 function get(i) {
-    RingDialog.text("get(" + i + ")");
+    RingDialog.text("ring[" + i + "]");
     if (Ring.noElements>i) {
 	var j = Ring.current - i;
 	if (j<0)

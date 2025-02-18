@@ -144,8 +144,8 @@ function isEmpty() {
     }
 }
 
-function noItems() {
-    CQDialog.text("noItems()");
+function my_size() {
+    CQDialog.text("size()");
     CQResult
 	.transition()
 	.delay(500)
@@ -198,11 +198,11 @@ function resizeQueue() {
     }
 }
 
-function getCapacityLeft() {
-    CQDialog.text("getCapacityLeft()");
+function capacity() {
+    CQDialog.text("capacity()");
     CQResult
 	.transition()
 	.delay(500)
 	.duration(500)
-	.text((CQ.n-CQ.noElements));
+	.text(CQ.n);
 }
