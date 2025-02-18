@@ -1,0 +1,75 @@
+<html>
+  <head>
+<title>AICE1000 Lab A1</title>
+</head>
+<body>
+<h1>AICE1000 Algorithms and Analysis Lab A2</h1>
+
+<p>Today we are going to write C++ code.  We will implement two data structures, a queue based on a circular array and a ring.  We are going to use a unit testing that I will provide.  Your task is to pass all the unit tests through writing elegant and correct code.  If you have passed all the units test then you may show this to a demonstrator and then leave.  Otherwise you will need to work to the end of the session to get full marks.</p>
+
+<p><strong>You may work on your own or in a group of two.</strong></p>
+
+<h2>Preparation</h2>
+
+<ol>
+  <li>You should review
+  <li>Bring a laptop to work on
+  <li>You will need both a C++ compiler and python with matplotlib installed
+  <li>If you don't know about log-log plots either look them up e.g. on <a href="https://en.wikipedia.org/wiki/Log%E2%80%93log_plot">wikipedia</a> (bit technical) or watch a video e.g. the one by <a href="https://www.youtube.com/watch?v=5AUgp5N6a48">Robert Cruikshank</a>.
+</ol>
+
+
+<h2>Sort Algorithms</h2>
+
+We want to measure the time complexity for <b>insertion sort</b>, <b>shell sort</b> and <b>quick sort</b>. We will get them to sort a <code>vector&lt;double&gt;</code> multiple times for different lengths.  We will use Open-AI's Chat-GPT or some other chatbot to help write the code.  The demonstrators are there to help.  Don't get stuck, ask for help.
+
+<ol>
+  <li>Ask the chatbot to write a C++ function that takes another C++ function, <code>func(const vector&lt;double&gt;& v)</code> as an argument.  It should should generate a <code>vector&lt;double&gt;</code> of size <code>n</code> consisting of random doubles and time how long <code>func</code> takes to run.
+  <li>Ask the chatbot to write a C++ function that runs insertion sort to sort a vector of doubles
+  <li>Time how long it takes to sort 1000 random doubles using insertion sort
+  <li>Put this in a loop using <code>for(int i=0; i&lt;20; ++i){...}</code> and using <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.h">sos.h</a> and <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.cc">code.cc</a> compute the mean time and the estimated error in the mean time.
+  <li>Using the loop <code>for(int n=10; i&lt;5000; n*=2){...}</code> compute the runtimes for different length arrays.
+  <li>Ask the chatbot to write a code snippet to write the results into a file
+  <li>Ask the chatbot to write a python program that read a file with columns n, t and dt and generate a graph with errorbars plotting t versus n with errors dt.
+  <li>Modify the graph plotting function to plot the graph on a log-log plot and
+    fit a straight line to the data.  Find the gradient and intercept (i.e. log(t) = a log(n) +b).
+  <li>From this plot a quadratic curve on the original plot that fits the data
+  <li>Repeat this for shell sort.  This is quicker that quadratic and you can test it on larger length arrays.
+  <li>Do the same for quick sort (quick sort is built into the sort algorithm of the standard library). Note for quick sort runs in n log(n) time.  If you want to fit this you need to plot t/n versus log(n), which should be a straight line.
+</ol>
+
+<h2>Optional: Graph Colouring</h2>
+
+We have measured the time complexisty for sort.  Here we look at the time complexity of solving a classic combinatorial optimisation problem: graph colouring. 
+
+<p><center>
+<div id="graphColouring">
+<script type="text/javascript" src="d3.min.js"></script>
+<script type="text/javascript" src="graphColouring.js"></script>
+<div id="GCbuttons">
+<input name="updateButton"
+       type="button"
+       value="solve()"
+       onclick="solve()" />
+</div>
+
+</center>
+
+  <p>We can solve this problem by brute force.  Using backtracking we search all possible colourings of the graph.
+  <ol>
+    <li>Download the C++ program <a href="code/graph_colouring.cc">graph_colouring.cc</a> (if you want to compile it with make use this <a href="code/Makefile">Makefile</a>)
+    <li>Run the code using
+      <pre><code>graph_colouring &lt;number of vertices&gt; &lt;number of colours&gt; </code></pre>
+      Try it with 15 vertices and 3 colours and 4 colours.  The code generates a graph using <code>matplotlib</code>.
+    <li>Modify the code to empirically measure the runtime for graphs of size 10-17 with three and four colours.
+    <li>Plot this on a graph of log time taken, log(t). versus number of vertices, n, and fit a straight line fit to the plot.
+    <li>By considering the total number of different colourings come up with a theoretical runtime complexity and see whether it agrees with your empirical result.
+  </ol>
+
+
+
+<address>
+<a href="mailto:apb1@soton.ac.uk">Adam Prugel Bennett</a>
+</address>
+</body>
+</html>
