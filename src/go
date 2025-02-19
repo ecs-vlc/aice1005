@@ -4,7 +4,7 @@ import  re
 from ask import Ask
 import os
 from myengage import myengage
-
+import time
 
 def extract(str):
     _, endpart = str.split("{")
@@ -35,5 +35,6 @@ if newer(tex, pdf) or newer("macros_gen.tex", pdf):
     os.system(f"ppower4 lectures.pdf {pdf}")
 
 os.system(f"evince {pdf}&")
+time.sleep(1)
 myengage()
 

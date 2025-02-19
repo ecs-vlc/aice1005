@@ -21,7 +21,7 @@
 
 <h2>Queues</h2>
 
-<p>We are going to implement a queue using a circular array (we could use a linked list, but won't).  We will use the conventional names <code>enqueue(const T& x)</code> and <code>dequeue()</code> to add and remove items from the queue.  We could implement this using an array
+<p>We are going to implement a queue using a circular array (we could use a linked list, but won't).  We will use the conventional names <code>enqueue(const T& x)</code> and <code>dequeue()</code> to add and remove items from the queue.  We could implement this using an array.
   <center><img src="array_queue.png" align=center><i></i></center>
 <p>This would however be hugely wasteful of memory.  Instead we are going to use a resizable circular array.
   <p><center><div id="CircularQueue">
@@ -53,13 +53,15 @@
 </center>
 
 <ol>
-  <li>I provide you with a header file Queue.h, an implementation file Queue.cc a test file test_queue.cc and a second header file to do unit testing and a makefile.  Download these to a directory.
-  <li>You should be able to compile these using the command <code>make</code> to get an executably file <code>test_queue</code>.
-  <li>If you run <code>test_queue</code> it should tell you that you have failed all the tests.  <code>test_queue</code> uses <a href="https://github.com/doctest/doctest">doctest</a> to do unit testing.
-  <li>Your job is to fill in the implementation in <code>Queue.cc</code> so thatthe code passes all the tests.  The default capacity should be 8. If there are more than 8 items in the queue you should double the capacity.
+  <li>I provide you with a header file <a href="code/Queue.h">Queue.h</a>, a test file <a href="code/test_queue.cc">test_queue.cc</a> and a second header file <a href="code/doctest.h">doctest.h</a> to do unit testing and a makefile.  Download these to a directory.
+  <li>You should be able to compile these to get an executably file <code>test_queue</code>.
+  <li>If you run <code>test_queue</code> it should tell you that you have failed most of the tests.  <code>test_queue</code> uses <a href="https://github.com/doctest/doctest">doctest</a> to do unit testing.
+  <li>Your job is to fill in the implementation in <code>Queue.h</code> so thatthe code passes all the tests (don't change <code>test_queue.cc</code>).  Note I have written functions templates for all the member functions of class <code>Queue&lt;T&gt;</code>, but you need to replace these with working code.  The default capacity should be 8. If there are more than 8 items in the queue you should double the capacity.
 </ol>
 
-<h2>Building a Ring</h2>
+<h2>Building a Ring Buffer</h2>
+
+<p>Ring buffers are used to store some number of items, but it will write over old items.  It is used in things like history mechanisms which store a number of previous commands, but forgets old commands.
 
 <center><div id="Ring">
 <script type="text/javascript" src="d3.min.js"></script>
@@ -88,6 +90,14 @@
 </div>
 
 </center>
+
+<p>You are going to implement a ring mechanism.  It has a funny semantics in that <code>ring[0]</code> will give you the last item you added and <code>ring[1]</code> gives you the item before that (it iterates backwards in time).  We are also going to build an iterator that should iterate over all the items you have stored in the ring.  Once again we are going to have a capacity which by default sets to 8.
+
+  <ol>
+    <li>Copy <a href="code/ring.h">ring.h</a> and <a href="code/test_ring.cc">test_ring.cc</a>.  This uses the same <a href="code/doctest.h">doctest.h</a> file that you used for testing the queue.
+    <li>Once again, compile <code>test_ring.cc</code> and run the executable code.
+    <li>Your task is to fill in the implementation of <code>ring.h</code> so that you pass all the unit tests.
+  </ol>
 
 
 <address>

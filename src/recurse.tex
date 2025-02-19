@@ -60,7 +60,7 @@
     \end{itemize}    
   \end{minipage}\hfill
   \begin{minipage}{0.3\linewidth}
-    \multipdf[width=0.5\linewidth]{ancestors}\pause
+    \multipdf[width=0.7\linewidth]{ancestors}\pause
   \end{minipage}
 \end{itemize}
 
@@ -368,7 +368,6 @@
            return gcd(a, b);
       }
     \end{java}
-  \item Example of tail recursion
 \end{itemize}
 
 \end{slide}
@@ -437,7 +436,7 @@
   long fib(long n)
   {
     if (n<=2)
-    return 1;
+      return 1;
     return fib(n-1) + fib(n-2);
   }
 \end{java}\pause
@@ -719,7 +718,7 @@ to dust and the world would end. \pause
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{slide}
-\section{Proof by Recursion}
+\section{Proof by Induction}
 
 \begin{itemize}
 \item $T(n) = 2\,T(n-1) + 1$

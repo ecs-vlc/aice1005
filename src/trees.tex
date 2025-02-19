@@ -240,7 +240,7 @@
 \begin{cpp}
 template <typename T>    
 class binary_tree {
-private:
+private:$\pause$
   class Node {
   public:
     T element;
@@ -256,10 +256,13 @@ private:
 
   unsigned no_elements = 0;
   Node* root = 0;$\pause$
+
+private:
+  ...$\pause$
 \end{cpp}
 \end{minipage}\hspace{2cm}
 \begin{minipage}{9cm}
-\vspace{-3cm}
+\vspace{-5cm}
 \includegraphics[width=9cm]{tree-entry}
 \end{minipage}
 \end{slide}
@@ -389,9 +392,9 @@ private:
       \begin{itemize}
       \item Constructors
       \item \texttt{size()}
-      \item \texttt{insert(T\,o)}
-      \item \texttt{find(Object\,o)}
-      \item \texttt{erase(Object\, o)}
+      \item \texttt{insert(T\, o)}
+      \item \texttt{find(T\, o)}
+      \item \texttt{erase(T\, o)}
       \item \texttt{begin()} and \texttt{end()}
       \end{itemize}\pause
     \end{itemize}
@@ -573,6 +576,39 @@ private:
     \end{cpp}\pause
   \end{itemize}
 \end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{C++ Code}
+
+\begin{cpp}
+class binary_tree {
+$\pause$
+public:
+  class iterator {
+  private:
+    Node* current;$\pause$
+    
+  public:
+    iterator(Node* node) {current=node;}$\pause$
+    T operator*() const {return current->element;}$\pause$
+    iterator operator++() {
+      current = successor(current);
+      return *this;
+    }$\pause$
+    bool operator!=(const iterator& other) {
+      return current!=other.current;
+    }
+  };$\pause$
+
+  iterator begin() {...}
+  iterator end() {return iterator(0)}
+
+};$\pause$
+\end{cpp}
 \end{slide}
 
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%

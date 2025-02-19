@@ -265,9 +265,9 @@
 
 \begin{minipage}{10cm}
 \begin{java}
-void rotateLeft(Node<T>* e)$\pause$
+void rotateLeft(Node* e)$\pause$
 {
-  Node<T>* r = e->right;$\pause$
+  Node* r = e->right;$\pause$
   e->right = r->left;$\pause$
   if (r->left != 0)
      r->left->parent = e;$\pause$

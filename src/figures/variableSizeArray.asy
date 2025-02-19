@@ -58,6 +58,17 @@ draw(box((-7,-3), (8,1)), white);
 
 label("list.push\_back(" + string(r) + ")", (-2,0), W, blue);
 draw((-2,0)--(-0.5, 0), red, Arrow);
+emptyArray(capacity, (0,-2));
+for(int j=0; j<i-1; ++j) {
+  label(string(array[j]), (j, -2));
+}
+
+ship();
+erase();
+draw(box((-7,-3), (8,1)), white);
+label("list.push\_back(" + string(r) + ")", (-2,0), W, blue);
+
+draw((-2,0)--(-1.25,0)--(-1.25,-2)--(-0.5, -2), red, Arrow);
 
 emptyArray(capacity, (0,-2));
 for(int j=0; j<i-1; ++j) {

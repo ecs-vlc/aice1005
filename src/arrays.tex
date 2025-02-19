@@ -406,6 +406,39 @@
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{slide}
+\section{RAII}
+
+\begin{PauseHighLight}
+\begin{cpp}
+  template <typename T>
+  class container {
+    private:
+      T* data;
+    
+    public:
+      container(unsigned n) {data = new T[n];}$\pause$
+      ~container(unsigned n) {delete[] data;} $\pauselevel{=3}\pauseb$
+  };$\pauselevel{=1}\pause$
+
+    
+    main() {
+
+      for (int i=0; i<1000; ++i) {
+        container<int> my_container(10000);
+        // $do something$
+      }
+
+    }$\pause$
+\end{cpp}
+
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
 \section[-2]{Writing over Memory}
 
 \begin{PauseHighLight}
@@ -652,7 +685,9 @@ int main(int argc, char *argv[]) {
   \item insertion and deletion are expensive, $O(n)$\pause
   \item Arrays are often the simplest way to implement many other
     data structures, e.g. stacks\pause
-  \item Use (dynamically re-sizable) arrays (vector<T>) frequently!\pause
+  \item Use (dynamically re-sizable) arrays (\jl+vector<T>+)
+    frequently!\pause
+  \item Stop using raw arrays\pauseb
   \end{itemize}
 \end{PauseHighLight}
 

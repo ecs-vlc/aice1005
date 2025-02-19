@@ -5,7 +5,7 @@ practical_cpp:
 practical_cpp_2:
   "driver file": main2.cc
   "header file": array2.h
-practical_cpp_3:
+arrays:
   "driver file": main3.cc
   "header file": array3.h
 cpp101:
