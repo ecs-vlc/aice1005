@@ -4,38 +4,40 @@
 template <typename T>
 class Ring {
 public:
-  Ring(unsigned capacity=8);
+  Ring(int capacity=8);
   Ring(const Ring<T>&);
   ~Ring();
   void add(const T&);
-  T operator[](unsigned);
-  unsigned size() const;
-  unsigned capacity() const;
+  T operator[](int);
+  int size() const;
+  int capacity() const;
 
   class iterator {
   public:
-    iterator(unsigned);
+    iterator(Ring& parent, int);
     T operator*() const;
     iterator operator++();
     bool operator!=(const iterator& other);
   private:
-    unsigned current;
+    Ring& parent;
+    int current;
+    int cnt;
   };
 
-  iterator begin() const;
-  iterator end() const;
+  iterator begin();
+  iterator end();
 
 private:
   T* items;
-  unsigned pos;
-  unsigned num_items;
-  unsigned capacity_size;
+  int position;
+  int num_items;
+  int capacity_size;
 };
 
 /* Constructor; should create an empty ring of size capacity which defaults to 8 if not given. */
 
 template <typename T>
-Ring<T>::Ring(unsigned capacity) capacity_size(capacity), num_items(0), pos(0) {
+Ring<T>::Ring(int capacity): position(0), num_items(0), capacity_size(capacity) {
   items = new T[capacity];
 }
 
@@ -44,64 +46,90 @@ Ring<T>::Ring(unsigned capacity) capacity_size(capacity), num_items(0), pos(0) {
 template <typename T>
 Ring<T>::Ring(const Ring<T>& rhs) {
   capacity_size = rhs.capacity_size;
+  num_items = rhs.num_items;
+  position = rhs.position;
   items = new T[capacity_size];
-  
+  for(int i=0; i<num_items; ++i) {
+    items[i] = rhs.items[i];
+  }
 }
 
 /* Destructor needs to free up memory */
 
 template <typename T>
-Ring<T>::~Ring() {}
+Ring<T>::~Ring() {
+  delete[] items;
+}
 
 /* add: add item to the ring.  This may need to resize the list (if you want you can create another function resize in the head file Ring.h). In the standard library this would be called push. */
 
 template <typename T>
-void Ring<T>::add(const T& item) {}
+void Ring<T>::add(const T& item) {
+  items[position] = item;
+  position = (position==capacity_size-1)? 0: position + 1;
+  if (num_items<capacity_size) {
+    ++num_items;
+  }
+}
 
 /* operator[]: This should return the i^th element counting backwards.  If it is called with an index greater than the number of items in the ring then it should throw an exception "this item is not stored" */
 
 template <typename T>
-T Ring<T>::operator[](unsigned index) {return T(-1);}
+T Ring<T>::operator[](int index) {
+  if (index>=num_items) {
+    throw "this item is not stored";
+  }
+  return (index>=position)? items[capacity_size + position - index -1] : items[position - index -1];
+}
 
-/* size: returns the number of items in the ring.  As this can't be negative we make this an unsigned integer.  The const in the definition tells us that this command does not change the Ring data structure */
+/* size: returns the number of items in the ring.  As this can't be negative we make this an int integer.  The const in the definition tells us that this command does not change the Ring data structure */
 
 template <typename T>
-unsigned Ring<T>::size() const {return 999;}
+int Ring<T>::size() const {return num_items;}
 
 /* capacity: tells up how much memory we have reserved */
 
 template <typename T>
-unsigned Ring<T>::capacity() const {return 0;}
+int Ring<T>::capacity() const {return capacity_size;}
 
 
 /* constructure for the nested class iterator: note that this has access to the data held in ring */
 
 template <typename T>
-Ring<T>::iterator::iterator(unsigned i) {}
+Ring<T>::iterator::iterator(Ring& p, int i): parent(p) {
+  current = (i>=parent.position)? parent.capacity_size + parent.position - i - 1 : parent.position - i - 1;
+  cnt = i;
+}
 
 /* dereferencing operator should return whatever the iterator "points to" */
 
 template <typename T>
-T Ring<T>::iterator::operator*() const {return T(0);}
+T Ring<T>::iterator::operator*() const {return parent.items[current];}
 
 /* need a way to check that the iterator is not the end iterator */
 
 template <typename T>
-bool Ring<T>::iterator::operator!=(const iterator& other) {return false;}
+bool Ring<T>::iterator::operator!=(const iterator& other) {
+  return cnt < other.cnt;
+}
 /* need a way to check that the iterator is not the end iterator */
 
 template <typename T>
-typename Ring<T>::iterator Ring<T>::iterator::operator++() {return iterator(0);}
+typename Ring<T>::iterator Ring<T>::iterator::operator++() {
+  current = (current>0)? current-1 : parent.capacity_size - 1;
+  ++cnt;
+  return *this;
+}
 
 /* code to return a new iterator: you are free to define this however you want to */
 
 template <typename T>
-typename Ring<T>::iterator Ring<T>::begin() const {return iterator(0);}
+typename Ring<T>::iterator Ring<T>::begin() {return iterator(*this, 0);}
 
 /* code to return a "point" past the last iterator: you are free to choose this however you like. */
 
 template <typename T>
-typename Ring<T>::iterator Ring<T>::end() const {return iterator(0);}
+typename Ring<T>::iterator Ring<T>::end() {return iterator(*this, num_items);}
 
 
 #endif

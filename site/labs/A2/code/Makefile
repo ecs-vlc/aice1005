@@ -26,3 +26,5 @@ clean:
 	rm -f $(OBJS) $(TARGET)
 
 
+run: test_ring
+	./test_ring

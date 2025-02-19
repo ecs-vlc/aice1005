@@ -28,7 +28,8 @@ TEST_CASE("Test Ring") {
     CHECK(ring1.capacity()==12);
 
     CHECK(ring1[0]==9);
-    CHECK(ring1[10]==0);
+    CHECK(ring1[9]==0);
+    CHECK_THROWS(ring[10]);
   }
 
   SUBCASE("Check multiple adds") {
@@ -36,7 +37,7 @@ TEST_CASE("Test Ring") {
       ring.add(i);
     }
     CHECK(ring[0]==9);
-    CHECK(ring[8]==2);
+    CHECK(ring[7]==2);
 
     CHECK_THROWS(ring[10]);
   }
@@ -56,7 +57,7 @@ TEST_CASE("Test Ring") {
     CHECK(ring2[3]==3);
 
     CHECK(ring[1]==3);
-    CHECK(ring[2]==4);
+    CHECK(ring[0]==4);
   }
 
   SUBCASE("test iterator") {
@@ -66,7 +67,7 @@ TEST_CASE("Test Ring") {
 
     int cnt = 0;
     for(auto ring_pt=ring.begin(); ring_pt!=ring.end(); ++ring_pt) {
-      CHECK(*ring_pt==8-cnt);
+      CHECK(*ring_pt==9-cnt);
       ++cnt;
     }
     CHECK(cnt==8);
@@ -74,7 +75,8 @@ TEST_CASE("Test Ring") {
     // the next one should work by default
     cnt = 0;
     for(int item: ring) {
-      CHECK(item==8-cnt);
+      CHECK(item==9-cnt);
+      ++cnt;
     }
     CHECK(cnt==8);
   }
