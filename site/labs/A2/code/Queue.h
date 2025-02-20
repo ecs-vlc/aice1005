@@ -3,7 +3,7 @@
 
 template <typename T>
 class Queue {
-public:
+public:                        // Don't change the public intergace
   Queue();
   Queue(const Queue<T>&);
   ~Queue();
@@ -14,11 +14,14 @@ public:
   bool is_empty() const;
   bool resize_capacity(unsigned);
 private:
-  T* items;
-  unsigned front;
-  unsigned num_items;
+  T* items;                    // You may want to change these
+  unsigned front;              // although they provide sufficient
+  unsigned num_items;          // infromation to construct a queue
   unsigned capacity_size;
 };
+
+/* You need to change all the functions below.  I put in enough details
+   to ensure the code would compile.  It does work at the moment.  */
 
 /* Constructor; should create an empty queue with capacity 8 */
 

@@ -14,10 +14,19 @@
 <ol>
   <li>We are going to use C++ classes.  These are similar to python classes, but if they are completely strange have a look at class section of <a href="https://www.w3schools.com/cpp/">W3 school</a>
   <li>We are also going to use C++ templates.  For what we are doing all you need is to do is make the data type of the objects you are storing type "T".  If you are completely confused about this or want to know more have a look <a href="https://www.geeksforgeeks.org/templates-cpp/">here</a>.
-  <li>You should review the code associated with the lecture notes on <a href="https://moodle.ecs.soton.ac.uk/course/view.php?id=121">Moodle</a>.  Particularly the array code, the linked list code and the binary tree code.  Make sure you can compile them and run them.
+  <li>You should review the <a href="https://moodle.ecs.soton.ac.uk/course/view.php?id=121#section-1">C++ 101 lecture</a> and the code associated with the lecture notes on <a href="https://moodle.ecs.soton.ac.uk/course/view.php?id=121">Moodle</a>.  Particularly the array code, the linked list code and the binary tree code.  Make sure you can compile them and run them.
   <li>Read the description of the data structures we are going to implement.  If you don't understand read the Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Circular_buffer">circular buffer</a>
 </ol>
 
+<h3>Tips</h3>
+<ol>
+  <li>The <code>const</code> after the function tells the compiler that the function method does not change the content of the class
+  <li>You need to wrap around once you have reached the capacity.  To do modular arithmetic in C++ use <code>a%b</code>
+  <li>You should only resize when the number of elements exceeds the capacity
+  <li>The unit tests do very simple tests.  Try to understand them.  They do things like create a queue.  Enqueue and item.  Check the number of items.  Dequeue the item and checks it is what you enqueued.  It is worth trying to get the first checks correct first as these are the easy ones
+  <li>There are lots of ways of writing a queue.  You want to write clean code as it is easier to read (will have less bugs) and is usually faster.
+  <li>All functions except the copy constructor (<code>Queue(const Queue&)</code>) should be &Theta;(1)
+</ol>
 
 <h2>Queues</h2>
 
@@ -91,12 +100,13 @@
 
 </center>
 
-<p>You are going to implement a ring mechanism.  It has a funny semantics in that <code>ring[0]</code> will give you the last item you added and <code>ring[1]</code> gives you the item before that (it iterates backwards in time).  We are also going to build an iterator that should iterate over all the items you have stored in the ring.  Once again we are going to have a capacity which by default sets to 8.
+<p>You are going to implement a ring mechanism.  It has a funny semantics in that <code>ring[0]</code> will give you the last item you added and <code>ring[1]</code> gives you the item before that (it iterates backwards in time).  We are also going to build an iterator that should iterate over all the items you have stored in the ring.  Once again we are going to have a capacity which by default sets to 8.  Working with unsigned integers is tricky when you need to iterate backwards so to keep things simple I have made all the indexes integers.
 
   <ol>
     <li>Copy <a href="code/ring.h">ring.h</a> and <a href="code/test_ring.cc">test_ring.cc</a>.  This uses the same <a href="code/doctest.h">doctest.h</a> file that you used for testing the queue.
     <li>Once again, compile <code>test_ring.cc</code> and run the executable code.
     <li>Your task is to fill in the implementation of <code>ring.h</code> so that you pass all the unit tests.
+    <li>The iterator is fiddly.  In C++ the nested class does not by default know about the Outer class.  This information can be passed to the iterator in the constructor, which I have done in the skeleton code.
   </ol>
 
 
