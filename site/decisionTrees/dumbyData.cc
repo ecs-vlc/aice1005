@@ -70,7 +70,7 @@ int main() {
 
   for (string fn: data_filename) {
   
-    std::ofstream outFile("training.dat");
+    std::ofstream outFile(fn);
     
     vector<vector<Sos>> means(num_classes);
     for(unsigned i=0; i<means.size(); ++i) {
