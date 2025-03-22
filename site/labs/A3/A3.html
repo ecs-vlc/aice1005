@@ -1,0 +1,46 @@
+<html>
+  <head>
+<title>AICE1005 Lab A3</title>
+</head>
+<body>
+<h1>AICE1005 Algorithms and Analysis Lab A3</h1>
+
+<h2>Preparation</h2>
+
+<ol>
+  <li>We are going to write some C++ classes.  If you are still new to this look at the preparation for <a href="../A2/A2.html">lab A2</a>.
+  <li>We are going to look at <a href="../../lecture_pdf/trees.pdf">binary trees</a> and <a href="../../lecture_pdf/graph.pdf">graphs</a>.  If you are unsure of these look at the <a href="../../lecture.html">lectures</a>.
+</ol>
+
+<h2>Marking</h2>
+
+Full marks will be given if you attend the lab for 3 hours or you have finished all parts.  If you miss a lab there will be an opportunity to redo a lab or you can complete the lab in your own time and send me the code.
+
+<h2>Binary Search Trees</h2>
+
+<p>We provide a simple binary search tree <a href="code/binary_tree.h">class</a>.  This does not do any balancing.  You can view the graph using the class method <code>show_tree()</code> or (more prettily) using <code>print_tree</code>.
+
+  <ol>
+    <li>Write a class recursive method to compute the average depth of the tree (note that the depth of a node is the distance from the root).  The easy way to do this is to compute a method finding the total depth of all nodes and then divide this by <code>size()</code>.
+    <li>Write a programme that generates 10 random arrays of size <code>n</code> and find the average "average depth".  You might want to use <a href=" <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.h">sos.h</a> and <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.cc">code.cc</a>"></a> to compute the average.  You may use a chatbot to generate the code, provided you understand the code being generated.
+    <li>Plot a graph of average depth of binary tree versus <code>log(n)</code> and find an empirical fit for the average depth of a binary search tree with no balancing.  You might want to use python's matplot lib for balancing.  You may also use a chatbot to generate the plotting code.
+  </ol>
+
+<h2>Graphs</h2>
+
+<ol>
+  <li>Write a graph class that assigns a 2-d positions to vertices and stores edges as an adjaceny list with the distance between the edges of vertices.
+  <li>Write a method to geneate random graphs with <code>n</code> vertices whose positions are randomly selected to lie in a 100x100 box and where the edge probability is <code>p</code>.  
+  <li>Optionally write a method to visualise the graph. You might want to use matplotlib to do this or graphviz (a well known package for quickly visualising graphs).  Again you may use a chatbot to help you do this.
+  <li>Write a method to compute the minimum spanning tree using Prim's algorithm. Prim's algorithm is illsutrated in <a href="prim.pdf">here</a>.  You should use the STL's <code>priority_queue</code> to implement prim's algorithm.'
+    <center><img src="prim.gif" align=center><i></i></center>
+  <li>Write a second method using Kruskal's algorithm (you can use quick sort to sort the edges).  Kruskal builds a minimum spanning tree by adding the shortest available edge that does not form a loop as illustrated <a href="kruskal.pdf">here</a>.  It uses <a href="https://ecs-vlc.github.io/aice1005/code/set_algorithms/disjointSet.cc"><code>disjointSet.cc</a> to ensure no loops.
+    <center><img src="kruskal.gif" align=center><i></i></center>
+  <li>Compare the minimum spanning tree of both algorithms.    
+</ol>
+
+<address>
+<a href="mailto:apb1@soton.ac.uk">Adam Prugel Bennett</a>
+</address>
+</body>
+</html>
