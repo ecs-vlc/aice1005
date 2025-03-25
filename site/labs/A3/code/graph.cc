@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <sstream> 
 #include <math.h>
 #include <random>
 #include <fstream>
@@ -154,6 +155,10 @@ public:
   }
 
   unsigned size() const {return num_vertices;}
+
+  const vector<Edge>& edges_connecting(int vertex) {
+    return adjacencyList[vertex];
+  }
   
   void print() {
     int cnt = 0;
@@ -163,7 +168,7 @@ public:
     }
     int cnt_edges = 0;
     for(unsigned i=0; i<size(); ++i) {
-      for(const Edge e: adjacencyList[i]) {
+      for(const Edge e: edges_connecting(i)) {
 	if (e.vertex2<i)
 	  continue;
 	cout << "edge[" << cnt_edges << "] = " << i << "-"
@@ -180,7 +185,7 @@ public:
     draw(edges);
   }
   
-  void draw(const vector<Edge>& edges1) const {
+  void draw(const vector<Edge>& highlightEdges) const {
     ofstream plot("plot_graph.py");
 
     plot << "import numpy as np\n";
@@ -192,27 +197,40 @@ public:
       for(const Edge& e: adjacencyList[i]) {
 	if (e.vertex2<i)
 	  continue;
-	Position v1 = vertices[e.vertex1];
-	Position v2 = vertices[e.vertex2];
-	plot << "plt.plot([" << v1.x << "," << v2.x << "],["
-	     << v1.y << "," << v2.y << "], \"ro-\")\n";
+	plot << matplotlibEdge(e);
       }
     }
+    for(const Edge& e: highlightEdges) {
+      plot << matplotlibEdge(e, "b", 1);
+    }
+	  
     int cnt = 0;
     for(const Position& p: vertices) {
-      plot << "cir = plt.Circle(" << p << ", 5, color=\"red\", fill=True)\n";
+      plot << "cir = plt.Circle(" << p << ", 5, color=\"red\", fill=True, zorder=2)\n";
       plot << "ax.add_patch(cir)\n";
       plot << "plt.text(" << p.x << "," << p.y << "," << cnt++
-	   << ", ha=\"center\", ma=\"center\", va=\"center\")\n";
+	   << ", ha=\"center\", ma=\"center\", va=\"center\", zorder=3)\n";
     }
     plot << "plt.show()\n";
     plot.close();
-    sleep(1);
+    sleep(0.2);
     system("python plot_graph.py&");
   }
 
   vector<Edge> prims();
   vector<Edge> kruskal();
+
+private:
+  inline
+  string matplotlibEdge(const Edge& e, string col="ro", int zorder=0) const {
+    Position v1 = vertices[e.vertex1];
+    Position v2 = vertices[e.vertex2];
+    stringstream ss;
+    ss << "plt.plot([" << v1.x << "," << v2.x << "],["
+       << v1.y << "," << v2.y << "], \""
+       << col << "-\", zorder=" << zorder << ")\n";
+    return ss.str();
+  }
 };
 
 
@@ -233,6 +251,6 @@ int main() {
   Graph graph(15, 0.3);
   graph.print();
   vector<Edge> my_edges;
-  my_edges.push_back(Edge(1,3, 0));
+  my_edges.push_back(graph.edges_connecting(0)[0]);
   graph.draw(my_edges);
 }
