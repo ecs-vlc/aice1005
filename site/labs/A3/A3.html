@@ -31,9 +31,9 @@ Full marks will be given if you attend the lab for 3 hours or you have finished 
 <ol>
   <li>I have written a graph class (<a href="code/graph.cc">graph.cc</a>) with a constructor <code>Graph(n,p)</code> where <code>n</code> is the number of vertices and <code>p</code> is the edge probability.  Each vertex has a 2-d position and the edge has a weight equal to the distance between the vertices.
   <li>You can visualise the graph using <code>graph.draw()</code>.  You will need matplot lib installed.
-  <li>Write a method to compute the minimum spanning tree using Prim's algorithm. Prim's algorithm is illsutrated in <a href="prim.pdf">here</a>.  You should use the STL's <code>priority_queue</code> to implement prim's algorithm.'
+  <li>Write a method to compute the minimum spanning tree using Prim's algorithm. Prim's algorithm is illsutrated in <a href="prim.pdf">here</a>.  You should use the STL's <code>priority_queue</code> to implement prim's algorithm. (see help below)'
     <center><img src="prim.gif" align=center><i></i></center>
-  <li>Write a second method using Kruskal's algorithm (you can use quick sort to sort the edges).  Kruskal builds a minimum spanning tree by adding the shortest available edge that does not form a loop as illustrated <a href="kruskal.pdf">here</a>.  It uses <a href="code/disjointSet.h"><code>disjointSet.h</a> to ensure no loops.
+  <li>Write a second method using Kruskal's algorithm (you can also use a priority queue edges).  Kruskal builds a minimum spanning tree by adding the shortest available edge that does not form a loop as illustrated <a href="kruskal.pdf">here</a>.  It uses <a href="code/disjointSet.h"><code>disjointSet.h</a> to ensure no loops.
     <center><img src="kruskal.gif" align=center><i></i></center>
   <li>Compare the minimum spanning tree of both algorithms.    
 </ol>
@@ -43,11 +43,11 @@ Full marks will be given if you attend the lab for 3 hours or you have finished 
 <ul>
   <li>In C++ to use a priority queue we need to tell the queue how to order edges.  We do this with a class that performs a comparison.  I have include a class to compare edges.  To create a priority queue we use
     <pre><code>
-	  priority_queue<Edge, vector<Edge>, CompareEdges> pq;
+	  priority_queue&lt;Edge, vector&lt;Edge&gt;, CompareEdges&gt; pq;
 	  Edge e2(1, 2, 2.5)
 	  pq.push(e2);
 	  Edge e2 = pq.top();
-	  pq.pop()
+	  pq.pop();
 	  <code><pre>
 </ul>
 
