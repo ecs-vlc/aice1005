@@ -38,6 +38,19 @@ Full marks will be given if you attend the lab for 3 hours or you have finished 
   <li>Compare the minimum spanning tree of both algorithms.    
 </ol>
 
+<h3>Help</h3>
+
+<ul>
+  <li>In C++ to use a priority queue we need to tell the queue how to order edges.  We do this with a class that performs a comparison.  I have include a class to compare edges.  To create a priority queue we use
+    <pre><code>
+	  priority_queue<Edge, vector<Edge>, CompareEdges> pq;
+	  Edge e2(1, 2, 2.5)
+	  pq.push(e2);
+	  Edge e2 = pq.top();
+	  pq.pop()
+	  <code><pre>
+</ul>
+
 <address>
 <a href="mailto:apb1@soton.ac.uk">Adam Prugel Bennett</a>
 </address>

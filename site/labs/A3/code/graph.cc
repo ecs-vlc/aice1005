@@ -57,7 +57,11 @@ struct Edge {
   Edge(int v1, int v2, double d): vertex1(v1), vertex2(v2), distance(d) {}
 };
 
-
+class CompareEdges {
+  bool operator()(Edge e1, Edge e2) {
+    return e1.distance < e2.distance;
+  }
+};
 
 /* Graph class */
 
