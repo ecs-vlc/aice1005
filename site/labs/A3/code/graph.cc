@@ -240,6 +240,8 @@ private:
 
 vector<Edge> Graph::prims() {
   vector<Edge> mst;
+
+  priority_queue<Edge, vector<Edge>, CompareEdges> pq;
   // You need to fill this in
   return mst;
 }
