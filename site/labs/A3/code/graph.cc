@@ -211,9 +211,7 @@ public:
     draw(edges);
   }
   
-  void draw(const vector<Edge>& highlightEdges, string title="") const {
-    char file_name[] = "tmpfileXXXXXX";
-    mkstemp(file_name);
+  void draw(const vector<Edge>& highlightEdges, string title="", string file_name="tmpfile.py") const {
     ofstream plot(file_name);
 
     plot << "import numpy as np\n";
@@ -271,7 +269,7 @@ vector<Edge> Graph::prims() {
 
   // You need to fill this in
 
-  draw(mst, "Prim's Algorithm");
+  draw(mst, "Prim's Algorithm", "prims.py");
   return mst;
 }
 
@@ -280,7 +278,7 @@ vector<Edge> Graph::kruskals() {
   
   // You need to fill this in
   
-  draw(mst, "Kruskal's Algorithm");
+  draw(mst, "Kruskal's Algorithm", "kruskals.py");
   return mst;
 }
 
