@@ -55,6 +55,7 @@ struct Edge {
   unsigned vertex2;
   double distance;
 
+  Edge() {}
   Edge(int v1, int v2, double d): vertex1(v1), vertex2(v2), distance(d) {}
 };
 
@@ -244,7 +245,7 @@ public:
     plot << "plt.show()\n";
     plot.close();
     sleep(0.2);
-    string cmd = "python " + string(file_name) + " &";
+    string cmd = "python3 " + string(file_name) + " &";
     system(cmd.c_str());
   }
 
