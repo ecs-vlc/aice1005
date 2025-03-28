@@ -39,7 +39,18 @@ public:
     }
   };
 
-  binary_tree(): no_elements(0), root(0) {} 
+  binary_tree(): no_elements(0), root(0) {}
+
+  ~binary_tree() {clean_up(root);}
+
+  void clean_up(Node* node) {
+    if (node==0)
+      return;
+    clean_up(node->left);
+    clean_up(node->right);
+    delete node;
+  }
+
 
   pair<iterator, bool> insert(const T& element) {
     if (no_elements==0) {
@@ -71,14 +82,14 @@ public:
   }
 
   inline
-  unsigned size() {return no_elements;}
+  unsigned size() const {return no_elements;}
 
   inline
-  void show_tree() {
+  void show_tree() const {
     cout << show_subtree(root) << endl;
   }
   
-  string show_subtree(Node* node) {
+  string show_subtree(Node* node) const {
     if (node==0) {
       return "*";
     } else {

@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <queue>
 #include <stdio.h>
+#include "disjointSets.h"
 using namespace std;
 
 /* Structure to hold posision of vertices */

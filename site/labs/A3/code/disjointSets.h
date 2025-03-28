@@ -5,7 +5,7 @@ class DisjointSets {
 public:
   DisjointSets(unsigned numElements): num_elements(numElements) {
     s = new int[numElements];
-    for(int i=0; i<numElements; i++)
+    for(unsigned i=0; i<numElements; i++)
       s[i] = -1;                   // roots are negative number
   }
 
