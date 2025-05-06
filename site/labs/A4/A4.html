@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AICE1005 Lab A4: Huffman Coding</title>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      margin: 2rem auto;
+      max-width: 900px;
+      padding: 0 1rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    h1 {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+    }
+
+    ol {
+      margin-left: 1.2rem;
+    }
+
+    code {
+      background-color: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    a {
+      color: #0066cc;
+    }
+
+    address {
+      margin-top: 2rem;
+      font-style: normal;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>AICE1005 Lab A4: Huffman Coding</h1>
+
+  <p>Your task is to encode this <a href="study.txt">file</a> using a Huffman code, and decode it using a Huffman tree.</p>
+
+  <ol>
+    <li>
+      Start by writing code to read a file and count character occurrences.  You want to create a <code>map&lt;char, int&gt; charCount;</code> that has a count for each character in the file.
+      If needed, example code is <a href="charCount.cc">here</a>.
+    </li>
+
+    <li>
+      The next step is to write a Huffman tree. C++ allows us to use inheritance.  It is useful to have an base class <code>HuffmanTree</code> and two derived classes <code>HuffmanTreeLeaf</code> and <code>HuffmanTreeNode</code>.  We show an example of how to do this below.  You will want to add additional functions and you need to fill in the constructors for the leaf node and non-leaf node.
+      <pre><code class="language-cpp">
+/* Abstract base class for Huffman tree */
+class HuffmanTree {
+protected:
+  unsigned occurrence_frequency;
+public:
+  int occurrence() const { return occurrence_frequency; }
+  ...
+};
+
+/* Leaf node for Huffman tree */
+class HuffmanTreeLeaf: public HuffmanTree {
+private:
+  char character;
+public:
+  HuffmanTreeLeaf(char ch, int occ) {
+    ...
+  }
+  ...
+};
+
+/* Non-leaf node */
+class HuffmanTreeNode: public HuffmanTree {
+private:
+  HuffmanTree* left_child;
+  HuffmanTree* right_child;
+public:
+  HuffmanTreeNode(HuffmanTree* left, HuffmanTree* right) {
+    ...
+  }
+  ...
+};
+      </code></pre>
+
+      To use this kind of inheritance you use pointers to the HuffmanTree base class, but initialise the derived class, e.g.
+      <pre><code class="language-cpp">
+HuffmanTree* ht1 = new HuffmanTreeLeaf('a', 50);
+HuffmanTree* ht2 = new HuffmanTreeLeaf('b', 30);
+
+HuffmanTree* ht3 = new HuffmanTreeNode(ht1, ht2);
+      </code></pre>
+    </li>
+
+    <li>
+      We now have to build a Huffmann tree.  To do this we have to create a <code>HuffmanTreeLeaf</code> for each character in <code>charCount</code> (our map of characters).  These should be added to a priority queue (using <code>pq.push(new HuffmanTree(ch, occ)</code>).  For the priority queue to sort the <code>HuffmanTree</code>s correctly we have to define a comparison class.
+      <pre><code class="language-cpp">
+/* Class used to sort Huffman subtrees */
+class CompareHuffman {
+public:
+  bool operator()(HuffmanTree* ht1, HuffmanTree* ht2) {
+    return ht1-&gt;occurrence() &gt; ht2-&gt;occurrence();
+  }
+};
+      </code></pre>
+    </li>
+    Priority queues are defined in the header file <code>queue</code> (so you need <code>#include &lt;queue&gt;;</code>).  To define a priority queue of Huffman tree pointers we use
+      <pre><code class="language-cpp">
+priority_queue&lt;HuffmanTree*, vector&lt;HuffmanTree*&gt;, CompareHuffman&gt; pq;
+      </code></pre>
+
+    <li>
+      Combine trees from the queue into a single root tree.  You need to take the two Huffman trees at the top of the priority queue (using <code>top()</code> and <code>pop()</code> twice) and create a new <code>HuffmanTreeNode*</code> that we then push onto the priority queue.  We repeat this until there is only one <code>HuffmanTree*</code> left in the priority queue.  This points to the root of the complete Huffman tree.
+    </li>
+
+    <li>
+      We now have to traverse the Huffman tree from the root to all the leaves to extract all the codes.  To do this we first define a map which will eventually contain a mapping from all the characters in the file to Huffman code strings
+      <pre><code class="language-cpp">
+map&lt;char, string&gt; codeMap;
+      </code></pre>
+      Next write a function <code>extractCodes</code> which needs to be a virtual function in your base class (making it virtual forces you to define it in the derived classes)
+      <pre><code class="language-cpp">
+/* Defined in HuffmanTree */
+virtual void extractCodes(map&lt;char, string&gt;& codeMap, string codeString) const = 0;
+      </code></pre>
+      We define it as <code>const</code> because it should not change the data stored in the Huffman tree nodes.  Setting it equal to 0 means we don&#39;t give it an implementation in the base class. We have also to define the same function in the derived classes
+      <pre><code class="language-cpp"e>
+/* Defined in HuffmanTreeLeaf and HuffamnTreeNode */
+void extractCodes(map&lt;char, string&gt;& codeMap, string codeString) const {
+  ...
+}
+      </code></pre>
+      We can populate the <code>codeMap</code> recursively using a single call to the HuffmanTree (which I've called <code>root</code>)
+      <pre><code class="language-cpp">
+root-&gt;extractCodes(codeMap, "");
+      </code></pre>
+      For the <code>HuffmanTreeNode</code> we recursively call <code>extractCodes</code> on the <code>left_child</code> and <code>right_child</code>.  For the left child you need to extend <code>codeString</code> by "0" and bb "1" for the right child.  For the <code>HuffmanTreeLeaf</code> you just define <code>extractCode</code> to perform <code>codeMap[character] = codeString;</code> (this creates a mapping from the character stored in the leaf to a <code>codeString</code>).  As a sanity check you can look at your codes
+      <pre><code class="language-cpp">
+cout &lt;&lt; "Huffman Encoding\n";
+for(auto&amp; code: codes) {
+  cout &lt;&lt; "\"" &lt;&lt; code.first &lt;&lt; "\": " &lt;&lt; code.second &lt;&lt; endl;
+}
+cout &lt;&lt; "---------------------\n";
+      </code></pre>
+      (note that some characters are unprintable and one is the return character).
+
+    <li>
+      We can now use our <code>codeMap</code> to encode our file.  We can do this with the following code
+      <pre><code class="language-cpp">
+/* Encode the text using Huffman tree */
+file.clear();             // clean up file stream for the input text
+file.seekg(0);            // start from beginning
+
+string encoded_text_filename = "encoded_text.txt";
+ofstream encoded_file(encoded_text_filename);    // file we will write to
+int length=0;                                    // measure length of encoding
+while (file.get(ch)) {
+  string code = codeMap[ch];                     // use map to get new encodings
+  encoded_file &lt;&lt; code;
+  length += code.size();
+}
+cout &lt;&lt; "length of encoding = " &lt;&lt; length/8 &lt;&lt; " bytes\n";
+cout &lt;&lt; "---------------------\n";
+encoded_file.close();
+      </code></pre>
+      I got a code length for the file of 140430 bytes.  Note that if you really wanted to compress the file you would print using a byte encoding (rather than write 0 and 1 in ACCII).
+    </li>
+
+    <li>
+      One last piece of code is to use the Huffman tree to decode encoded text file.  We read the encoded text one character at a time.  We set a <code>HuffmanTree*</code> to root and then pass the character (0 or 1) to a function <code>HuffmanTree* decode(char)</code> of the HuffmanTree (this needs to be defined as a virtual function of the base class and defined in each derived class).  For the <code>HuffmanTreeNode</code> we return <code>left_child</code> if the character is '0' and <code>right_child</code> otherwise.  Although you need to define a function for the <code>HuffmanTreeLeaf</code> it should never get called.  You need to know whether you have reached a leaf.  A function <code>bool is_leaf()</code> and a second function <code>char symbol()</code> can be used do decode as follow
+      <pre><code class="language-cpp">
+ifstream in_file(encoded_text_filename);              // open encoded file
+ofstream decompressed_file("decompressed_text.txt");  // open output file
+
+HuffmanTree* decoder = root;                          // start decoding at root of tree
+while (in_file.get(ch)) {
+  decoder = decoder-&gt;decode(ch);                      // navigate down tree depending on code
+  if (decoder-&gt;is_leaf()) {                           // when you hit a leaf use symbol
+    decompressed_file &lt;&lt; decoder-&gt;symbol();
+    decoder = root;                                   // restart at root of tree
+  }
+}
+      </code></pre>
+      (you need to define <code>bool is_leaf()</code> and <code>char symbol()</code> in the base class (as a virtual function) and the derived class&emdash;<code>char symbol()</code> will never be called for the <code>HuffmanTreeNode</code> class but you need to give it an implementation all the same)
+    </li>
+
+    <li>
+      Verify the output matches the original file (in Unix you can use <code>diff file1 file2</code>).
+    </li>
+  </ol>
+
+  <p>Well done you have encoded and decoded a file using a Huffman code.  You got a long way with three data structures (maps, priority queues and you bespoke Huffman tree). In a real coding system you would have to store the Huffman tree in the encoded file.  For efficient compression you don&#39;t compress on characters, but on commonly occurring sub-strings.  You need to run another algorithm to identify the commonly occurring sub-strings.</p>
+
+  <address>
+    <a href="mailto:apb@ecs.soton.ac.uk">Adam Prugel Bennett</a>
+  </address>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
