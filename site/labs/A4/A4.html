@@ -115,7 +115,7 @@ HuffmanTree* ht3 = new HuffmanTreeNode(ht1, ht2);
     </li>
 
     <li>
-      We now have to build a Huffmann tree.  To do this we have to create a <code>HuffmanTreeLeaf</code> for each character in <code>charCount</code> (our map of characters).  These should be added to a priority queue (using <code>pq.push(new HuffmanTree(ch, occ)</code>).  For the priority queue to sort the <code>HuffmanTree</code>s correctly we have to define a comparison class.
+      We now have to build a Huffmann tree.  To do this we have to create a <code>HuffmanTreeLeaf</code> for each character in <code>charCount</code> (our map of characters).  These should be added to a priority queue (using <code>pq.push(new HuffmanTreeLeaf(ch, occ)</code>).  For the priority queue to sort the <code>HuffmanTree</code>s correctly we have to define a comparison class.
       <pre><code class="language-cpp">
 /* Class used to sort Huffman subtrees */
 class CompareHuffman {
@@ -132,7 +132,7 @@ priority_queue&lt;HuffmanTree*, vector&lt;HuffmanTree*&gt;, CompareHuffman&gt; p
       </code></pre>
 
     <li>
-      Combine trees from the queue into a single root tree.  You need to take the two Huffman trees at the top of the priority queue (using <code>top()</code> and <code>pop()</code> twice) and create a new <code>HuffmanTreeNode*</code> that we then push onto the priority queue.  We repeat this until there is only one <code>HuffmanTree*</code> left in the priority queue.  This points to the root of the complete Huffman tree.
+      Combine trees from the queue into a single root tree.  You need to take the two Huffman trees at the top of the priority queue (using <code>top()</code> and <code>pop()</code> twice) and create a new <code>HuffmanTreeNode</code> that we then push onto the priority queue.  We repeat this until there is only one <code>HuffmanTree*</code> left in the priority queue.  This points to the root of the complete Huffman tree.
     </li>
 
     <li>
@@ -159,7 +159,7 @@ root-&gt;extractCodes(codeMap, "");
       For the <code>HuffmanTreeNode</code> we recursively call <code>extractCodes</code> on the <code>left_child</code> and <code>right_child</code>.  For the left child you need to extend <code>codeString</code> by "0" and bb "1" for the right child.  For the <code>HuffmanTreeLeaf</code> you just define <code>extractCode</code> to perform <code>codeMap[character] = codeString;</code> (this creates a mapping from the character stored in the leaf to a <code>codeString</code>).  As a sanity check you can look at your codes
       <pre><code class="language-cpp">
 cout &lt;&lt; "Huffman Encoding\n";
-for(auto&amp; code: codes) {
+for(auto&amp; code: codeMap) {
   cout &lt;&lt; "\"" &lt;&lt; code.first &lt;&lt; "\": " &lt;&lt; code.second &lt;&lt; endl;
 }
 cout &lt;&lt; "---------------------\n";
