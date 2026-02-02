@@ -10,11 +10,11 @@ private:
     Node *next;
   };
 
-  struct list_iterator {
-    list_iterator(Node *pt): entry(pt) {}
+  struct iterator {
+    iterator(Node *pt): entry(pt) {}
     T& operator*() {return entry->value;}
     const T& operator*() const {return entry->value;}
-    list_iterator operator++() {
+    iterator operator++() {
       entry = entry->next;
       return entry;
     }
@@ -58,8 +58,8 @@ public:
     }
   }
 
-  list_iterator begin() {return list_iterator(head);}
-  list_iterator end() {return list_iterator(0);}
+  iterator begin() {return list_iterator(head);}
+  iterator end() {return list_iterator(0);}
   
 };
 
