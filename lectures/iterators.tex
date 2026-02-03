@@ -1,0 +1,555 @@
+%Master File:lectures.tex
+
+\lesson{Iterate}
+
+\vspace*{-2cm}
+\begin{center}
+  \includegraphics[height=11cm]{iterators_cartoon}
+\end{center}
+\vspace*{-1cm}
+\keywords{Array iteration, iterators}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Iterators}{iterators}
+    \outlineitem{The C++ Iterator Pattern}{viter}
+    \outlineitem{Linked-List Iterators}{linkedlist}
+    \outlineitem{Generic Programming}{genericprog}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{iterators_cartoon}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Iterators}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One common task you want to do on a collection of objects is
+    to iterate through each component\pause
+  \item If we have a standardised method for all collections then it
+    is much easier to remember what to do\pause
+  \item But we can also write code that works for any collection that
+    follows this pattern\pause
+  \item This pattern is known as the \emph{iterator pattern}\pause
+  \item The pattern was first developed in C++, but is commonly used
+    in many other languages\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Iterating Over C Arrays}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In C we would typically use a for-loop to iterate over an
+    array
+    \begin{cpp}
+int n = 10;                        // size of array
+int* begin = malloc(n*sizeof(10));  // malloc returns beginning of array $\pause$
+int* end = begin + n;               // address past end of array$\pause$
+
+int sum = 0;
+for(int* pt = begin; pt != end; pt++) {
+  sum += *pt;                      // need to dereference pointer$\pause$
+}
+    \end{cpp}
+  \item Ugly\pauseb, but efficient\pauseb
+  \item Acts a prototype for C++ iterators\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{C++ Iterator Pattern}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The C++ iterator pattern says for every \jl+container<T>+ we
+    create a nested class called
+    \begin{cpp}
+      container::iterator
+    \end{cpp}
+    which acts as a pointer (for arrays this could just be a pointer
+    to the array)\pause
+  \item The class should implement
+    \begin{itemize}
+    \item a derefenecing operator \jl+T operator*()+\pause
+    \item an increment operator \jl*operator++()*\pause
+    \item a not equal function \jl+bool operator!=(const ITER&, const ITER&)+
+      where \jl+ITER+ is \jl+container::iterator+\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{A Beginning and an Ending}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In addition the container should have two methods
+    \begin{itemize}
+    \item \jl+begin()+
+    \item \jl+end()+
+    \end{itemize}
+    that return iterators representing the first element and an
+    iterator representing one position past the last element\pause
+  \item Wow! That seems awfully complicated\pauseb
+  \item Don't panic!\pauseb{} We can hack this\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Minimal Iterator}
+  
+\begin{PauseHighLight}
+  \begin{cpp}
+template <typename>
+class Container<T> {
+private:
+  
+  class iterator {   // this is a nested class$\pause$
+  public:
+    iterator() {...}            // constructor$\pause$
+    iterator operator++() {...} // increment$\pause$
+    T& operator*() {...}        // dereference$\pause$
+    friend bool operator!=(const iterator&, const iterator&){
+      // code to determine inequality
+    }$\pause$
+  }
+
+public:
+  
+  iterator begin() {...}        // return begin iter
+  iterator end() {...}          // return end iter$\pause$
+
+}
+  \end{cpp}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Array-based iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For array based containers such as vector we don't actually
+    need to create an iterator class as we can just use the normal
+    pointer
+    \begin{cpp}
+template <typename T>
+class Array {
+private:
+  T *data;
+  unsigned length;
+  unsigned capacity;
+  
+public:
+  ...
+  typedef T* iterator;           // iterator is pseudonym for T*$\pause$
+  iterator begin() {return data;}
+  iterator end() {return data+length;}
+};$\pause$
+    \end{cpp}
+  \item That's all we need\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Using Array Iterators}
+
+\begin{cpp}
+  main() {
+
+    Array<string> elements(4): {"earth", "water", "wind", "fire"};$\pause$
+
+    for(Array:iterator it=elements.begin(); it!=elements.end(); ++it) {
+      cout << *it << endl;
+    }$\pause$
+
+    for(auto it=elements.begin(); it!=elements.end(); ++it) {
+      cout << *it << endl;
+    }$\pause$
+
+    for(string& element: elements) {  // range-based loop
+      cout << element << endl;
+    } $\pause$
+  }
+\end{cpp}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Linked-List Iterators}
+
+\pb
+  \begin{itemize}
+  \item Linked-lists are not array based\pauseh
+  \item To use the iterator we need to implement the iterator
+    class\pauseh
+  \item The object instantiated from the class should represent the
+    position we are in the linked list\pauseh
+    \begin{center}
+      \multipdf[width=\linewidth]{linkedListIterator}\pause
+    \end{center}
+  \end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Linked-List}
+
+\begin{cpp}
+template <typename T>
+class MyList {   // My linked list class $\pause$
+private:
+  struct Node{   // A simple node nested class
+    Node(T value, Node *node): value(value), next(node) {}
+    T value;
+    Node *next;
+  };$\pause$
+
+  struct iterator {          // An iterator class $\pause$
+    Node* entry;             // Holds node pointer$\pause$
+    iterator(Node* pt): entry(pt) {}       // constructor$\pause$
+    T& operator*() {return entry->value;}  // dereferencing$\pause$
+    iterator operator++() {  // next entry
+      entry = entry->next;
+      return iterator(entry);
+    }$\pause$
+    bool operator!=(const iterator& other) const {
+      return entry != other.entry;
+    }
+  };$\pause$
+\end{cpp}
+
+\end{slide}
+\begin{slide}
+\section[-2]{Linked-List}
+
+\begin{cpp}
+template <typename T>
+class MyList {
+private:
+  struct Node{...}
+
+  struct iterator {...} $\pause$
+
+  Node* head;          // head of linked list$\pause$
+  unsigned no_elements;$\pause$
+  
+public:
+  MyList(): head(nullptr), no_elements(0) {}
+  void add(T value) {...}$\pause$
+  
+  iterator begin() {return iterator(head);}
+  iterator end() {return iterator(nullptr);}
+}  $\pause$
+\end{cpp}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Increment Operators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ has a pre-increment opeator \jl$++a$ and a post-increment
+    operator \jl$a++$\pause
+  \item The pre-increment operator increments $a$ and returns the
+    incremented version, e.g.
+    \begin{cpp}
+T& operator++() {++count; return *this;}  // defines ++a$\pause$
+    \end{cpp}
+  \item The post-increment operator copies $a$ increments it and
+    returns the copy, e.g.
+    \begin{cpp}
+T operator++(int) {T b=a; ++count; return b;} // defines a++$\pause$
+    \end{cpp}
+  \item The \jl+int+ argument is not used, but tells the compiler
+    which increment is which\pause
+  \item We might want to implement \jl$it++$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Const Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ uses the compiler to test whether functions change their
+    argument or not
+    \begin{cpp}
+    func1(Class obj)   // obj is copied so will only modify copy$\pause$
+    func2(Class& obj)  // passed by reference, might change obj$\pause$
+    func3(const Class& Obj)    // will not change obj$\pause$
+    \end{cpp}
+  \item \jl+func3+ will only call methods of Obj that are const
+    \begin{cpp}
+    class Class {
+      void method() const;  // won't change the object$\pause$
+      void change();        // might change the object
+    }$\pause$
+    \end{cpp}
+  \item We want to declare a \jl+const_iterator+ with 
+    \begin{cpp}
+    const T& operator*() const  // const derefencing operator$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Bidirectional Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For the linked list we have implemented a \emph{forward
+      iterator}\pause
+  \item This is the only iterator possible for a singly linked
+    list\pause
+  \item For a doubly linked list we can implement a \emph{bidirectional
+    iterator}\pause
+  \item This requires us to implement the decrement operators
+    \begin{cpp}
+    T& operator--();     // implements --obj
+    T  operator--(int);  //implements obj--
+    \end{cpp}\pause
+  \item There also exist \emph{random-access iterators} that implements
+    methods including
+    \begin{cpp}
+    T& operator[int i]  // returns i'th element
+    operator+=[int i]   // move forward i places
+    \end{cpp}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Range-Based For Loop}
+  
+\begin{PauseHighLight}\squeeze
+  \begin{itemize}
+  \item C++ allows you to iterate over collections elegantly
+    \begin{cpp}
+    Collection<string> collection;
+      
+    for (string& element: collection) {
+      print(element);  // or whatever function you want
+    }$\pause$
+    \end{cpp}
+  \item This is syntatic sugar!  The compiler just replaces this with
+    \begin{cpp}
+    for(auto& it=collection.begin(); it!=collection.end(); ++it) {
+      print(*it);
+    }$\pause$
+    \end{cpp}
+  \item This works for any class that has an iterator\pause
+  \item \jl+auto+ just works out the correct type\pause
+  \item By being pretty ranged-based for loops reduce bugs in code\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Generic Algorithms}
+
+\begin{PauseHighLight}\squeeze
+  \begin{itemize}
+  \item Iterators allow us to write generic functions\pause
+  \item E.g. summing elements
+    \begin{cpp}
+template <typename Iter, typename T>
+T accum(Iter it, Iter end, T init) {
+  for(; it != end; ++it)
+    init += *it;
+    return init;
+}      $\pause$
+    \end{cpp}
+  \item This will sum many collections
+    \begin{cpp}
+int array[20];$\pauselevel{=2}\pause$
+vector<double> v[5];$\pauselevel{=3}\pause$
+set<int> s;$\pauselevel{=4}\pause$
+
+cout << " array sum = " << accum(&array[0], &array[20], 0) << endl;$\pauselevel{=2}\pause$
+cout << "vector sum = " << accum(v.begin(), v.end(), 0.0) << endl;$\pauselevel{=3}\pause$
+cout << "   set sum = " << accum(s.begin(), s.end(), 0) << endl;$\pauselevel{=4}\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{std::algorithm}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The standard template library includes a library
+    \jl$<algorithm>$ that uses iterators to offer generic algorithms\pause
+  \item There are a lot of algorithms available, e.g.
+    \begin{itemize}
+    \item \jl+count_if()+: counts elements that satisfies condition\pause
+    \item \jl+max_element()+: returns maximum element\pause
+    \item \jl+find()+: find an element\pause
+    \item \jl+find_if()+: find first element that satisfies condition\pause
+    \item \jl+all_of()+: true if all elements satisfy condition\pause
+    \item \jl+any_of()+: true if any element satisfies condition\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Modifying Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item \jl+for_each()+: perform operation of each element\pause
+  \item \jl+move()+: move elements in a range\pause
+  \item \jl+copy()+: copy range of elements\pause
+  \item \jl+copy_if()+: copy range if condition is true\pause
+  \item \jl+merge()+: merge two ranges \pause
+  \item \jl+replace_if()+: replace element if ...\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Sorting and Searching}
+  
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item \jl+reverse()+: reverse range\pause
+  \item \jl+rotate()+: cyclically rotate range\pause
+  \item \jl+shuffle()+: random shuffle\pause
+  \item \jl+sort()+: sort collection\pause
+  \item \jl+stable_sort()+: use a stable sort\pause
+  \item \jl+make_heap()+: make a heap\pause
+  \item \jl+binary_search()+: use binary search\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Why Use Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item This is just a selection of some algorithms available\pause
+  \item Using these algorithms you will get a correct and efficient
+    implementation\pause
+  \item You could write them yourself, but by when you use standard
+    algorithms it makes your code very readable\pause{} and
+    maintainable\pauseb
+  \item It is slightly disappointing you don't get to write your own
+    algorithms as they are cool\pause, but you will end up with much
+    more solid code\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item C++ iterators are not the easiest thing to get your head
+    around\pause
+  \item They are the major tool for writing generic algorithms\pause
+  \item Once you get used to them, they are not that difficult to
+    code\pause
+  \item They also provide a classic example of how to build generic
+    systems\pause
+  \item Learning to use the \jl+<algorithm>+ will take you to yet
+    another level\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

@@ -1,0 +1,551 @@
+%Master File:lectures.tex
+
+\lesson{Use Arrays for Fast Set Algorithms}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{newMaze}
+\end{center}
+
+\keywords{Equivalent classes, Disjoint Set, Fast Sets}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\vfill
+\begin{minipage}{10cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Equivalent Classes}{equiv}
+    \outlineitem{Disjoint Sets}{disjoint}
+    \outlineitem{Fast Sets}{fast}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=7cm]{newMaze1}
+\end{minipage}
+\vfill
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+\setcounter{outlineitem}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Equivalence Classes
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Equivalence Relations}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given a set of elements $\mathcal{X}=\{x_1,\, x_2,\, \ldots \}$
+    and a binary relationship $\sim$ with the following properties\pause
+    \begin{description}
+    \item[\textbf{(Reflexivity)}] For every element $x\in\mathcal{X}$,
+      $x\sim x$\pause
+    \item[\textbf{(Symmetry)}] For every two elements $x, y \in
+      \mathcal{X}$ if $x \sim y$ then $y \sim x$\pause
+    \item[\textit{(Transitivity)}] For every three elements $x, y, z \in
+      \mathcal{X}$ if $x \sim y$ and $y\sim z$ then $x\sim z$\pause
+    \end{description}
+  \item Then $\sim$ defines a partitioning of the set into
+    \emph{equivalence classes}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.4\linewidth]{partition}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Example of Equivalence Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Although, equivalent classes sound very mathematical they
+    often provide a useful formalisation of the real world\pause
+  \item E.g. Pairs of web pages with a link in each direction between them\pause
+  \item Consider web pages in the same equivalence class if you can
+    get from one to the other by clicking links\pause
+  \item Partitions the web into linked domains\pause
+  \item Friendship relations in social media\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Dynamic Equivalence Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Finding equivalence classes is rather easy using graph traversal
+    algorithms\pause
+  \item However, as our web example suggests, there are applications
+    where equivalence classes change over time\pause
+  \item Adding a link could join two domains which were separate\pause
+  \item We will see this is a useful idea both for building mazes
+    and (in a later lecture) for finding minimum spanning trees\pause
+  \item Building a data structure which finds equivalence classes where
+    the equivalence relation changes over time is challenging\pause,
+    but fortunately there is an elegant solution to this\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Union-Find
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Union-Find}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In the union-find algorithm we have a set of objects $x \in 
+    \mathcal{S}$ which are to be grouped into subsets $\mathcal{S}_1$,
+    $\mathcal{S}_2$, \ldots\pause
+  \item Initially each object is in its individual subset (no relationships)\pause
+  \item We want to make the \emph{union} of two subsets (add
+    relationship between elements)\pause
+  \item We also want to \emph{find} the subset given an element\pause
+  \item This is a common problem for which we will write a class
+  \jl$DisjointSets$ to perform fast \texttt{union}s and \texttt{find}s\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{DisjointSets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We want to create a class
+    \begin{java}
+class DisjointSets
+{
+    DisjointSets(int numElements) {/* Constructor */}
+    int find(int x) {/* Find root */}
+    void union_(int root1, int root2) {/* Union */}
+
+  private:
+    int* s;
+}$\pause$
+    \end{java}
+  \item Where \jl$find(x)$ returns a unique identifier for the subset
+    which element \jl$x$ belongs to\pause
+  \item The array \jl$s$ contains labelling information to implement
+    \jl$find(x)$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Union-Find Dilemma}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A natural algorithm to perform finds is to maintain an
+    array returning a subset label for each element\pause---this makes
+    \texttt{find} fast\pause
+  \item However, every time we combine two subset we have to change all
+    the labels in this array (taking $O(n)$ operations)\pause
+  \item If we are unlucky the cost of performing $n$ unions is
+    $\Theta(n^2)$\pause
+  \item If we ensure that we relabel the smaller subset then the time
+    complexity is $\Theta(n \log(n))$\pause
+  \item Fast \textit{finds} seems to give slow(ish) \textit{unions}\pause
+  \item What about the other way around?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Fast Union}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To achieve fast unions we can represent our disjoint sets as a
+    forest (many disjoint trees)\pause
+  \item Every time we perform a union we make one of the trees point to
+    the head of the other tree\pause
+  \item The cost of \texttt{find} depends on the depth of the tree\pause
+  \item To make unions efficient we make the shallow tree a subtree of
+    the deeper tree\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Putting it Together}
+\pb
+
+\begin{center}
+  \multiinclude[graphics={height=14cm}]{disjointset}\pause
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Smart Union}
+
+\begin{PauseHighLight}
+\begin{java}
+    DisjointSets::DisjointSets(int numElements)
+    {
+        s = new int[numElements];
+        for(int i=0; i<numElements; i++)
+            s[i] = -1;                   // roots are negative number
+    }$\pause$
+
+    void DisjointSets::union_(int root1, int root2)
+    {
+        if (s[root2]<s[root1]) {         // root2 is deeper
+            s[root1] = root2;            // make root2 the root$\pause$
+        } else {
+            if (s[root1]==s[root2])      
+                s[root1]--;              // update height if same
+            s[root2] = root1;            // make root1 new root
+        }
+    }$\pause$
+\end{java}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{disjointDiag}
+\end{center}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Path Compression}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To speed up \texttt{find} we relabel all nodes we visit during
+    \texttt{find} by the root label\pause
+    \begin{java}
+    int DisjointSets::find(int index)
+    {
+        if (s[index]<0)
+            return index;
+        else
+            return s[index] = find(s[index]);
+    }$\pause$
+    \end{java}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{disjointDiag1}
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Mazes}
+
+\pb
+\begin{minipage}{15cm}
+  \begin{itemize}\squeeze
+  \item Union-Find is a data structure which can occur in very different
+    applications\pauseh
+  \item One application is building a maze\pauseh
+  \item Start from a complete lattice\pauseh
+  \item Remove a randomly chosen edge if it connects two unconnected
+    regions\pauseh
+  \item Stop when the start and end cell are connected\pauseh
+  \item Or better after all cells are connected\pauseh
+  \end{itemize}
+\end{minipage}\hfill
+\begin{minipage}{8cm}
+  \begin{picture}(80,150)
+    \put(0,0){\includegraphics[width=8cm]{maze.0}}
+    \pauselevel{=1}\pause
+    \put(0,0){\includegraphics[width=8cm]{maze.1}}
+    \pauselevel{=4}\pause
+    \put(0,0){\includegraphics[width=8cm]{maze.2}}
+    \pauselevel{=5}\pause
+    \put(0,0){\includegraphics[width=8cm]{maze.3}}
+    \pauselevel{=6}\pause
+  \end{picture}
+\end{minipage}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity of Union-Find}
+
+\pb
+\begin{itemize}
+\item If we perform $M$ finds and $N$ unions then the time complexity
+  is $O\bigl(M\log_2^*(N)\bigr)$\pauseh
+\item Where $\log_2^*(N)$ is the number of times you need to apply the
+  logarithm function before you get a number less than 1\pauseh
+\item In practice $\log_2^*(N)\leq 5$ for all conceivable $N$\pauseh
+  \begin{align*}
+    \hspace{3cm}\log_2(10^{80}) = 265.75 \mypl{4}
+    \mathllap{\log_2(\log_2(10^{80})) = 8.0539\mypl{5}}
+    \mathllap{\log_2(\log_2(\log_2(10^{80}))) = 3.0097\mypl{6}}
+    \mathllap{\log_2(\log_2(\log_2(\log_2(10^{80})))) = 1.5896\mypl{7}}
+    \mathllap{\log_2(\log_2(\log_2(\log_2(\log_2(10^{80}))))) = 0.66868\pause}
+  \end{align*}
+\item The proof of this time complexity is rather involved\pause
+\end{itemize}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Fast Set
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Comparison of Sets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Binary Search Trees: $O(\log_2(n))$, general purpose\pause
+  \item Hash tables: $O(1)$, but need to compute hash, slow iterator
+    when sparse, general purpose\pause
+  \item B-trees: $O((k-1)\,\log_k(n))$ very complicated, used for large amounts
+    of data\pause
+  \item Tries: $O(\log_k(n))$ for large $k$ expensive in memory,
+    complicated to code efficiently\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{What Set to Use?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A PhD student and I were working on writing a fast solver for a
+    combinatorial optimisation problem\pause
+  \item We had to choose one variable to change out of a small number of
+    possible variables\pause
+  \item Each time we changed a variable then we had to update the list
+    of possible variables (remove some variables add others)\pause
+  \item We wanted a data structure which had quick add and remove and
+    where we could choose a variable at random\pause---what should we
+    use?\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Bounded Set}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One special feature is that we knew we only wanted the set to
+    contain integers between 0 and $n$ (where $n$ might be 100\,000)\pause
+  \item This allowed us to use an array to represent whether an integer
+    belong to that set\pause
+  \item But how do we find a random element of the set quickly?\pause
+  \item Use another array of course!\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{FastSet}
+
+\pb \pause
+\begin{center}
+  \multipdf[width=0.9\linewidth]{fastSet}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Implementation}
+
+\pausecolors{TwoColor}{TextColor}{HighLight}%
+  \color{TwoColor}\pausehighlight
+\begin{java}
+  class FastSet {
+    private:  
+      int* indexArray;
+      int* memberArray;
+      int noMembers;$\pause$
+
+    public:
+      FastSet(int n) {
+        indexArray = new int[n];
+        memberArray = new int[n];
+        for(int i=0; i<n; i++) {
+             indexArray [i] = -1;
+        }
+        noMembers = 0;
+    }$\pause$
+
+    int size() {
+       return noMembers;
+    }$\pause$
+\end{java}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Add and Remove}
+
+\begin{java}
+   bool add(int i) {
+      if (indexArray[i]>-1)
+         return false;
+      memberArray[noMembers] = i;
+      indexArray[i] = noMembers;
+      ++noMembers;
+      return true;
+   }$\pause$
+
+   bool remove(int i) {
+      if (indexArray[i]==-1)
+            return false;
+      --noMembers;
+      memberArray[indexArray[i]] = memberArray[noMembers];
+      indexArray[memberArray[noMembers]] = indexArray[i];
+      indexArray[i] = -1;
+      return true;
+   }$\pause$
+\end{java}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Collection Methods}
+
+\begin{java}
+   void clear() {
+      for(int i=0; i<noMembers; i++) {
+         indexArray[memberArray[i]] = -1;
+      }
+      noMembers = 0;
+   }$\pause$
+
+   bool isEmpty() {
+      return noMembers==0;
+   }$\pause$
+
+   int* begin() {return &memberArray[0];}
+   int* end() {return &memberArray[noMembers];}
+     
+   }$\pause$
+\end{java}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{And Random?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can add additional methods taking advantage of the classes
+    strength
+    \begin{java}
+ private:
+   random_device rd;  // Seed for the random number engine
+   mt19937 gen(rd()); // Mersenne Twister RNG
+ 
+ public:
+   int getRandomElement() {
+     return memberArray[uniform_int_distribution<int>(0, noMembers)];
+   }$\pause$
+    \end{java}
+  \item Need to use FastSet signature to use this
+    \begin{java}
+   FastSet fastSet(n);
+   $\vdots$
+   int r = fastSet.getRandomElement();$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Speed Up}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We compared our algorithm to a very highly regarded
+    ``state-of-the-art'' algorithm\pause
+  \item For large problems we were over 10 times faster because of this
+    data structure\pause
+  \item The competitor algorithm used a complex tree structure instead
+    of the simple array\pause
+  \item Why?\pause\ The array solution isn't in the books\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If you have a bounded set then using an array is usually going
+    to be very fast $O(1)$ (or $O(\log^*(n))$)\pause
+  \item These data structures are not general purpose for solving every
+    day problems (c.f. \jl$vector<T>$, \jl$set<T>$ and \jl$map<T>$)\pause
+  \item They are ``back pocket'' data structures that solve problems
+    that come up often enough that they are worth knowing about\pause
+  \item Sometimes good algorithms are not documented, but it doesn't
+    mean they don't exist\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

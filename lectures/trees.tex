@@ -1,0 +1,661 @@
+%Master File:lectures.tex
+
+\lesson{Make Friends with Trees}
+ 
+\vspace*{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{tree_hug}\hfil%
+  \includegraphics[height=10cm]{tree_hug1}
+\end{center}
+
+\keywords{Binary trees, binary search trees, sets, tree iterators}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+
+\begin{minipage}{12cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Trees}{intro}
+    \outlineitem{Binary Trees}{bt}
+    \begin{itemize}
+    \item \toplink{impl}{Implementing Binary Trees}
+    \end{itemize}
+    \outlineitem{Binary Search Trees}{bst}
+    \begin{itemize}
+    \item \toplink{bstdef}{Definition}
+    \item \toplink{implset}{Implementing a Set}
+    \end{itemize}
+    \outlineitem{Tree Iterators}{treeiter}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=8cm]{tree_hug}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Trees}
+
+\begin{PauseHighLight}
+\begin{itemize}
+\item Trees are one of the major ways of structuring data\pause
+\item They are used in a vast number of data structures
+  \begin{itemize}\squeeze
+  \item Binary search trees
+  \item B-trees
+  \item splay trees
+  \item heaps
+  \item tries
+  \item suffix trees\pause
+  \end{itemize}
+\item We shall cover most of these\pause
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Defining Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Mathematically a tree is an \emph{acyclic undirected
+      graph}\pause
+    \begin{itemize}
+    \item \emph{graph}: a structure consisting of \emph{nodes} or
+      \emph{vertices} joined by \emph{edges}\pause
+    \item \emph{undirected}: the edges goes both ways\pause
+    \item \emph{acyclic}: there are no cycles in the graph\pause
+    \end{itemize}
+  \end{itemize}
+  \begin{center}\pauselevel{=2}
+    \multiinclude[graphics={width=\linewidth}]{tree-def}\pause
+  \end{center}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Borrowing from Nature}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item We often impose an ordering on the nodes (or a direction on the
+    edges)\pause---known as a rooted tree\pause
+  \item Borrowing from nature, we recognise one node as the
+    \emph{root} node\pause
+  \item Nodes have \emph{children} nodes living beneath them
+  \item Each child has a \emph{parent} node above them except the
+    root\pause
+  \item Nodes with no children are \emph{leaf} nodes\pause
+  \end{itemize}
+  \begin{center}\pauselevel{=2}
+    \multiinclude[graphics={height=5cm}]{tree-def2}\pause
+  \end{center}\vspace{-2cm}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Spot the Error}
+\pausebuild
+\begin{itemize}
+\item One small biological inconsistency\pause
+\item Yep!, computer scientists draw there trees upside down\pause
+  \begin{itemize}
+  \item root at the top
+  \item leaves at the bottom\pause
+  \end{itemize}
+  \begin{center}\pauselevel{=2}
+    \multiinclude[graphics={height=8cm}]{tree-def3}\pause
+  \end{center}
+\end{itemize}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Subtrees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can think of the tree made up of \emph{subtrees}
+  \end{itemize}
+  \begin{center}
+    \multiinclude[graphics={height=5cm}]{subtree-def}\pause
+  \end{center}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Level of Nodes}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item It is useful to label different levels of the tree\pauseh
+\item We take the \emph{level} of a node in a tree as its distance
+  from the root\pauseh
+\item We take the \emph{height} of a tree to be the number of
+  levels\pauseh
+\end{itemize}
+\begin{center}\pauselevel{=1}
+  \multiinclude[graphics={width=\linewidth}]{tree-depth}\pause
+\end{center}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Binary trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Binary Trees}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}\squeeze
+\item A \emph{binary tree} is a tree where each node can have zero,
+  one or two children\pauseh
+\item The total number of possible nodes at level $l$ is $2^l$\pauseh
+\item The total number of possible nodes of a tree of height $h$ is
+  \begin{align*}
+    1 + 2 + \cdots + 2^{h-1} = 2^{h} -1 \pauseh
+  \end{align*}\vspace{-1cm}
+\end{itemize}
+\begin{center}\pauselevel{=1}
+  \multiinclude[graphics={width=0.9\linewidth}]{binary-tree-def}\pause    
+\end{center}\vspace{-1cm}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Uses of Binary Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Binary trees have a huge number of applications\pause
+  \item For example, they are used as \emph{expression trees} to
+    represent formulae
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=20cm]{expression-tree} \pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation}
+\toptarget{impl}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We wish to build a generic binary tree class with each node
+    housing an element\pause
+  \item Again we use a \texttt{Node<T>} class as the building block
+    for our data structure---in this case a node of the tree\pause
+  \item The \texttt{Node<T>} class will contain a pointer to left and
+    right children\pause
+  \item To help navigate the tree each node will contain a pointer to
+    its parent\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{C++ Code}
+
+\begin{minipage}{12cm}
+\begin{cpp}
+template <typename T>    
+class binary_tree {
+private:$\pause$
+  class Node {
+  public:
+    T element;
+    Node* parent;
+    Node* left = 0;
+    Node* right = 0;
+
+    Node(const T& value, Node* parent_node) {
+      element = value;
+      parent = parent_node;
+    }
+  };$\pause$
+
+  unsigned no_elements = 0;
+  Node* root = 0;$\pause$
+
+private:
+  ...$\pause$
+\end{cpp}
+\end{minipage}\hspace{2cm}
+\begin{minipage}{9cm}
+\vspace{-5cm}
+\includegraphics[width=9cm]{tree-entry}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Binary search trees
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Binary Search Trees}
+\toptarget{bstdef}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We will concentrate on one of the most important binary trees,
+    namely the \emph{binary search tree}\pause
+  \item The binary search tree keeps the elements ordered\pause
+  \item We can define a binary search tree recursively\pause
+    \begin{enumerate}
+    \item Each element in the left subtree is less than the root element\pause
+    \item Each element in the right subtree is greater than the root
+      element\pause
+    \item Both left and right subtrees are binary search trees\pause
+    \end{enumerate}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Example Binary Search Tree}
+
+\begin{PauseHighLight}
+  \begin{center}
+    \multiinclude[graphics={width=\linewidth}]{bst}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Searching A Binary Search Tree}
+
+\pausebuild
+\color{TwoColor}
+\begin{minipage}{10cm}
+  \begin{itemize}
+  \item Searching a binary search tree is easy\pauseh
+  \item Start at the root
+    \pauselevel{=1, highlight =3 :3}\pause
+  \item Compare with element\pauselevel{=1, highlight =4 :8}\pause
+    \begin{itemize}
+    \item If less than element go left
+      \pauselevel{=1, highlight =4 :5, highlight =7 :7}\pause
+    \item If greater than element go right
+      \pauselevel{=1, highlight =6 :6}\pause
+    \item If equal to element found
+      \pauselevel{=1, highlight =8 :8}\pause
+    \end{itemize}
+  \end{itemize}
+\end{minipage}\hspace{0.5cm}
+\begin{minipage}{13cm}
+\color{TextColor}
+  \begin{center}\pauselevel{=1}
+    \multiinclude[graphics={width=13cm}]{bst-find}\pause
+  \end{center}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Speed of Search}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The number of comparisons necessary to find an element in a
+    binary tree depends on the level of the node in the tree\pause
+  \item The worst case number of comparisons is therefore the height of
+    the tree\pause
+  \item This depends on the density of the tree\pause
+  \end{itemize}
+  \begin{center}
+    \multiinclude[graphics={width=\linewidth}]{tree_shape}\pause
+  \end{center}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementing a Set}
+\toptarget{implset}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A set is a fundamental \emph{abstract data type}\pause
+  \item It is a collection of things with no repetition and no
+    order\pause
+  \item Ironically because order doesn't matter we can order the
+    elements
+    \begin{align*}
+      \{1,3,5,5,3,4\} = \{5, 3, 4, 1\} = \{1, 3, 4, 5\}\pause 
+    \end{align*}
+  \item This allows rapid search---a feature we care about\pause
+  \item Binary trees are one of the efficient ways of implementing a set\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+  \section[-1]{Fitting In}
+
+  \begin{PauseHighLight}
+    \begin{itemize}
+    \item The standard template library provides a class \texttt{std:set<T>}\pause
+    \item This contains many functions like
+      \begin{itemize}
+      \item Constructors
+      \item \texttt{size()}
+      \item \texttt{insert(T\, o)}
+      \item \texttt{find(T\, o)}
+      \item \texttt{erase(T\, o)}
+      \item \texttt{begin()} and \texttt{end()}
+      \end{itemize}\pause
+    \end{itemize}
+  \end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Comparable}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To sort any objects they must be comparable\pause
+  \item In the STL the set implementation has a second template
+    parameter: \jl$std::set<T, Compare = less<T> >$\pause
+  \item by default this is defined to be \jl$less<T>$ (which is a function
+    already defined for most common types) which you can define\pause
+  \item If you have a set of complex objects you will have to define
+    \texttt{Compare}
+    \begin{cpp}
+      bool MyCompare(MyObject left, MyObject right) {
+        return something
+      }
+
+      mySet = set<MyObject, MyCompare>;
+    \end{cpp}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Find an Element}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One of the core operations of a binary tree is to find a node\pause
+    \begin{cpp}
+   iterator find(const T& element) {
+    Node* current = root;$\pause$
+    while (current!=0) {
+      if (current->element == element) {
+	return iterator(current);
+      }$\pause$
+      if (element < current->element) {
+	current = current->left;
+      } else {
+	current = current->right;
+      }$\pause$
+    }
+    return iterator(0);
+  }$\pause$
+    \end{cpp}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Add an Element}
+
+\begin{cpp}
+  pair<iterator, bool> insert(const T& element) {
+    if (no_elements==0) {
+      root = new Node(element, 0);
+      ++no_elements;
+      return pair<iterator, bool>(iterator(root), true);
+    }$\pause$
+    Node* parent = 0;
+    Node* current = root;
+    while(current != 0) {
+      if (current->element == element) {
+	return pair<iterator, bool>(iterator(0), false);
+      }$\pause$
+      parent = current;
+      if (element < current->element) {
+	current = current->left;
+      } else {
+	current = current->right;
+      }
+    }$\pause$
+
+    
+
+
+
+
+    
+    current = new Node(element, parent);
+    if (element < parent->element) {
+      parent->left = current;
+    } else {
+      parent->right = current;
+    }
+    ++no_elements;
+    return pair<iterator, bool>(iterator(current), true);
+  }$\pause$
+\end{cpp}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Tree in Action}
+\pb\pause
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{binarytree-add0.eps}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{19}{%
+    \llap{\includegraphics[width=0.9\linewidth]{binarytree-add\ia.eps}}\mypl{\ib}}
+\end{center}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Shape of Tree}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The structure of the tree depends on the order in which we add
+    elements to it\pause
+  \item Suppose we add
+    \begin{quote}\it
+      To be, or not to be: that is the question:\\
+      Whether 'tis nobler in the mind to suffer\\
+      The slings and arrows of outrageous fortune,\\
+      Or to take arms against a sea of troubles,\pause
+    \end{quote}
+  \item Ignoring punctuation we get the following tree\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Hamlet}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{hamlet.eps}
+\end{center}
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Tree Iterators
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Tree Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As with most container classes it is very useful to define
+    iterators\pause
+  \item \texttt{begin()} should return a ``pointer'' to the start of
+    the tree\pause
+  \item \texttt{end()} provides a ``pointer'' past the end\pause
+  \item \texttt{operator*()} returns the element\pause
+  \item \texttt{opeator++()} increments the ``pointer''\pause
+  \item \texttt{operator!=(lhs, rhs)} is used to compare iterators\pause
+    \begin{cpp}
+      set<int> mySet;
+      ...
+      for(auto pt=mySet.begin(), pt!=mySet.end(), ++pt) {
+        cout << *pt;
+      }
+    \end{cpp}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{C++ Code}
+
+\begin{cpp}
+class binary_tree {
+$\pause$
+public:
+  class iterator {
+  private:
+    Node* current;$\pause$
+    
+  public:
+    iterator(Node* node) {current=node;}$\pause$
+    T operator*() const {return current->element;}$\pause$
+    iterator operator++() {
+      current = successor(current);
+      return *this;
+    }$\pause$
+    bool operator!=(const iterator& other) {
+      return current!=other.current;
+    }
+  };$\pause$
+
+  iterator begin() {...}
+  iterator end() {return iterator(0)}
+
+};$\pause$
+\end{cpp}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2.5]{Successor}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item To find the successor we first start in the left most branch
+    \pauselevel{=1, =6}\pause
+  \item We follow two rules\pause
+    \begin{enumerate}
+    \item \textbf{If} right child exist \textbf{then} move right once
+      and then move as far left as possible
+      \pauselevel{=3, =8, =10, =11, =14, =15, =17}\pause
+    \item \textbf{else} go \textit{up} to the left as far as possible
+      and then move up right
+      \pauselevel{=4, =7, =9, =12, =13, =16, =18}\pause
+    \end{enumerate}
+  \end{itemize}\pauselevel{=5}
+  \begin{center}
+    \multiinclude[graphics={height=7cm}]{bst-traverse}\pause\\
+    \pauselevel{=6} $\textcolor{TextColor}{\{}15\pause\ 25\pause\
+    28\pause\ 30\pause\ 32\pause\
+    36\pause\ 37\pause\ 50\pause\ 53\pause\ 59\pause\ 61\pause\
+    68\pause\ 75\textcolor{TextColor}{\}}\pause$
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Trees and particularly binary trees are one of the most
+    important tools of a computer scientist\pause
+  \item Conceptually they are quite simple\pause
+  \item However, there are a lot of details that need to be
+    understood\pause
+  \item Coding even simple trees needs great care\pause
+  \item As we will see things get more complicated\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}

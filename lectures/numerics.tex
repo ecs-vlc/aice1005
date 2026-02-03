@@ -1,0 +1,700 @@
+%Master File:lectures.tex
+
+\lesson{Understand Numerics}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=9cm]{newtonRaphson-2}
+\end{center}
+\keywords{Representing reals, rounding error, convergence, stability,
+  conditioning}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Numerical Approximations}{numerics}
+    \outlineitem{Iterating to a Solution}{solvingEquations}
+    \outlineitem{Linear Algebra}{linalg}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{newtonRaphson-2}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section{Numerical Analysis}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Numerical algorithms are usually taught separately from
+    the ``discrete algorithms'' we have predominantly looked at\pause
+  \item The main difference stems from the fact that numerical
+    algorithms model continuous variables\pause
+  \item Computers can only approximate continuous variables\pause
+  \item Numerical algorithms have to take into account this
+    approximation\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Representing Reals}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item All real numbers are approximated by a binary encoding
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{realRepresentation}\pause
+    \end{center}
+  \item $x = m \times 2^{e-t}$\pause
+  \item $t$ is precision so that if $e=t$, then $0.5 \leq x < 1$\pause
+  \item For IEEE double $t=1023$, $expon_{\min} = -1021$, $expon_{\max}=1024$\pause
+  \item Typical rounding error is $u=1\times10^{-16}$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Number Line}
+
+\pb
+\begin{itemize}
+\item We approximate the continuous number line by a set of discrete
+  values\pauseh
+\item Imagine using a mantissa of 3 bits and an exponent of 2 bits (and
+  a sign)\pauseh
+\end{itemize}\pauselevel{=2}
+\begin{center}
+  \multipdf[width=0.9\linewidth]{numberline}\pauseb
+\end{center}
+\begin{itemize}
+\item The rounding error is half the gap between the discrete values\pauseh
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Overflow and Underflow}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An overflow will cause a program to fall over at run time\pause
+  \item An underflow is ignored\pause
+  \item This is usually innocuous, but can lead to trouble\pause
+  \item If you call \jl$log(x)$ or \jl$1.0/x$ but \jl$x$ has underflowed
+    then your program will crash\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Rounding Error}
+
+\begin{PauseHighLight}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{numberline-0}
+  \end{center}
+  \vspace*{-3cm}
+  \begin{itemize}
+  \item The distance between two real numbers $\Delta x$ grows with the
+    number such that $\Delta x/x \leq u$ where $u\approx 10^{-16}$ for
+    doubles\pause
+  \item Measure relative error
+    \begin{align*}
+      \text{Relative error} = \left\vert \frac{\text{Approx} -
+          \text{Exact}}{\text{Exact}} \right \vert\pause
+    \end{align*}
+  \item Thus almost every operation is only accurate up to this small
+    (relative) rounding error\pause
+  \item Most operations are carefully designed that these rounding errors are
+    unbiased so that the sum of random errors grows sub-linearly\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Losing Precision}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There seems to be plenty of precision, so what's the problem?\pause
+  \item One issue is that its easy to lose precision\pause
+  \item Consider estimating derivatives by finite differencing
+    \begin{align*}
+      f'(x) \approx \frac{f(x+\epsilon) -
+        f(x-\epsilon)}{2\,\epsilon}\pause
+      = \frac{\scriptstyle 0.841470984861927-0.841470984753866}
+      {2.0\times 10^{-10}}\pauseb
+    \end{align*}
+  \item The problem is $f(x+\epsilon)$ and $f(x-\epsilon)$ are very
+    close so in taking their difference we lose precision\pause
+  \item $f(x) = \sin(x)$, $f'(x) = \cos(x)$ at $x=1.0$
+    \begin{center}\small
+      \begin{tabular}{|c|c|c|c|c|c|}\hline
+        $\epsilon$ & $10^{-6}$ & $10^{-8}$ & $10^{-10}$ & $10^{-12}$ & $10^{-14}$  \\ \hline
+        relative error & $5\times 10^{-11}$ & $5\times10^{-9}$ &
+        $1\times 10^{-7}$ & $2\times10^{-5}$ &$ 6\times10^{-3}$ \\ \hline
+      \end{tabular}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Solving Quadratic Equations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A classic example where you can lose precision is in solving a
+    quadratic equation \mbox{$a\,x^2 + b\,x + c =0$}
+    \begin{align*}
+      x = \frac{-b \pm \sqrt{b^2 - 4\,a\,c\,}}{2\,a}\pause
+    \end{align*}
+  \item If $b^2 \gg |4\,a\,x|$ then for one solution we end up
+    subtracting numbers very close\pause
+  \item We rather use this equation to compute one solution
+    \begin{align*}
+      x_1 = \frac{-b - \mathrm{sgn}(b) \sqrt{b^2 - 4\,a\,c\,}}{2\,a}\pause
+    \end{align*}
+  \item Use the identity $x_1\,x_2 = c/a$ to find $x_2$\pause{}
+    (i.e. $x_2= c/(a\,x_1)$)\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Accumulation of Rounding Error}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item With many significant figures surely we can afford to lose some
+    accuracy?\pause
+  \item This is sometimes true, but we often use ``for loops'' where we
+    might be losing accuracy all the time
+    \begin{minipage}{0.5\linewidth}
+    \begin{java}
+      x = 1.6;
+      for (i=0; i<50; i++)
+         x = sqrt(x);
+      for (i=0; i<50; i++)
+         x = x*x;$\pause$
+    \end{java}
+    \end{minipage}\hfill
+    \begin{minipage}{0.15\linewidth}
+      \includegraphics[width=\linewidth]{truncationError}\pauseb
+    \end{minipage}
+    \item Gave the answer 1.2840 (if I run the for loop 60 times it
+      gives the answer 1 for almost any input)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Coping With Truncation Errors}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Nothing is exact so to check that $x = y$ we use
+    \begin{java}
+      Math.abs(x-y) < 1.0e-10$\pause$  // a small constant
+    \end{java}
+  \item Sometimes sums that add up to 1 don't quite so we have not to
+    rely on anything being exact\pause
+  \item Avoid operations that are likely to lose accuracy (e.g. by
+    taking the difference of similar numbers) where possible\pause
+  \item Sometimes it pays to do some operations using higher precision
+    \jl$long double$\pause
+  \item Make sure that errors are unbiased\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Solving Equations
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Iterative Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We solve many numerical tasks by obtaining successively
+    better solutions
+    \begin{align*}
+      x^{(0)},\, x^{(1)},\, x^{(2)},\, x^{(3)},\, x^{(4)},\,\ldots\pause
+    \end{align*}
+  \item We often stop when the change in solution is below some
+    threshold, e.g. $|x^{(i+1)}-x^{(i)}|\leq \epsilon \approx u$\pause
+  \item The time complexity depends on the speed of convergence\pause
+  \item This can range from very fast to miserably slow\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Bisection}
+\pb
+\begin{itemize}
+\item Suppose we want to compute $\sqrt{2}$ (without using
+  \jl$sqrt(2)$)\pauseh
+  \begin{align*}
+    f(x) = x^2 - 2 = 0
+  \end{align*}
+\item One of the classic methods of solving $f(x)=0$ is
+  \emph{bisection}\pauseh\pauselevel{=1}
+  \begin{center}
+    \multipdf[width=0.8\linewidth]{numericalBisection}\pause
+  \end{center}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Newton Raphson}
+
+\pb
+\begin{itemize}
+\item A second classic method to solve $f(x)=0$ is Newton-Raphson's
+  method
+  \begin{align*}
+    x^{(i+1)} = x^{(i)} - \frac{f(x^{(i)})}{f'(x^{(i)})}\pauseh 
+  \end{align*}
+\item For $f(x)=x^2-2$ so $x^{(i+1)} = ((x^{(i)})^2-1)/(2\,x^{(i)})$ 
+  \pauseh\pauselevel{=1}
+  \begin{center}
+    \multipdf[width=0.8\linewidth]{newtonRaphson}\pause
+  \end{center}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Convergence}
+
+\pb\pause\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.8\linewidth]{convergence}\pause
+\end{center}
+\begin{itemize}
+\item Bisection shows linear convergence (exponential increase in
+  accuracy)\pause
+\item Newton Raphson shows quadratic convergence\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Beware of Asymptotic Convergence}
+
+\pb\pause\pauselevel{=1}
+\begin{itemize}
+\item Newton Raphson only converges quadratically if you start close
+  enough to the solution\pauseh
+\item Consider solving $x^6-1=0$ starting with $x^{(0)}=0.5$\pauseh
+  \pauselevel{=1}
+  \begin{center}
+    \multipdf[width=0.8\linewidth]{newtonRaphson10}\pause
+  \end{center}
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Evaluating Functions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can evaluate many functions using a series expansion
+    \begin{align*}
+      \e{x} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots\pause
+    \end{align*}
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{expTaylor}\pause
+    \end{center}
+  \item For large $i$ this converges since $i! \gg x^i$ \pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Slow convergence}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Some expansions converge rather slowly (or even diverge)
+    \begin{align*}
+      \log(1+x) =  x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots\pause
+    \end{align*}
+  \item Converges for $-1 < x \leq 1$, but converges slowly for $x=1$
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{logTaylor}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Convergence}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many functions can be approximated by a sum\pause
+  \item We get a truncation error by taking only a finite number of
+    elements\pause
+  \item We want the truncation error to be around machine accuracy\pause
+  \item For quick evaluation we need a strongly convergent series\pause
+  \item This often depend on the value of the argument we give to the
+    function\pause
+  \item Most special functions are approximated by different series
+    depending on the input argument\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Differential Equations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Differential equations are used in many applications, for
+    example in modelling the motion of object\pause
+  \item A typical equation of motion might be
+    \begin{align*}
+      \frac{\dd^2 x(t)}{\dd t^2} = 2\,\frac{\dd x(t)}{\dd t} + 3\,x(t)
+    \end{align*}
+  \item Which has a general solution $x(t) = c_1 \e{-t} + c_2 \e{3\,t}$\pause
+  \item The constants are determined by initial conditions, for example,
+    if $x(0) =1$ and $\dot{x}(0) = -1$ then $x(t) = \e{-t}$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Euler's Method}
+
+\pb\pause\pauselevel{=1}
+\begin{itemize}
+\item To solve a differential equation we use an approximate
+  update equation
+  \begin{align*}
+    x(t+\epsilon) &\approx x(t) + \epsilon \dot{x}(t) \\
+    \dot{x}(t+\epsilon) &\approx \dot{x}(t) + \epsilon \ddot{x}(t)\pauseh
+  \end{align*}
+\item This becomes more exact as $\epsilon\rightarrow 0$\pauseh
+  \begin{center}
+    \multipdf[width=0.8\linewidth]{stability}\pause
+  \end{center}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Stability}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Some iterative equations are unstable\pause
+  \item Round off errors can push a system of equations towards an
+    unstable solution\pause
+  \item This can sometimes be overcome by cunning (e.g. running the
+    equations backwards)\pause
+  \item Finding stable algorithms and avoiding unstable algorithms can
+    be key to getting accurate predictions\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Linear Algebra
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Solving Simultaneous Equations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When problems involve many variables it is convenient to use
+    matrices and vectors to store the numbers\pause\\
+    \begin{minipage}{0.4\linewidth}
+    \vspace*{-13mm}
+    \begin{align*}
+      3 x + 2y &= 5\\
+      7 x - 8y &= -11
+    \end{align*}\pause
+  \end{minipage}
+  \begin{minipage}[b]{0.4\linewidth}
+    \begin{align*}
+      \begin{pmatrix}
+        3 & 2 \\ 7 & -8
+      \end{pmatrix}
+      \begin{pmatrix}
+        x \\ y
+      \end{pmatrix} &=
+      \begin{pmatrix}
+        5 \\ -11
+      \end{pmatrix}\pause
+    \end{align*}
+  \end{minipage}
+  \vspace*{-2cm}
+\item Or $\mat{A} \bm{x} = \bm{b}$ with solution $\bm{x} = \mat{A}^{-1}
+  \mat{b}$\pause
+\item Linear algebra is an abstraction allowing mathematicians,
+  scientists and engineers to write solutions at a higher level\pause
+\item The job of the numerical analyst is to write the code that does
+  this\pause 
+\end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Linear Algebra}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are a large number of problems with matrices that people
+    care about\pause
+  \item The solution often depends on the problem\pause
+  \item These include
+    \begin{itemize}\squeeze
+    \item Multiply matrices together
+    \item Solving linear equations $\mat{A} \bm{x} = \bm{b}$
+    \item Finding eigenvalues of symmetric and non-symmetric matrices
+    \item Performing singular valued decomposition\pause
+    \end{itemize}
+  \item These are important tasks that need to be done efficiently and
+    reliably\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Solving Linear Equations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We consider the classic problem of solving $\mat{A} \bm{x} =
+    \bm{b}$\pause
+  \item Although we can solve this by computing $\mat{A}^{-1} \bm{b}$,
+    finding the inverse of a matrix is typically a $\Theta(n^3)$
+    operation\pause
+  \item It is preferable to decompose $\mat{A}$ into a product of a lower
+    triangular matrix $\mat{L}$ and an upper triangular matrix $\mat{U}$
+    which takes $\Theta(n^2)$ operations
+    \begin{align*}
+      \mat{A} =
+      \begin{pmatrix}
+        4 & 2 & 6 \\
+        3 & 5 & 9 \\
+        1 & 2 & 3
+      \end{pmatrix}
+      =
+      \begin{pmatrix}
+        1 & 0 & 0 \\
+        0.75 & 1 & 0 \\
+        0.25 & 0.428 & 1
+      \end{pmatrix}
+      \begin{pmatrix}
+        4 & 2 & 6\\
+        0 & 3.5 & 4.5\\
+        0 & 0 & -4.28\\
+      \end{pmatrix}
+      = \mat{L} \mat{U}\pause
+    \end{align*}
+  \item Solving $\bm{x} = \mat{U}^{-1} (\mat{L}^{-1} \bm{b})$ is also
+    $\Theta(n^2)$ because of the structure of $\mat{L}$ and
+    $\mat{U}$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{LU-Decomposition}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item LU-decomposition is achieved by Gaussian-elimination\pause
+  \item This is a straightforward procedure, but if done carelessly can
+    lead to large rounding errors\pause
+  \item The standard solution is to permute the rows of the
+    matrix (aka pivoting) to prevent loss of accuracy\pause
+  \item In addition we can ``polish'' solutions
+    \begin{align*}
+      \mat{A} (\bm{x} + \delta\bm{x}) - \bm{b} = \bm{\epsilon}\pause
+    \end{align*}
+  \item Thus $\delta\bm{x} = \mat{A}^{-1} \bm{\epsilon}$ which we can
+    use to get an improved estimate of $\bm{x}$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Norms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item With some work we can get a good approximation to $\bm{x}$ such
+    that $\mat{A} \bm{x} = \bm{b}$\pause
+  \item But what if we have some error in $\bm{b}$, this induces an
+    error $\delta \bm{x} = \mat{A}^{-1} \, \delta\bm{b}$\pause
+  \item How big is $\delta \bm{x}$?\pause
+  \item To measure the size of a vector we use a norm $\|\delta
+    \bm{x}\|$, which is a number encoding the size of $\delta \bm{x}$
+    \pause
+  \item There are a number of different norms, e.g.
+    \begin{align*}
+      \|\delta \bm{x}\|_2 &= \sqrt{\delta x_1^2 + \cdots +
+        \delta x_n^2}, \pause &
+      \|\delta \bm{x}\|_1 &= |\delta x_1| + \cdots +
+        |\delta x_n| \pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Conditioning}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The size of the error in $\bm{x}$: $\mat{A}\,\bm{x}=\bm{b}$
+    when $\bm{b}$ has error $\delta \bm{b}$ is
+    \begin{align*}
+      \|\delta \bm{x}\| = \| \mat{A}^{-1} \delta \bm{b}\| \pause \leq
+      \| \mat{A}^{-1} \| \, \|\delta \bm{b}\|\pause
+    \end{align*}
+  \item Where $\| \mat{A}^{-1} \|$ provides a measure of the size of
+    the error in the worst case\pause
+  \item For large matrices $\| \mat{A}^{-1} \|$ can be large meaning
+    that any error in $\bm{b}$ is potentially magnified significantly\pause
+  \item Such matrices are said to be ill-conditions\pause
+  \item Ill-conditioning is not to due with rounding errors but the
+    structure of the matrix\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Linear Algebra}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Linear algebra packages provide an important set of tools used
+    for solving linear equations\pause
+  \item Care has to be taken to ensure that needless operations (such as
+    inverting a matrix) are not done\pause
+  \item Algorithms must ensure that as little accuracy as possible is
+    lost (e.g. by permuting rows in LU-decomposition)\pause
+  \item Even when the algorithms are precise, small errors can get
+    amplified in some operations, which requires care in formulating the
+    problem\pause
+  \item The idea of poor conditioning (errors being amplified) is useful
+    in understanding many numerical tasks\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Be wary of numerical algorithms, because computers approximate
+    real numbers you don't always get what you expect\pause
+  \item Don't avoid numerical algorithms, they are hugely important with
+    vast areas of applications\pause
+  \item This is a well studied area with large libraries of reliable
+    algorithms that work most of the time\pause
+  \item There are some good books such as ``Numerical Recipes'' by
+    Press, \textit{et al.}, which describes the issues and provides
+    code\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

@@ -1,0 +1,624 @@
+%Master File:lectures.tex
+
+\lesson{Learn to Traverse Graphs}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{bipartiteGraph1}
+\end{center}
+\keywords{Breadth First Search, Depth First Search, Topological Sort}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Breadth First Search}{bfs}
+    \begin{itemize}
+    \item \toplink{bfsapp}{BFS applications}
+    \end{itemize}
+    \outlineitem{Depth First Search}{dfs}
+    \begin{itemize}
+    \item \toplink{dfsapp}{DFS applications}
+    \end{itemize}
+    \outlineitem{Topological Sort}{topsort}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{graphArticulation2}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Basic Graph Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Graphs provide an abstraction for a huge number of real world
+    processes: social networks, compute network, road networks, etc.\pause
+  \item Increasing applications focus on very large (sparse) graphs
+    (usually implemented using an adjacency list)\pause
+  \item Require (near) linear time algorithms\pause
+  \item Basic building block are graph traversal algorithms
+    \begin{itemize}
+    \item Breadth First Search
+    \item Depth First Search\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Advanced Generic}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To make these algorithm general purpose (generic) we allow
+    ourselves to call arbitrary functions to act on the vertices and
+    edges at different points in the algorithm\pause
+  \item This introduces a new level of generics which makes the
+    algorithms very powerful\pause
+  \item Increases the steepness of the learning curve to use these
+    algorithms\pause
+  \item Once you get familiar with using these algorithms this level of
+    generics starts to pay off\pause
+  \item Libraries which does this include Boost Graph Library and LEDA
+    in C++; JDSL and  JGraphT in Java\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Graph Traversal}
+
+\begin{PauseHighLight}
+  \pb
+  \begin{itemize}
+  \item To traverse a graph we start at a (arbitrary) \textit{root}
+    vertex\pauseh
+  \item We then follow edges to create a tree\pauseh
+\begin{center}
+  \includegraphics[width=0.7\linewidth]{graphTraversal0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{12}%
+  {\llap{\includegraphics[width=0.7\linewidth]{graphTraversal\ia}\mypl{\ib}}}
+\end{center}
+
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Breadth First Search}
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{graphBfs-0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{52}%
+  {\llap{\includegraphics[width=0.9\linewidth]{graphBfs-\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Applications of Breadth First Search}
+\toptarget{bfsapp}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Breadth first search can be used to find the shortest path from
+    a source node to a destination node for an \emph{unweighted} graph
+    \begin{itemize}\squeeze
+    \item Run \texttt{bfs(graph,source)}
+    \item Use parent information to find path from destination back to
+      source\pause
+    \end{itemize}
+  \item BFS (as well as DFS) can be used to find connected components
+    \begin{itemize}
+    \item Use \textit{processVertexEarly} to mark vertices connected to
+      the current connected component
+    \item Run \textit{bfs} from all vertices that are not labelled\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Bipartite Graphs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Bipartite graphs are graphs where the vertices can be split into
+    two sets so that there are no edges between vertices in the same
+    graph
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{bipartiteGraph0}\pause
+      \llap{\includegraphics[width=0.8\linewidth]{bipartiteGraph1}}\pauseb
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Checking Bipartiteness (Two-colourability)}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Each edge must connect nodes from different sets\pause
+    \begin{java}
+    isBipartite(graph) {
+       colour = List(graph.noNodes(), "white");
+       bipartite = true;$\pause$
+
+       foreach node in graph {
+          if (colour[node] == "white") {
+             colour[node] = "red";
+             bfs(graph, node);
+          }
+       }
+       return bipartite;
+    }$\pause$
+
+    processEdge(node1, node2) {
+       if (colour[node1] == colour[node2])
+           bipartite = false;
+       colour[node2] = (colour[node1]=="red")? "blue":"red";
+    }$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Depth First Search
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Depth First Search}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Depth first search is essentially like breadth first search
+    except we replace the queue by a stack\pause
+  \item In practice it is often implemented using recursion rather than
+    a stack\pause
+  \item It proves useful to keep a record of the traversal \emph{time}
+    for each vertex
+    \begin{itemize}
+    \item the clock ticks each time a vertex is entered or exited\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Depth First Search}
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{graphDfs-0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{64}%
+  {\llap{\includegraphics[width=0.9\linewidth]{graphDfs-\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Applications of DFS}
+\toptarget{dfsapp}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Depth first search has many applications\pause
+  \item Suppose we want to check if the graph is a tree (i.e. has no cycles)\pause
+  \item The only edges that are allowed are parent edges
+    \begin{pseudo}
+      processEdges(node1, node2) {
+         if (parent[node1] != node2) {
+            isTree := false
+            finish := true
+         }
+      }
+    \end{pseudo}
+    (note that we set \jl$finish$ to stop DFS prematurely)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Biconnected Graphs and Articulation Vertices}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If we removed a vertex (and all its edges) from a graph would
+    the graph become disconnected?\pause
+  \item Such nodes are called \emph{articulation vertices}\pause
+  \item Graphs with no articulation vertices are said to be
+    \emph{biconnected}\pause
+  \item In many applications articulation vertices are important,
+    e.g. they represent single point of failures in communication
+    networks\pause
+  \item A brute force method for identifying articulation vertices is to
+    remove each and check for connectivity---this would take $O(n(m+n))$
+    time\pause. Can we do this any faster?\pauseb 
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Single Pass Algorithm}
+
+
+\begin{minipage}{0.55\linewidth}
+  \begin{PauseHighLight}
+    \begin{itemize}
+    \item In DFS we divide the edges into tree edges that define the
+      search tree (edges between nodes and parents) and back edges
+      which take us back to vertices we have already seen\pause
+    \item Without the back edges we have a tree where all non-leaf nodes
+      are articulation nodes\pause
+    \item The back edges secure the edges to the rest of the tree\pause
+    \end{itemize}
+  \end{PauseHighLight}
+\end{minipage}\hfill
+\begin{minipage}{0.4\linewidth}
+  \includegraphics[width=\linewidth]{graphDfsEdges}
+\end{minipage}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Reachable Ancestors}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Need to check if there exist back edges to nodes that have been
+    visited earlier\pause
+  \item We maintain an array noting the reachable ancestors of all nodes\pause
+  \item This is initialised in the \texttt{processVertexEarly} method
+    to the node itself\pause
+  \item In the \texttt{processEdge} method, if the edge is a
+    \begin{description}
+    \item[back edge] we update the reachable ancestor (we check the
+      \textit{entryTime} to see if the edge leads to a vertex which was
+      discovered earlier)\pause
+    \item[tree edge] we maintain a count of the number of tree edges
+      connected to the vertex (used to determine if we are at a leaf
+      node)\pause
+    \end{description}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Types of Articulated Vertices}
+
+\begin{minipage}{0.55\linewidth}
+  \begin{PauseHighLight}\small
+  \begin{itemize}\squeeze\raggedright
+  \item Key is to recognise that articulated vertices only occur in
+    three version\pause
+    \begin{description}
+    \item[Root cut-nodes] Occur when the root has more than one child\pause
+    \item[Bridge cut-nodes] Occurs when the earliest reachable vertex
+      (not including the tree edge to the parent) is the vertex
+      itself. The parent will be an articulation node as will be the
+      node itself if it is not a leaf node\pause
+    \item[Parent cut-nodes] If the earliest reachable vertex is it
+      parent then the parent is an articulation node\pause
+    \end{description}
+  \item These are determined in \texttt{processVertexLate} method.\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{minipage}\hfill
+\begin{minipage}{0.4\linewidth}
+  \includegraphics[width=0.9\linewidth]{graphArticulation0}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Biconnectivity Summary}
+
+\begin{minipage}{0.55\linewidth}
+  \begin{PauseHighLight}
+  \begin{itemize}\raggedright
+  \item Algorithmic details are not too important\pause
+  \item One pass ($O(n+m)$) algorithm\pause
+  \item Uses \texttt{processVertexEarly}, \texttt{procesEdge} and
+    \texttt{processVerexLate} methods\pause
+  \item Bridge cuts also shows articulation edges\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{minipage}\hfill
+\begin{minipage}{0.4\linewidth}
+  \includegraphics[width=0.9\linewidth]{graphArticulation1}\pause
+  \llap{\includegraphics[width=0.9\linewidth]{graphArticulation2}}\pauseb
+\end{minipage}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Topological Sort
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{DAGs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Directed acyclic graphs or DAGs are directed graphs without
+    cycles\pause
+  \item They are often used to represent complex processes
+    \begin{itemize}
+    \item Vertices are processes
+    \item Directed edge $(i,j)$ indicates process $i$ needs to occur
+      before process $j$\pause
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.6\linewidth]{dag}
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Program Compilation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One example of a DAG is in compiling programs\pause
+  \item Some programs depend on other programs so they need compiling first\pause
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{compilationDAG}
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Other Applications}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The same problem occurs in compiling classes
+    \begin{itemize}
+    \item The implementation of a class can depend on the implementation
+      of other graphs\pause
+    \item What order should you compile the classes?\pause
+    \end{itemize}
+  \item In taking a degree various modules have other modules as
+    prerequisites\pause---what order should a student study the modules
+    in?\pauseb
+  \item In your graduation ceremony there is the VC, Provost, Dean, HOS,
+    Professors, etc.\pause---in what order should they precess?\pauseb 
+  \item If the graphs were not acyclic it would be impossible process them!\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Topological Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given a DAG a topological sort outputs an ordered list of
+    vertices which respects the ordering imposed by the edges\pause
+  \item That is, for each edge $(i,j)$, vertex $i$ will occur before
+    vertex $j$\pause
+  \item Any DAG will have at least one topological sort, but most DAGs
+    will have many topological sorts\pause
+  \item Topological sort is not a ``sort'', but it is a useful algorithm
+    for some applications\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Performing a Topological Sort}
+
+\pb
+\pause
+\begin{itemize}
+\item A topological sort is generated by a reversed order list of how
+    DFS processes nodes\pauseh
+\end{itemize}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{topologicalSort0}\mypl{2}
+  \multido{\ia=1+1,\ib=3+1}{28}%
+  {\llap{\includegraphics[width=0.9\linewidth]{topologicalSort\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{DFS on Digraphs}
+
+\pb\pause
+  \includegraphics[height=12cm]{directedDfs-0}\mypl{1}
+  \llap{\includegraphics[height=12cm]{directedDfs-1}\pause}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementing Topological Sort}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given our DFS programme we define
+    \begin{pseudo}
+topologicalSort(graph) {
+   Stack stack
+   for node $\in$ graph.vertexSet()
+      if (!discovered[node])
+          dfs(graph, node)
+  
+   List topSortList
+   while (!stack.isEmpty())
+      topSortList.add(stack.pop())
+
+   return topSortList
+}
+    \end{pseudo}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Enhance DFS}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Requires us to define a couple of helper function
+\begin{pseudo}
+  processVertexLast(node) {
+     stack.push(node)
+  }$\pause$
+
+  processEdge(currentNode, neighbour) {
+     if (state[neighbour] == "processed") {
+        print "error: graph not a DAG"
+        finished = true
+     }
+  }$\pause$
+\end{pseudo}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementation Issues}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Most awkward part of the implementation is that the
+    \texttt{topologicalSort} algorithm needs access to dfs structures
+    (\texttt{discovered[]})\pause
+  \item \texttt{processVertexLast(node)} needs access to the stack\pause
+  \item Need to be able to redefine \texttt{processVertexFirst},
+    \texttt{processEdge} and \texttt{processVertexLast}\pause
+  \item Different languages and libraries cope with this differently
+    \begin{itemize}
+    \item Java: JDSL, JGraphT
+    \item C++: Boost Graph Library, LEDA\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Other Applications}
+
+\pb
+\begin{itemize}
+\item DFS is used for many other classic problems\pauseh
+\item Euler Cycles \pauseh \hfil
+  \begin{minipage}{0.3\linewidth}
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{eulerCycle0}\mypl{2}
+      \multido{\ia=1+1,\ib=3+1}{11}%
+      {\llap{\includegraphics[width=0.9\linewidth]{eulerCycle\ia}\mypl{\ib}}}
+      \llap{\includegraphics[width=0.9\linewidth]{eulerCycle12}\pause}
+    \end{center}
+  \end{minipage}
+\item Strongly Connected Components\pauseh\raisebox{-3cm}{\includegraphics[width=0.4\linewidth]{stonglyConnectedComponent}}\pause
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Breadth first and depth first search are different methods for
+    traversing graphs\pause
+  \item They are used as part of many specific algorithms for discovering
+    graph properties\pause
+  \item Breadth first search is particularly important for finding
+    shortest paths in unweighted graphs\pause
+  \item Depth first search is used in a whole host of applications
+    (finding articulation points, Euler cycles, strongly connected
+    components)\pause
+  \item One of the most used application is in topological sort (finding
+    an ordering of processes represented by a DAG)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
