@@ -43,7 +43,7 @@
 \begin{PauseHighLight}
   \begin{itemize}
   \item An array is a contiguous chunk of memory\pause
-  \item In C we can create arrays using\\
+  \item In C++ we can create arrays using\\
     \jl$int *array = new int[20]$\pause
   \item The array has an access time of $\Theta(1)$\pause
   \item The constant factor is small (i.e. access time $\approx 1$ time
@@ -168,7 +168,7 @@
 \pausebuild
 \begin{itemize}
 \item We start with some reasonable capacity\pause
-\item We can add elements\pause{} \pauselevel{=6}
+\item We can add elements\pause{}\pauselevel{=7}
   until we reach the capacity\pause
 \item A simple method for resizing memory is
   \begin{itemize}
@@ -246,8 +246,8 @@
     n + 2 n + 4 n + \cdots + 2^{m-1} \, n\pause=n(1 + 2 + \cdots + 2^{m-1})
     \pause = n \, (2^{m}-1)\pause
   \end{align*}
-\item Total number of operations is (using $\lceil \log(a) \rceil <
-  \log(a) +1$)
+\item Total number of operations is\pause\pauselevel{=9} (using
+  $\lceil \log(a) \rceil < \log(a) +1$)\pause\pauselevel{=7}
   \begin{align*}
     N + n \, (2^{m}-1) \pause= N + n 2^{\left\lceil \log_2\bigl(
       \tfrac{N}{n} \bigr) \right\rceil} -n \pause < N +2 N -n 
@@ -260,12 +260,11 @@
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{slide}
-\section{Insertion and Deletion}
+\section[-1]{Insertion and Deletion}
 
 \begin{PauseHighLight}
   \begin{itemize}
-  \item \jl$vector<T>$ is very useful and very fast for lots of
-    things\pause
+  \item In C++ \jl$vector<T>$ is a resizable array and used a lot\pause
   \item But if you try to insert or delete an element anywhere other
     than the end then you have to shove all the subsequent elements
     one space forward\pause
@@ -308,18 +307,23 @@
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{slide}
-\section{Problems with C++}
+\section[-1]{Problems with C++}
   
 \begin{PauseHighLight}
   \begin{itemize}
   \item Amongst a number of issues that make C++ dangerous are
     \begin{itemize}\squeeze
-    \item Memory management
-    \item Writing to parts of memory that you should not
+    \item Memory management\pause
+    \item Writing to parts of memory that you should not\pause
     \item Multiple inheritance\pause, although you seldom need to do this\pauseb
     \end{itemize}
   \item However, by using existing data structures (STL) and following
-    established programming patterns these don't have to be an issue\pause
+    established programming patterns these don't have to be an
+    issue\pause
+    \begin{itemize}
+    \item Use \jl$vector<T>$, \jl+set<T>+, etc.  not raw arrays\pauseb
+    \item Use standard for loops (iterators)\pauseb
+    \end{itemize}
   \end{itemize}
 \end{PauseHighLight}
 
@@ -421,14 +425,13 @@
   };$\pauselevel{=1}\pause$
 
     
-    main() {
+   main() {
 
-      for (int i=0; i<1000; ++i) {
+     for (int i=0; i<1000; ++i) {
         container<int> my_container(10000);
         // $do something$
-      }
-
-    }$\pause$
+     }
+    }$\pauselevel{=2,=4}\pause$
 \end{cpp}
 
 \end{PauseHighLight}
@@ -443,7 +446,7 @@
 
 \begin{PauseHighLight}
   \begin{itemize}
-  \item In C++ the following will compile and run
+  \item In C and C++ the following will compile and run
     \begin{cpp}
       int *array = new int[4];
       int *a = new int[2];
