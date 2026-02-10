@@ -66,17 +66,17 @@
   \item In C we would typically use a for-loop to iterate over an
     array
     \begin{cpp}
-int n = 10;                        // size of array
-int* begin = malloc(n*sizeof(10));  // malloc returns beginning of array $\pause$
-int* end = begin + n;               // address past end of array$\pause$
+int n = 10;                        // $\small \textit{size of array}$
+int* begin = malloc(n*sizeof(10)); // $\small \textit{malloc returns beginning of array} \pause$
+int* end = begin + n;              // $\small \textit{address past end of array}\pause$
 
 int sum = 0;
 for(int* pt = begin; pt != end; pt++) {
-  sum += *pt;                      // need to dereference pointer$\pause$
+  sum += *pt;                     // $\small \textit{need to dereference pointer}\pause$
 }
     \end{cpp}
   \item Ugly\pauseb, but efficient\pauseb
-  \item Acts a prototype for C++ iterators\pauseb
+  \item Acts as a prototype for C++ iterators\pauseb
   \end{itemize}
 \end{PauseHighLight}
 
@@ -118,7 +118,7 @@ for(int* pt = begin; pt != end; pt++) {
   
 \begin{PauseHighLight}
   \begin{itemize}
-  \item In addition the container should have two methods
+  \item In addition the iterator class we should have two methods
     \begin{itemize}
     \item \jl+begin()+
     \item \jl+end()+
@@ -148,7 +148,7 @@ private:
     iterator() {...}            // constructor$\pause$
     iterator operator++() {...} // increment$\pause$
     T& operator*() {...}        // dereference$\pause$
-    friend bool operator!=(const iterator&, const iterator&){
+    bool operator!=(const iterator& rhs){
       // code to determine inequality
     }$\pause$
   }
@@ -263,9 +263,9 @@ private:
     Node* entry;             // Holds node pointer$\pause$
     iterator(Node* pt): entry(pt) {}       // constructor$\pause$
     T& operator*() {return entry->value;}  // dereferencing$\pause$
-    iterator operator++() {  // next entry
+    T& operator++() {  // next entry ++it
       entry = entry->next;
-      return iterator(entry);
+      return entry->value;
     }$\pause$
     bool operator!=(const iterator& other) const {
       return entry != other.entry;
@@ -309,15 +309,15 @@ public:
   \begin{itemize}
   \item C++ has a pre-increment opeator \jl$++a$ and a post-increment
     operator \jl$a++$\pause
-  \item The pre-increment operator increments $a$ and returns the
+  \item The pre-increment operator increments \jl$it$ and returns the
     incremented version, e.g.
     \begin{cpp}
-T& operator++() {++count; return *this;}  // defines ++a$\pause$
+T& operator++() {++pt; return pt->value;}  // defines ++it$\pause$
     \end{cpp}
-  \item The post-increment operator copies $a$ increments it and
+  \item The post-increment operator copies \jl$it$ increments it and
     returns the copy, e.g.
     \begin{cpp}
-T operator++(int) {T b=a; ++count; return b;} // defines a++$\pause$
+T operator++(int) {T v = pt->value; ++pt; return v;} // defines it++$\pause$
     \end{cpp}
   \item The \jl+int+ argument is not used, but tells the compiler
     which increment is which\pause
