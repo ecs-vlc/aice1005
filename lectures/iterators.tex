@@ -207,7 +207,7 @@ public:
 
     Array<string> elements(4): {"earth", "water", "wind", "fire"};$\pause$
 
-    for(Array:iterator it=elements.begin(); it!=elements.end(); ++it) {
+    for(Array::iterator it=elements.begin(); it!=elements.end(); ++it) {
       cout << *it << endl;
     }$\pause$
 
@@ -263,9 +263,9 @@ private:
     Node* entry;             // Holds node pointer$\pause$
     iterator(Node* pt): entry(pt) {}       // constructor$\pause$
     T& operator*() {return entry->value;}  // dereferencing$\pause$
-    T& operator++() {  // next entry ++it
+    iterator& operator++() {  // next entry ++it
       entry = entry->next;
-      return entry->value;
+      return iterator(entry);
     }$\pause$
     bool operator!=(const iterator& other) const {
       return entry != other.entry;
@@ -312,12 +312,12 @@ public:
   \item The pre-increment operator increments \jl$it$ and returns the
     incremented version, e.g.
     \begin{cpp}
-T& operator++() {++pt; return pt->value;}  // defines ++it$\pause$
+iterator& operator++() {++it; return it;}  // defines ++it$\pause$
     \end{cpp}
   \item The post-increment operator copies \jl$it$ increments it and
     returns the copy, e.g.
     \begin{cpp}
-T operator++(int) {T v = pt->value; ++pt; return v;} // defines it++$\pause$
+T& operator++(int) {T v = it->value; ++it; return v;} // defines it++$\pause$
     \end{cpp}
   \item The \jl+int+ argument is not used, but tells the compiler
     which increment is which\pause
@@ -373,7 +373,7 @@ T operator++(int) {T v = pt->value; ++pt; return v;} // defines it++$\pause$
     iterator}\pause
   \item This requires us to implement the decrement operators
     \begin{cpp}
-    T& operator--();     // implements --obj
+    iterator& operator--();     // implements --obj
     T  operator--(int);  //implements obj--
     \end{cpp}\pause
   \item There also exist \emph{random-access iterators} that implements
