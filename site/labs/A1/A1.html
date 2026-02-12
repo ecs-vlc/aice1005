@@ -24,7 +24,7 @@
 We want to measure the time complexity for <b>insertion sort</b>, <b>shell sort</b> and <b>quick sort</b>. We will get them to sort a <code>vector&lt;double&gt;</code> multiple times for different lengths.  We will use Open-AI's Chat-GPT or some other chatbot to help write the code.  The demonstrators are there to help.  Don't get stuck, ask for help.
 
 <ol>
-  <li>Ask the chatbot to write a C++ function that takes another C++ function, <code>func(const vector&lt;double&gt;& v)</code> as an argument.  It should should generate a <code>vector&lt;double&gt;</code> of size <code>n</code> consisting of random doubles and time how long <code>func</code> takes to run.
+  <li>Ask the chatbot to write a C++ function that takes another C++ function, <code>func(vector&lt;double&gt;& v)</code> as an argument.  The function should generate a <code>vector&lt;double&gt;</code> of size <code>n</code> consisting of random doubles and time how long <code>func</code> takes to run.
   <li>Ask the chatbot to write a C++ function that runs insertion sort to sort a vector of doubles
   <li>Time how long it takes to sort 1000 random doubles using insertion sort
   <li>Put this in a loop using <code>for(int i=0; i&lt;20; ++i){...}</code> and using <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.h">sos.h</a> and <a href="https://ecs-vlc.github.io/aice1005/code/cpp101/sos.cc">code.cc</a> compute the mean time and the estimated error in the mean time.
