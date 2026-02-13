@@ -245,8 +245,8 @@ private:$\pause$
   public:
     T element;
     Node* parent;
-    Node* left = 0;
-    Node* right = 0;
+    Node* left = nullptr;
+    Node* right = nullptr;
 
     Node(const T& value, Node* parent_node) {
       element = value;
@@ -255,9 +255,9 @@ private:$\pause$
   };$\pause$
 
   unsigned no_elements = 0;
-  Node* root = 0;$\pause$
+  Node* root = nullptr;$\pause$
 
-private:
+public:
   ...$\pause$
 \end{cpp}
 \end{minipage}\hspace{2cm}
@@ -410,7 +410,7 @@ private:
   \begin{itemize}
   \item To sort any objects they must be comparable\pause
   \item In the STL the set implementation has a second template
-    parameter: \jl$std::set<T, Compare = less<T> >$\pause
+    parameter: \jl$std::set<T, Compare = less<T>>$\pause
   \item by default this is defined to be \jl$less<T>$ (which is a function
     already defined for most common types) which you can define\pause
   \item If you have a set of complex objects you will have to define
@@ -438,7 +438,7 @@ private:
     \begin{cpp}
    iterator find(const T& element) {
     Node* current = root;$\pause$
-    while (current!=0) {
+    while (current!=nullptr) {
       if (current->element == element) {
 	return iterator(current);
       }$\pause$
@@ -448,7 +448,7 @@ private:
 	current = current->right;
       }$\pause$
     }
-    return iterator(0);
+    return iterator(nullptr);
   }$\pause$
     \end{cpp}
   \end{itemize}
@@ -464,15 +464,15 @@ private:
 \begin{cpp}
   pair<iterator, bool> insert(const T& element) {
     if (no_elements==0) {
-      root = new Node(element, 0);
+      root = new Node(element, nullptr);
       ++no_elements;
       return pair<iterator, bool>(iterator(root), true);
     }$\pause$
-    Node* parent = 0;
+    Node* parent = nullptr;
     Node* current = root;
-    while(current != 0) {
+    while(current != nullptr) {
       if (current->element == element) {
-	return pair<iterator, bool>(iterator(0), false);
+	return pair<iterator, bool>(iterator(nullptr), false);
       }$\pause$
       parent = current;
       if (element < current->element) {
@@ -587,7 +587,7 @@ private:
 \begin{cpp}
 class binary_tree {
 $\pause$
-public:
+private:
   class iterator {
   private:
     Node* current;$\pause$

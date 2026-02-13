@@ -220,7 +220,6 @@
         return  n <  0  ? power_recurse(1.0/x,-n)  //  Negative power 
             :  n == 0   ? 1                        //  Special case
             : power_recurse(x,n);
-
     }$\pause$
 
     double power_recurse(double x, long n) {
@@ -430,7 +429,7 @@
 
 \begin{slide}
 \section[-1]{Fibonacci}
-
+  
 \pb
 \begin{java}
   long fib(long n)
