@@ -101,18 +101,18 @@
 \begin{PauseHighLight}
 \begin{minipage}{11cm}
 \begin{java}
-  if (n->left==0 && n->right==0) {
+  if (n->left==nullptr && n->right==nullptr) {
      if (n == n->parent->left)
-        n->parent->left = 0;
+        n->parent->left = nullptr;
      else
-        n->parent->right = 0;$\pause$
-  } else if (n->right==0) {
+        n->parent->right = nullptr;$\pause$
+  } else if (n->right==nullptr) {
      if (n == n->parent->left)
         n->parent->left = n->left;
      else
         n->parent->right = n->left;
      n->left->parent = n->parent;$\pause$
-  } else if (n->left==0) {
+  } else if (n->left==nullptr) {
      if (n == n->parent->left)
         n->parent->left = n->right;
      else
@@ -269,10 +269,10 @@ void rotateLeft(Node* e)$\pause$
 {
   Node* r = e->right;$\pause$
   e->right = r->left;$\pause$
-  if (r->left != 0)
+  if (r->left != nullptr)
      r->left->parent = e;$\pause$
   r->parent = e->parent;$\pause$
-  if (e->parent == 0)
+  if (e->parent == nullptr)
      root = r;
   else if (e->parent->left == e)
      e->parent->left = r;
