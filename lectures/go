@@ -39,7 +39,7 @@ for proc in psutil.process_iter():
     if proc.name() == "evince":
         proc.kill()
 
-os.system(f"evince {pdf}&")
+os.system(f"papers {pdf}&")
 time.sleep(1)
 myengage()
 
