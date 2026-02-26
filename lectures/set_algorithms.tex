@@ -114,13 +114,13 @@
 
 \begin{PauseHighLight}
   \begin{itemize}
-  \item In the union-find algorithm we have a set of objects $x \in 
-    \mathcal{S}$ which are to be grouped into subsets $\mathcal{S}_1$,
-    $\mathcal{S}_2$, \ldots\pause
-  \item Initially each object is in its individual subset (no relationships)\pause
-  \item We want to make the \emph{union} of two subsets (add
-    relationship between elements)\pause
-  \item We also want to \emph{find} the subset given an element\pause
+  \item In the union-find algorithm we have a set of objects
+    $x \in \mathcal{S}$ which are to be grouped into equivalence
+    classes $\mathcal{S}_1$, $\mathcal{S}_2$, \ldots\pause
+  \item Initially each object is in its own equivalence class\pause
+  \item \emph{union} combines two equivalence classes\pause
+  \item \emph{find} returns a unique member of the equivalence class
+    (e.g $[a]$)\pause
   \item This is a common problem for which we will write a class
   \jl$DisjointSets$ to perform fast \texttt{union}s and \texttt{find}s\pause
   \end{itemize}
@@ -341,7 +341,7 @@ class DisjointSets
     when sparse, general purpose\pause
   \item B-trees: $O((k-1)\,\log_k(n))$ very complicated, used for large amounts
     of data\pause
-  \item Tries: $O(\log_k(n))$ for large $k$ expensive in memory,
+  \item Tries: $O(len(seq))$ = $O(\log_k(n))$ for large $k$ expensive in memory,
     complicated to code efficiently\pause
   \end{itemize}
 \end{PauseHighLight}
@@ -420,11 +420,14 @@ class DisjointSets
              indexArray [i] = -1;
         }
         noMembers = 0;
-    }$\pause$
+      }$\pause$
 
-    int size() {
-       return noMembers;
-    }$\pause$
+      ~FastSet() {
+        delete[] indexArray;
+        delete[] memberArray;
+      }
+      
+      int size() { return noMembers; }$\pause$
 \end{java}
 \end{slide}
 
