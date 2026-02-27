@@ -4,12 +4,16 @@ size(200,0);
 
 void drawArray(int type, int[] a) {
   draw(box((0,1.2*type),(a.length, 1.2*type+1)));
+  label("index$\{\}$", (0,1.2+0.5), W);
+  label("mem$\{\}$", (0,0.5), W );
+  pen col = (type==1)? red: black;
   for(int i=0; i<a.length; ++i) {
     draw((i, 1.2*type)--(i, 1.2*type+1));
     if (a[i]>-2)
-      label(string(a[i]), (i+0.5, 1.2*type+0.5));
+      label(string(a[i]), (i+0.5, 1.2*type+0.5), col);
     if (type==1) {
       label("\small{" + string(i) + "}", (i+0.5, 1.2*type+1), N, blue);
+      label("\tiny{" + string(i) + "}", (i+0.5, 0), S, red);
     }
   }
 }
@@ -30,9 +34,10 @@ struct FastSet {
     return fs;
   }
   void draw() {
-    draw(box((-0.1,-0.1),(set.length+0.1, 3.7)), white);
+    draw(box((-3,-1.2),(set.length+0.1, 3.9)), white);
     drawArray(0, set);
     drawArray(1, index);
+    label("\texttt{noMembers}=" + string(last), (0, -1), E);
   }
   bool add(int i) {
     command("add(" + string(i) + ")");
