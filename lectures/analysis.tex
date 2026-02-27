@@ -435,7 +435,8 @@ bool search(T a[], T x)
   \item Selection sort always requires $n(n-1)/2$ comparisons so has the
     same worst case, but worse average case and best case complexity as
     insertion sort\pause
-  \item It only performs $n-1$ swaps---this makes it attractive
+  \item It only performs $n-1$ swaps---this makes it attractive when
+    swapping is expensive
     (insertion sort moved more elements)\pause
   \end{itemize}
 \end{PauseHighLight}
@@ -574,7 +575,7 @@ bool search(T a[], T x)
     tree for every possible way of sorting the list\pause
   \item The array $[a,b,c]$ must be arranged differently for all combinations
     \begin{align*}
-      [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]\pause
+      [a,b,c], [a,c,b], [b,a,c], [b,c,a], [c,a,b], [c,b,a]\pause
     \end{align*}
   \item That is they must go through a different path of the decision
     tree\pause
@@ -681,16 +682,16 @@ bool search(T a[], T x)
 %%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{slide}
-\section[-2]{Lessons}
+\section[-2.2]{Lessons}
 
 \begin{PauseHighLight}
   \begin{itemize}
-  \item Analysis of algorithms is hard\pause
+  \item Analysis of algorithms is hard!\pause
   \item Analysis is important: without it we don't know if we have a good
     algorithm or whether we should try to find a more efficient one\pause
   \item Lower bounds are particularly important
     \begin{center}
-      \includegraphics[width=0.8\linewidth]{lower-bound}\pause
+      \includegraphics[width=0.9\linewidth]{lower-bound}\pause
     \end{center}
   \end{itemize}
 \end{PauseHighLight}
