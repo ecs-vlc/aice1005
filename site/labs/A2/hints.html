@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Hints</title>
+    <script src="https://cdn.jsdelivr.net/gh/MarketingPipeline/Markdown-Tag/markdown-tag.js"></script> 
+    <style>
+      table {
+	  border-collapse: collapse;   /* Prevent double borders */
+	  width: auto;                 /* Or 100% if you prefer full width */
+      }
+
+      th, td {
+	  border: 1px solid #444;      /* Table grid lines */
+	  padding: 8px 12px;           /* Vertical | Horizontal spacing */
+	  text-align: left;            /* Optional */
+      }
+
+      th {
+	  background-color: #f2f2f2;   /* Optional header styling */
+      }
+    </style>
+</head>
+<body>
+
+<md>
+# Hints for Lab 2
+
+## Getting Started
+
+- Yes you are going to do this in C++, don't painic, I have already written the C++ plumbing for you
+- Make sure you are compiling with a C++ compiler (e.g. g++) not a C compiler
+- For this lab you only need to edit `Queue.h`
+- You compile and run `test_queue.cc` which calls `Queue.h`
+- You fill in the functions definition between curly brackets
+
+## Templates
+
+- C++ templates are very easy to work with!
+- Think about writing a Queue of `int`s but replace `int` by `T`
+
+| Description  | Code for `int`  | Code for `T` |
+|-------------|----------------|-----------------|
+| Declare a variable| `int x;`   | `T x;`        |
+| Instantiate an array | `int* a = new int[20];` | `T* a = new T[20];` |
+| Alternatively | `int[] a = new int[20];` | `T[] a = new T[20];` |
+| Define functions | `int f(int x)` | `T f(T x)` |
+ 
+## Classes
+
+- Classes consist of data and methods/function
+- If a method does not change the data we declare it const
+<pre><code>
+   class Myclass {
+    private:
+       int mydata;
+    public:
+       void method_that_changes_my_data();
+       void method_that_leaves_my_data_the same() const;
+   }					       
+</pre></code>
+
+## New and Delete
+
+- Rather than `malloc` and `free` C++ has `new` and `delete`
+- To create an array of integers of size `n` use
+<pre><code>
+    int[] a = new int[n];
+</pre></code>
+- The variables you create with `new` you need to release with `delete`
+<pre><code>
+    delete[] a;
+</pre></code>
+- When you create an array you need to call `delete[]`
+- Failure to call 'delete[]' will lead to that memory being wasted
+- Good practice in C++ is to create memory in a *constructor* and delete it in the *destructor*
+- You do **not** delete objects unless they were created with `new`
+
+## Implementing Queues
+
+- Think carefully about what a queue is and the language you use
+- The *front* or *head* is what you return first (`dequeue` returns the head)
+- The *back* or *tail* of a queue is where you add new items (`enqueue` adds the tail)
+- Have a play with the animation on the courses page
+- To prevent using huge amounts of memory we are going to put the queue in a circular array so if we enqueue and dequeue at around the same rate so the number of items in the queue are not too big we can get away with using a small amount of memory
+- One way to cope with indexing circular arrays is to use the modulus operator `a % b`
+- The tail of the queue is given by
+<pre><code>
+      tail = (front + num_items) % capacity_size;
+</pre></code>
+- To update `front` you could use
+<pre><code>
+      front = (front + 1) % capacity_size;
+</pre></code>
+- We don't know the correct `capacity_size` to use so we need to resize the queue when `num_items` exceeds `capacity_size`
+- To prevent resizes too often we should double `capacity_size`
+- We need to call `new` again, copy the elements across and `delete[]` the old items
+- Care is needed when we do this to ensure that the items appear in the new array in the right order
+- One way to ensure this is using
+</md>
+<pre><code>
+      for(int i=0; i < num_items; ++i)
+         new_items[i] = items[(front + i) % capacity_size];
+</pre></code>
+<md>
+- if you do this `front` needs to be reset to 0
+
+### Extras
+
+- If you want to copy a queue, for example using either
+<pre><code>
+       Queue queue2(queue1);
+       Queue queue3 = queue2;
+</pre></code>
+   then you need to implement the copy constructor
+</md>
+<pre><code>
+       Queue::Queue(const Queue&amp; rhs);
+</pre></code>
+<md>
+- This should implement a deep copy in that you use different `items` array so changing the new array does not change the original queue
+
+## Implementing a Ring
+
+- The ring is not too dissimilar to the circular queue except we overwrite entries once the ring is full
+- Make sure you fully understand the ring before you start implementing it
+- There is an animation on the web-page for you to play with to understand a ring
+- Because rings have limited history the most sensible way to index them is for `ring[0]` to be the last element you put in, `ring[1]` to be the element you put in before that, etc.
+- The iterator is a bit tricky.  The iterator needs to have access to the parent class `Ring`, but nested classes don't have access to parent classes automatically
+- When we create an iterator we therefore pass it the parent ring class and the position of the iterator
+- It is not helpful to think of the iterator as a pointer.  Think of it as an object that tells you where you are in the ring
+- The iterator needs to stop when it has seen every item in the ring
+
+</md>
+
+</body>
+</html>

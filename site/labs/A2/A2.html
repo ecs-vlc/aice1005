@@ -20,7 +20,6 @@
 
 <h3>Tips</h3>
 <ol>
-  <li>The <code>const</code> after the function tells the compiler that the function method does not change the content of the class
   <li>You need to wrap around once you have reached the capacity.  To do modular arithmetic in C++ use <code>a%b</code>
   <li>You should only resize when the number of elements exceeds the capacity
   <li>The unit tests do very simple tests.  Try to understand them.  They do things like create a queue.  Enqueue and item.  Check the number of items.  Dequeue the item and checks it is what you enqueued.  It is worth trying to get the first checks correct first as these are the easy ones
@@ -65,7 +64,8 @@
   <li>I provide you with a header file <a href="code/Queue.h">Queue.h</a>, a test file <a href="code/test_queue.cc">test_queue.cc</a> and a second header file <a href="code/doctest.h">doctest.h</a> to do unit testing and a makefile.  Download these to a directory.
   <li>You should be able to compile these to get an executably file <code>test_queue</code>.
   <li>If you run <code>test_queue</code> it should tell you that you have failed most of the tests.  <code>test_queue</code> uses <a href="https://github.com/doctest/doctest">doctest</a> to do unit testing.
-  <li>Your job is to fill in the implementation in <code>Queue.h</code> so thatthe code passes all the tests (don't change <code>test_queue.cc</code>).  Note I have written functions templates for all the member functions of class <code>Queue&lt;T&gt;</code>, but you need to replace these with working code.  The default capacity should be 8. If there are more than 8 items in the queue you should double the capacity.
+  <li>Your job is to fill in the implementation in <code>Queue.h</code> so that the code passes all the tests (don't change <code>test_queue.cc</code>).  Note I have written functions templates for all the member functions of class <code>Queue&lt;T&gt;</code>, but you need to replace these with working code.  The default capacity should be 8. If there are more than 8 items in the queue you should double the capacity.  All functions should be &Theta;(1)
+  <li>There are lots of hints <a href="hints.html">here.</a>
 </ol>
 
 <h2>Building a Ring Buffer</h2>
