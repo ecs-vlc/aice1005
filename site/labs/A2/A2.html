@@ -18,14 +18,7 @@
   <li>Read the description of the data structures we are going to implement.  If you don't understand read the Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Circular_buffer">circular buffer</a>
 </ol>
 
-<h3>Tips</h3>
-<ol>
-  <li>You need to wrap around once you have reached the capacity.  To do modular arithmetic in C++ use <code>a%b</code>
-  <li>You should only resize when the number of elements exceeds the capacity
-  <li>The unit tests do very simple tests.  Try to understand them.  They do things like create a queue.  Enqueue and item.  Check the number of items.  Dequeue the item and checks it is what you enqueued.  It is worth trying to get the first checks correct first as these are the easy ones
-  <li>There are lots of ways of writing a queue.  You want to write clean code as it is easier to read (will have less bugs) and is usually faster.
-  <li>All functions except the copy constructor (<code>Queue(const Queue&)</code>) should be &Theta;(1)
-</ol>
+
 
 <h2>Queues</h2>
 
