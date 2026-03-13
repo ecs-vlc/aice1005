@@ -1,0 +1,544 @@
+<html><head><title>Tutorial 3</title></head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<!--#include file="header.htx" -->
+<!--#include file="tutorial_index.htx" -->
+<!--#include file="separator.htx" -->
+<center><h1>Tutorial 3</h1></center><center><h3>Trees and Graphs</h3></center>
+<p><p>The following algorithm implements a simple binary search tree.
+<blockquote><table border=1 cellpadding=10  align=center bgcolor="#00ffff" ><td><font color="#ff0000"><pre>import java.util.*;
+
+public class BinarySearchTree&lt;T&gt; extends AbstractSet&lt;T&gt;
+{
+    private Node&lt;T&gt; root;
+    private int size;
+
+    private static class Node&lt;T&gt;
+    {
+	private T element;
+	private Node&lt;T&gt; left = null;
+	private Node&lt;T&gt; right = null;
+	private Node&lt;T&gt; parent;
+ 
+	private Node(T element, Node&lt;T&gt; parent)
+	{
+	    this.element = element;
+	    this.parent = parent;
+	}
+    }
+
+    public BinarySearchTree()
+    {
+	root = null;
+	size = 0;
+    }
+
+    public BinarySearchTree(BinarySearchTree&lt;T&gt; other)
+    {
+	root = null;
+	size = 0;
+	for (T element: other)
+	    add(element);
+    }
+
+    public int size()
+    {
+	return size;
+    }
+
+    public Iterator&lt;T&gt; iterator()
+    {
+	return new TreeIterator();
+    }
+
+
+
+
+    public boolean add(T element)
+    {
+	if (root == null) {
+	    root = new Node&lt;T&gt;(element, null);
+	    size++;
+	    return true;
+	} else {
+	    Node temp = root;
+	    int comp;
+	    while (true) {
+		comp = ((Comparable)(element)).compareTo(temp.element);
+		if (comp == 0)
+		    return false;
+		if (comp&lt;0) {
+		    if (temp.left != null)
+			temp = temp.left;
+		    else {
+			temp.left = new Node&lt;T&gt;(element, temp);
+			size++;
+			return true;
+		    }
+		} else {
+		    if (temp.right != null)
+			temp = temp.right;
+		    else {
+			temp.right = new Node&lt;T&gt;(element, temp);
+			size++;
+			return true;
+		    }
+		}
+	    }
+	}
+    }
+
+    public boolean remove(Object obj)
+    {
+	Node&lt;T&gt; e = getNode(obj);
+	if (e == null)
+	    return false;
+	deleteNode(e);
+	return true;
+    }
+
+    private Node&lt;T&gt; getNode(Object obj)
+    {
+	int comp;
+	Node&lt;T&gt; e = root;
+	while (e != null) {
+	    comp = ((Comparable)(obj)).compareTo(e.element);
+	    if (comp == 0)
+		return e;
+	    else if (comp &lt; 0)
+		e = e.left;
+	    else
+		e = e.right;
+	}
+	return null;
+    }
+
+    public T mapAdd(T obj)
+    {
+	if (root == null) {
+	    root = new Node&lt;T&gt;(obj, null);
+	    size++;
+	    return root.element;
+	}
+	int comp;
+	Node&lt;T&gt; e = root;
+	Node&lt;T&gt; p = null;
+	boolean left = true;
+	while (e != null) {
+	    p = e;
+	    comp = ((Comparable)(obj)).compareTo(e.element);
+	    if (comp == 0)
+		return e.element;
+	    else if (comp &lt; 0) {
+		left = true;
+		e = e.left;
+	    } else {
+		e = e.right;
+		left = false;
+	    }
+	}
+	e = new Node&lt;T&gt;(obj, p);
+	if (left)
+	    p.left = e;
+	else
+	    p.right = e;
+	size++;
+	return e.element;
+    }
+
+
+
+
+    public boolean contains(Object obj)
+    {
+	return getNode(obj) != null;
+    }
+
+    private Node&lt;T&gt; deleteNode(Node&lt;T&gt; p)
+    {
+	size--;
+	if (p.left != null &amp;&amp; p.right != null) {
+	    Node&lt;T&gt; s = successor(p);
+	    p.element = s.element;
+	    p = s;
+	}
+		
+	Node&lt;T&gt; replacement;
+	if (p.left != null)
+	    replacement = p.left;
+	else
+	    replacement = p.right;
+
+	if (replacement != null) {
+	    replacement.parent = p.parent;
+	    if (p.parent == null)
+		root = replacement;
+	    else if (p == p.parent.left)
+		p.parent.left = replacement;
+	    else
+		p.parent.right = replacement;
+	} else if (p.parent == null) {
+	    root = null;
+	} else {
+	    if (p == p.parent.left)
+		p.parent.left = null;
+	    else
+		p.parent.right = null;
+	}
+	return p;
+    }
+
+    private Node&lt;T&gt; successor(Node&lt;T&gt; e)
+    {
+	if (e == null) {
+	    return null;
+	} else if (e.right != null) {
+	    Node&lt;T&gt; p = e.right;
+	    while (p.left != null)
+		p = p.left;
+	    return p;
+	} else {
+	    Node&lt;T&gt; p = e.parent;
+	    Node&lt;T&gt; child = e;
+	    while (p != null &amp;&amp; child == p.right) {
+		child = p;
+		p = p.parent;
+	    }
+	    return p;
+	}
+    }
+
+    private class TreeIterator implements Iterator&lt;T&gt;
+    {
+	private Node&lt;T&gt; lastReturned = null;
+	private Node&lt;T&gt; next;
+
+	private TreeIterator()
+	{
+	    next = root;
+	    if (next != null)
+		while (next.left != null)
+		    next = next.left;
+	}
+
+	public boolean hasNext()
+	{
+	    return next != null;
+	}
+
+	public T next()
+	{
+	    if (next == null)
+		throw new NoSuchElementException();
+	    lastReturned = next;
+	    next = successor(next);
+	    return lastReturned.element;
+	}
+
+	public void remove()
+	{
+	    if (lastReturned == null)
+		throw new IllegalStateException();
+	    if (lastReturned.left != null &amp;&amp; lastReturned.right != null)
+		next = lastReturned;
+	    deleteNode(lastReturned);
+	    lastReturned = null;
+	}
+    }
+
+}
+</pre></font></td></table></blockquote><center><A HREF="BinarySearchTree.java">BinarySearchTree.java</A></center>
+<p><ol>
+<li>Write a test program to test <font color="#cf0000"><tt><font size=5>add</font></tt></font>, <font color="#cf0000"><tt><font size=5>remove</font></tt></font>, <font color="#cf0000"><tt><font size=5>contains</font></tt></font>
+    and the iterator</li>
+<li>Write a method (using recursion) to count the average depth of a
+    tree (you are allowed to modify the class).</li>
+<li>Write a program to compute the average depth versus the the number
+    of inputs for randomly generated numbers.  Plot this as a graph.</li>
+<p><h3>4-5 are Supplemental Questions</h3>
+<p><p><li>Modify the Binary Search Tree to implement a Map interface</li>
+<li>Write a program to display a tree
+<A HREF="tutorial4_0.txt">Hint</A></li>
+<p><center><h3>Graph Algorithms</h3></center>
+<p><li>Write a Java Graph class which stores a set of vertices and their
+    2-D positions.  It should also store a set of edges together with
+    weights on the edges.
+<A HREF="tutorial4_1.txt">Hint</A></li>
+<p><li>Write a method <font color="#cf0000"><tt><font size=5>randomGraph(n,p)</font></tt></font> which generates a graph with <font color="#cf0000"><tt><font size=5>n</font></tt></font>
+    vertices placed at random in the unit square and where the
+    probability of an edge is <font color="#cf0000"><tt><font size=5>p</font></tt></font>.  The weight of the edges are the
+    distances between the nodes.</li>
+<p>To visualise the graph use the follow program (this is just for
+visualisation, to use it create an instance of GraphDisplay)
+<blockquote><table border=1 cellpadding=10  align=center bgcolor="#00ffff" ><td><font color="#ff0000"><pre>import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
+
+
+
+class GraphDisplay extends JComponent
+{
+  public static void main(String[] args)
+  {
+    GraphDisplay gd = new GraphDisplay();
+    gd.showInWindow(400,400,&quot;A Random Graph&quot;);
+		
+    //	Add some randomly placed nodes
+    int n = 20;
+    for(int i=0; i&lt;n; i++)
+      gd.addNode(i,Math.random(),Math.random());
+		
+    //	Add a few random edges in slow motion
+    try{
+      for(int j=0; j&lt;2*n; j++)
+	{
+	  int a = (int)(Math.random()*n);
+	  int b = (int)(Math.random()*n);
+	  gd.addEdge(a,b,Color.red);
+	  Thread.sleep(500);
+	  gd.addEdge(a,b,Color.black);
+	}
+    }catch(InterruptedException e) {
+    }
+  }
+
+
+  public GraphDisplay()
+  {
+    minX = minY = Double.POSITIVE_INFINITY;
+    maxX = maxY = Double.NEGATIVE_INFINITY;
+  }
+	
+  public synchronized void addNode(Object identifier, double x, double y,
+				   Color col)
+  {
+    maxX = Math.max(maxX,x);
+    maxY = Math.max(maxY,y);
+    minX = Math.min(minX,x);
+    minY = Math.min(minY,y);
+    nodes.put(identifier,new Node(x,y,col));
+    repaint();
+  }
+
+  public synchronized void addNode(Object identifier, double x, double y)
+  {
+    maxX = Math.max(maxX,x);
+    maxY = Math.max(maxY,y);
+    minX = Math.min(minX,x);
+    minY = Math.min(minY,y);
+    nodes.put(identifier,new Node(x,y,NODE_COLOR));
+    repaint();
+  }
+	
+  public synchronized void addEdge(Object start, Object end, Color c)
+  {
+    removeEdge(start,end);
+    edges.add(new Edge(start,end,c));
+    repaint();
+  }
+	
+  public synchronized boolean removeEdge(Object start, Object end)
+  {
+    Iterator&lt;Edge&gt; it = edges.iterator();
+    while(it.hasNext())
+      {
+	Edge tmp = it.next();
+	if(tmp.joins(start,end))
+	  {
+	    it.remove();
+	    repaint();
+	    return true;
+	  }
+      }
+    return false;
+  }
+	
+  public void addEdge(Object start, Object end)
+  {
+    addEdge(start,end,Color.black);
+  }
+	
+	
+  public JFrame showInWindow(int width, int height, String title)
+  {
+    JFrame f = new JFrame();
+    f.add(this);
+    f.setSize(width,height);
+    f.setTitle(title);
+    f.addWindowListener(new WindowAdapter() {
+	public void windowClosing(WindowEvent we) {
+	  System.exit(0);
+	}
+      });
+    f.setVisible(true);
+    return f;
+  }
+
+  public void paint(Graphics g)
+  {
+    if(nodes.isEmpty())
+      return;
+	
+    double xscl = (getSize().width -2*MARGIN) / (maxX-minX);
+    double yscl = (getSize().height-2*MARGIN) / (maxY-minY);
+		
+	
+    g.translate(+MARGIN,+MARGIN);
+	
+    synchronized(this){
+      for(Edge e: edges)
+	e.paint(g,xscl,yscl,minX,minY);
+      for(Node n: nodes.values())
+	n.paint(g,xscl,yscl,minX,minY);
+    }		
+		
+    g.translate(-MARGIN,-MARGIN);
+  }
+	
+	
+	
+  protected double minX,maxX,minY,maxY;
+  protected HashMap&lt;Object,Node&gt; nodes = new HashMap&lt;Object,Node&gt;();
+  protected Vector&lt;Edge&gt; edges = new Vector&lt;Edge&gt;();
+	
+  protected int   MARGIN      = 20;
+  protected int   NODE_RADIUS = 5;
+  protected Color NODE_COLOR  = Color.blue.brighter();
+
+
+
+
+
+	
+  private class Node
+  {
+    public Node(double x, double y, Color col)
+    {
+      this.x = x;
+      this.y = y;
+      this.col = col;
+    }
+		
+    public void paint(Graphics g, double xscl, double yscl, double tx, double ty)
+    {
+      g.setColor(col);
+      g.fillOval(
+		 (int)((x-tx)*xscl - NODE_RADIUS),
+		 (int)((y-ty)*yscl - NODE_RADIUS),
+		 2*NODE_RADIUS,
+		 2*NODE_RADIUS
+		 );
+    }
+		
+    protected double x,y;
+    protected Color col;
+	        
+  }
+	
+  private class Edge
+  {
+    public Edge(Object start, Object end, Color col)
+    {
+      this.start = start;
+      this.end = end;
+      this.col = col;
+    }
+		
+    public boolean joins(Object a, Object b)
+    {
+      return	(start.equals(a) &amp;&amp; end.equals(b))
+	||	(start.equals(b) &amp;&amp; end.equals(a));
+    }
+		
+    public void paint(Graphics g, double xscl, double yscl, double tx, double ty)
+    {
+      Node a = nodes.get(start);
+      Node b = nodes.get(end);
+      g.setColor(col);
+      g.drawLine(
+		 (int)(xscl*(a.x-tx)),
+		 (int)(yscl*(a.y-ty)),
+		 (int)(xscl*(b.x-tx)),
+		 (int)(yscl*(b.y-ty))
+		 );			
+    }
+		
+    protected Object start,end;
+    protected Color col;
+  }
+}
+</pre></font></td></table></blockquote><center><A HREF="GraphDisplay1.java">GraphDisplay1.java</A></center>
+<p><li>Write a method that implements Prim's algorithm to compute
+    the minimum spanning tree.
+    <center><img src="prim.gif" align=center><i></i></center>
+    Prim's algorithm is illsutrated in <a href="prim.pdf">here</a>.
+    Your program should use your Graph class and the Java's collection
+    class priority queue.  You should visualise the answer using
+    <font color="#cf0000"><tt><font size=5>GraphDisplay</font></tt></font>.
+</li>
+<p><li>Write a method that implements Kruskal's algorithm to compute
+    the minimum spanning tree.
+    <center><img src="kruskal.gif" align=center><i></i></center>
+    You will need to use the <font color="#cf0000"><tt><font size=5>DisjointSets</font></tt></font> class
+    <blockquote><table border=1 cellpadding=10  align=center bgcolor="#00ffff" ><td><font color="#ff0000"><pre>public class DisjointSets
+{
+    public DisjointSets(int numElements)
+    {
+	s = new int[numElements];
+	for(int i=0; i&lt;s.length; i++)
+	    s[i] = -1;
+    }
+
+    public void union(int root1, int root2)
+    {
+	if (s[root2]&lt;s[root1]) {
+	    s[root1] = root2;
+	} else {
+	    if (s[root1]==s[root2])
+		s[root1]--;
+	    s[root2] = root1;
+	}
+    }
+
+    public int find(int x)
+    {
+	if (s[x]&lt;0)
+	    return x;
+	else
+	    return s[x] = find(s[x]);
+    }
+
+    private int[] s;
+}
+</pre></font></td></table></blockquote><center><A HREF="DisjointSets.java">DisjointSets.java</A></center>
+    To use the DisjointSet class you simple write
+    <blockquote><table border=1 cellpadding=10  align=center bgcolor="#00ffff" ><td><font color="#ff0000"><pre>
+/* Create a disjoint sets object*/
+
+DisjointSets dj = new DisjointSets(n);
+
+/* Find to shortest edge (a,b) */
+
+int finda = dj.find(a);
+int findb = dj.find(b);
+
+if (finda!=findb) {
+    // vertices a and b belong to different trees
+    dj.union(finda, findb);  // NOT dj.union(a,b)
+    /* add (a,b) to spanning tree */
+}
+</pre></font></td></table></blockquote><center><A HREF="usingds.java">usingds.java</A></center>
+</li>
+<p><p><center><h3> Supplemental Question: Branch and Bound</h3></center>
+<p><li>Add a method to the graph-colouring program in tutorial 1 so that
+    it performs a branch and bound search (see
+    <a href="../lectures/apb-lectures/strategies.pdf">lesson 17</a>).  This
+    should involve modifying the exhaustive search.  Compare the time
+    complexity with exhaustive enumeration.</li>
+<p></ol>
+
+<hr>
+<i><center><A HREF="tutorial2.html">previous</A>
+</center><!--#include file="footer" -->
+</i></html>

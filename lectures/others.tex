@@ -1,0 +1,418 @@
+%Master File:lectures.tex
+
+\lesson{Improve Your General Knowledge}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{genknowledge}
+\end{center}
+\keywords{Computational Geometry, Numerical
+  Algorithms, FFT, Linear Programming}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Computational Geometry}{computationalgeom}
+    \outlineitem{Numerical Algorithms}{numericalalg}
+    \begin{itemize}
+    \item \toplink{fft}{FFT}
+    \end{itemize}
+    \outlineitem{Linear Programming, etc.}{linearprog}
+    \outlineitem{Data Analysis}{dataanalsyis}
+    \outlineitem{Problem Solving}{ai}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{genknowledge}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{What Isn't Covered}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item This course has covered some of the most important and
+    frequently used data structures and algorithms\pause
+  \item There is a lot we haven't covered\pause
+  \item This is an attempt at a whistle-stop tour of algorithms we
+    haven't looked at\pause
+  \item We start with a subject which appears in many data structure and
+    algorithm books, namely \emph{multiway trees}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Computational Geometry
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Computational Geometry}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Computational Geometry is a study of algorithm related to
+    geometric objects\pause
+  \item There are obvious applications in computer graphics and machine
+    vision\pause
+  \item A typical problem is given $n$ points in the 2-d plane find the
+    closest two points\pause
+  \item The brute force method of comparing each pair of points takes
+    $O(n^2)$\pause
+  \item An algorithm based on divide-and-conquer strategy takes
+    $O(n\log(n))$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Convex Hull}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given a set of points find the smallest convex hull which
+    contains all the points
+    \begin{center}
+      \begin{picture}(75,75)
+        \put(0,-10){\includegraphics[height=10cm]{convexhull1}}\pause
+        \put(0,-10){\includegraphics[height=10cm]{convexhull2}}\pauseb
+      \end{picture}
+    \end{center}
+  \item The simplest brute force algorithm takes $O(n^3)$
+    operations\pause
+  \item An algorithm based on divide-and-conquer strategy closely
+    resembling quicksort takes $O(n\log(n))$ operations\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Numerical Algorithms
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Numerical Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The analysis of numerical algorithms is a subject known as
+    \emph{numerical analysis}\pause
+  \item The classic book covering numerical algrorithms is
+    \textit{Numerical Recipes in X} by Press et. al.\pause
+  \item Topics covered include
+    \begin{itemize}\squeeze
+    \item Evaluation of special functions\pause
+    \item Linear algebra (operations on matrices)\pause
+    \item Interpolation and extrapolation\pause
+    \item Computing integrals, solving differential equations\pause
+    \item Solving equations (root finding), optimisation (maximising and
+      minimising function)\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Fast Fourier Transform}
+\toptarget{fft}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Numerical algorithms also include transformations\pause
+  \item These provide different ``views'' of functions, sequences,
+    signals, images, etc.\pause
+  \item By far the most important of these is the Fourier
+    Transform\pause
+  \item The \emph{Fast Fourier Transform} was an algorithm divised by
+    John Tukey and James Cooley in 1965 to compute the Fourier
+    Transform\pause
+  \item It is based on a divide-and-conquer strategy and takes
+    $O(n\log(n))$ operation compared to the $O(n^2)$ brute force
+    method\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Applications of FFT}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The application of FFT are enormous\pause
+  \item It lies at the heart of digital signal processing\pause
+  \item It is frequently used in image analysis\pause
+  \item It is even used in fast multiplication of very large
+    integers---with important applications in cryptography\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Linear Programming, Etc.
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Problems in P}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are many problems with brute force algorithms that take
+    exponential time which actually have polynomial time algorithms\pause
+  \item We have only looked at minimum spanning tree and shortest
+    path\pause
+  \item These algorithms are very important and lie at the heart of
+    \emph{Operations Research}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Linear Assignment}
+
+\begin{minipage}{12cm}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The linear assignment problem is pair two sets of object\pause
+  \item There is a cost associated with every pair\pause
+  \item The aim is to minimise the overall cost\pause
+  \item Brute force method would take $\Theta(n!)$ operations\pause
+  \item The best algorithms take $O(n^3)$ operations\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+\includegraphics[width=10cm]{linear_assignment}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Max Flow}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given a directed graph where each edge has a carrying capacity
+    find the maximum flow between a source and target node\pause
+  \item Algorithm is $O(\vert V \vert \times \vert E \vert^2)$\pause
+  \begin{center}
+    \includegraphics[height=10cm]{maxflow}
+  \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Linear Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Many problems in class P can be reduced to a \emph{linear
+    programming} problem\pause
+  \item Given a linear function $f(\bm{x})= \sum_i c_i x_i$\pause
+  \item A set of linear constraints of the form $b_1 x_1 + \cdots +
+    b_m x_n \leq b_0$\pause
+  \item Find the optimal value $\bm{x}$\pause
+  \item George Dantzig invented the \emph{simplex algorithm} for solving
+    linear programming problems in 1947\pause
+  \item The simplex algorithm has an exponential worst-case
+    complexity!\pause
+  \item However, it is nearly always very fast!---there are now
+    polynomial algorithms for linear programming, but they are rarely as
+    fast as the simplex algorithm\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{A Simple Linear Programming Problem}
+
+\begin{center}
+  \includegraphics[height=14cm]{linearprogramming}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Application of Linear Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are many applications of linear programming\pause
+    \begin{itemize}
+    \item Minimising costs in construction projects
+    \item Truck routing
+    \item Staff scheduling
+    \item Obtaining bounds on TSP\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Quadratic Programming}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In \emph{quadratic programming} we have a quadratic cost function
+    \begin{align*}
+      f(\bm{x}) = \sum_{i,j} Q_{i,j} x_i x_j + \sum_i c_i x_i\pause
+    \end{align*}
+  \item We also have linear constraints similar to linear
+    programming\pause
+  \item There are polynomial time, $O(n^3)$, algorithms for solving
+    this problem provided the matrix $\mat{Q}$ is positive
+    semi-definite\pause
+  \item Many application including machine learning\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Data Analysis
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Data Analysis}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are a large number of applications related to data
+    analysis\pause
+  \item These include finding stuctures in data\pause
+    \begin{itemize}
+    \item Cluster detection (K-means clustering)\pause
+    \item Find relevant directions in high dimensional data (PCA)\pause
+    \end{itemize}
+  \item Statistical properties of data\pause
+    \begin{itemize}
+    \item Hypothesis testing\pause
+    \item Independence\pause
+    \end{itemize}
+\end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Learning from Data}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given some examples can you extract rules from data\pause
+  \item This is the problem of machine learning/pattern
+    recognition\pause
+  \item Strategies include, neural networks, SVM, decision trees,
+    probabilitic reasoning (Bayes rules)\pause
+  \item Used in fraud detection, spam filters, medical diognosis,
+    machine vision, etc.
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.4\linewidth]{googleCar}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Data Analysis
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{AI}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Large number of AI algorithms
+    \begin{itemize}
+    \item Search algorithms
+      \begin{itemize}
+      \item Depth first, breadth first, $A^{*}$, \ldots
+      \item Used for solving mazes, route planning, etc.
+      \end{itemize}
+    \item Game Playing Algorithms
+      \begin{itemize}
+      \item minimax, alpha-beta, pruning algorithms, etc.
+      \item reinforcement learning, Q-learning
+      \item Used for chess, backgammon, \ldots
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There are large number of good algorithms that have been
+    developed\pause
+  \item Part of being a computer scientist is being able to analyse a
+    problem and see if it has been solved before\pause
+  \item These algorithms are developed in many advanced course
+    \begin{itemize}\squeeze
+    \item Intelligent algorithms
+    \item Compilers
+    \item Artificial Intelligence
+    \item Machine Learning
+    \item Computer Graphics/Machine Vision
+    \item Cryptography\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

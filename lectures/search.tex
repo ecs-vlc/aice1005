@@ -1,0 +1,500 @@
+%Master File:lectures.tex
+
+\lesson{Know how to Search}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{4queens-18}
+\end{center}
+\keywords{Backtracking,
+  Branch and Bound}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Search Trees}{searchTrees}
+    \outlineitem{Backtracking}{backtrack}
+    \outlineitem{Branch and Bound}{branchandbound}
+    \outlineitem{Search in AI}{aistuff}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{4queens-18}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Search Trees
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{State Space Representation}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many real world problems involve taking a series of actions to
+    manipulate the state of the system\pause
+  \item This is the area of planning and search which sits within the
+    domain of artificial intelligence\pause
+  \item One of the key props to help us develop algorithms is to think
+    of the states as nodes of a graph which are linked if there exists
+    an action taking us from one state to another\pause
+  \item This provides a \emph{state space representation} of the problem
+    (we saw this before when we derived a low bound on sorting)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{8-Puzzle Example}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{8puzzle}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Large State Spaces}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The search space typically increase exponentially with the
+    problem size\pause
+  \item We can find the quickest solution to the 8-puzzle (and the 15
+    puzzle) using breadth first search, but larger puzzles soon become
+    intractable\pause
+  \item Nevertheless, a lot of important problems involve very large
+    state spaces and we have to find algorithms to explore them\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Backtracking
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Backtracking}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Backtracking is used to find feasible solutions in large state
+    spaces\pause
+  \item E.g. solving sudoku\pause
+  \item It works by growing partial solutions until either
+    \begin{itemize}
+    \item a feasible solution is found when we can finish
+    \item no feasible solution is found when we backtrack\pause
+    \end{itemize}
+  \item We often search the state space using depth first search\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{4-Queens Problem}
+\pb
+\pause\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.7\linewidth]{4queens}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{6-Queens Problem}
+\pb
+\pause
+\begin{center}
+  \multipdf[width=0.5\linewidth]{nQueens}\pause
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Implementing $n$-Queens}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Implementing backtracking is easily done using recursion\pause
+  \item Recall depth-first search is easily implemented using
+    recursion\pause
+  \item We just need a recursive function \texttt{next(n, row, sol)}
+    which for a $n$-Queens problem searches new solutions in
+    \texttt{row} given queens in previous rows given in
+    \texttt{sol}\pause
+  \item Run: \texttt{List sol = nextRow(6, 0, new List());}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Code}
+
+\begin{java}
+List nextRow(int noRows, int row, List queenPositions) {
+  if (row==noRows) {return queenPositions;}$\pause$
+  for (int col=0; col<noRows; ++col) {
+    if (legalQueen(col, row, queenPositions)) {
+      queenPositions.add(col);
+      List solution = nextRow(noRows, row+1, queenPositions);
+      if (solution!=null)
+	return solution;
+    }$\pause$
+  }
+  return null;
+}$\pause$
+
+bool LegalQueen(int col, int row, List sol) {
+  for(int r=0; r<row: ++r) {
+    rf (sol[r] == col || sol[r]-row+r == col || sol[r]+row-r==col) {
+      return false;
+    }
+  }
+  return true;
+}$\pause$
+\end{java}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Hamiltonian Circuit}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A Hamiltonian cycle is a tour through a graph which visits every
+    vertex once only and returns to the start\pause
+  \item It is a hard problem in that there are no known algorithms
+    that are guaranteed to find a Hamiltonian cycle in polynomial time\pause
+  \item For many graphs it is not too hard
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.2\linewidth]{hamiltonCircuit}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Hamiltonian Circuit Example}
+\pb\pause\pauselevel{=1}
+\begin{center}
+  \multipdf[width=0.5\linewidth]{hamiltonianCircuit}\pause
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Backtracking}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Backtracking is a standard algorithm for solving constraint
+    problems with large search spaces\pause
+  \item It can take exponential amount of time, however with many
+    constraints it will often find solutions relatively quickly\pause
+  \item A backtracking algorithm does not solve, for example, sudoku in the
+    same way as a human\pause---it uses speed rather than brains\pauseb
+  \item We can often speed up backtracking by adding more constraints
+    (although, this can make writing the program longer)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Branch and Bound
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Optimisation Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In many optimisation problems (TSP, Graph-colouring, etc.) we
+    again have a huge search space ($n!$, $k^n$)\pause
+  \item However, we don't have hard constraints\pause
+  \item If we are interested in finding the optimal then we can use the
+    cost as a constraint
+    \begin{quote}
+      any partial solution has to have a lower cost than the best
+      solution we have found so far\pause
+    \end{quote}
+  \item This allows us to develop a backtracking strategy known as
+    branch and bound\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Branch and Bound}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Branch and bound is used on optimisation problems where
+    efficient strategies just don't work\pause
+  \item It beats exhaustive enumeration by eliminate many possible
+    solutions without having to enumerate them all\pause
+  \item Branch and bound can be slow as the constraints aren't
+    necessarily very strong\pause
+  \item By working harder we can sometimes strengthen the constraints
+    thus eliminating much of the search space\pause
+  \item This strategy works quite well on smallish problems, but usually
+    fails on large problems\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Cutting the Search Tree}
+
+\begin{PauseHighLight}
+\begin{minipage}{15cm}
+  \begin{itemize}
+  \item We can think of exact enumeration as exploring a giant search
+    tree\pause
+  \item If we know a partial solution is worse than our bound we cut the
+    search tree\pause
+  \item The earlier we cut the tree the more we can save\pause
+  \end{itemize}
+\end{minipage}
+\begin{minipage}{8cm}
+\includegraphics[width=8cm]{branchandbound.0}
+\end{minipage}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Branch and Bound in Action}
+
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=\linewidth]{bb_0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{60}{%
+    \llap{\includegraphics[width=\linewidth]{bb_\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Bound on Partial Solution}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item We know that the partial solution has to include all the
+    remaining cities
+    \begin{center}
+      \includegraphics[height=4cm]{bblb}\pause
+    \end{center}
+  \item We can use this to obtain a lower bound on the partial
+    solution\pause
+  \item We know the remaining tour will go through each of the unvisited
+    cities and the two edge cities\pause
+  \item In fact the remaining part of the tour is a spanning tree of
+    these vertices (it connects all the vertices once and has no
+    cycles)\pause
+  \item But we know a lower bound for this\pause---\emph{the minimum
+      spanning tree}\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Cuts}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For 2-D Euclidean TSPs edges should never cross\pause
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{twoopt}\pause
+    \end{center}
+  \item In fact we can check that we cannot perform a 2-opt move\pause
+  \item We can also halve the search by considering only one
+  direction---for example, by insisting we visit city~1 before city~2\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Good Starting Bound}
+
+\pb
+
+\begin{minipage}{0.4\linewidth}
+  \begin{itemize}
+  \item It helps to start with a good bound\pauseh
+  \item We can use an \textit{incomplete heuristic algorithm} to
+    find a good solution which will act as a starting bound\pauseh
+  \item One very simple heuristic is a greedy algorithm\pauseh
+  \end{itemize}
+\end{minipage}\hfil\
+\begin{minipage}{0.54\linewidth}
+  \setlength{\unitlength}{\linewidth}
+  \begin{picture}(1,1)
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_0}}\pauselevel{=1 :4}\pause
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_1}}\pauselevel{=5 :5}\pause
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_2}}\pauselevel{=6 :6}\pause
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_3}}\pauselevel{=7 :7}\pause
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_4}}\pauselevel{=8 :8}\pause
+    \put(0,0){\includegraphics[width=\linewidth]{greedy_5}}\pauselevel{=9 :9}\pause
+  \end{picture}
+\end{minipage}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Branch and Bound after Pruning}
+
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=\linewidth]{bbfast_0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{16}{%
+    \llap{\includegraphics[width=\linewidth]{bbfast_\ia}\mypl{\ib}}}
+\end{center}
+
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Applications of Branch and Bound}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Branch and bound works for many optimisation problems\pause
+  \item It's drawback is that you often end up still searching an
+    exponentially large search space even though it might be massively
+    faster than exhaustive enumeration\pause
+  \item To make it work well requires considerable work\pause
+  \item This is not an instantaneous algorithm, you may be waiting hours
+    before you find a solution\pause
+  \item For really large problems branch and bound might be too
+    slow\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Backtracking
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Search Strategies}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Search is a big topic in AI\pause
+  \item The algorithms used depends on the information available\pause
+  \item A classic search scenario is when there is ``heuristic''
+    information which provides a hint as to where an optimal solution
+    lies\pause
+  \item Algorithms such as $A^*$ exist which will finds the best route
+    given an (admissible) heuristic as efficiently as possible\pause
+  \item You should learn about this next year in AI\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Planning and Game Paying}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Search is also used to find the best action to take in planning
+    problems and game playing (e.g. computer chess)\pause
+  \item Again it is useful to think in terms of a search tree\pause
+  \item Searching all paths on the search tree is usually infeasible\pause
+  \item Look for ways of pruning the search tree to focus on good moves\pause
+  \item Strategies include \textit{minimax} and \textit{alpha-beta
+      pruning}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Minimax with Alpha-Beta Prunning}
+
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{minimax-illustration}
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Search has many applications\pause
+  \item It is helpful to consider the search space as a tree whose
+    branch corresponds to possible actions\pause
+  \item Backtracking is useful in search trees with constraints\pause
+  \item For optimisation problems branch and bound uses backtracking and
+    costs of partial solutions as constraints\pause
+  \item Widely applicable, but can take too long\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

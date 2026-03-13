@@ -1,0 +1,680 @@
+%Master File:lectures.tex
+
+\lesson{Understand Time Complexity}
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{complexity.eps}
+\end{center}
+
+\keywords{Theta, Big-O, little-o, Big-Omega, little-omega}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Time Complexity Classes}{tcc}
+    \begin{itemize}
+    \item \toplink{theta}{Theta---$\Theta$}
+    \item \toplink{bigO}{Big O}
+    \item \toplink{littleo}{Little o}
+    \item \toplink{bigOmega}{Big Omega---$\Omega$}
+    \item \toplink{littleomega}{Little omega---$\omega$}
+    \end{itemize}
+    \outlineitem{Computing Time Complexity}{comp}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \vfill
+  \includegraphics[width=10cm]{complexity.eps}
+  \vfill
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Recap}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We have seen many algorithms taking times of order 1, $\log(n)$,
+    $n$, $n\log(n)$, $n^2$, etc\pause
+  \item Sometimes these are worst time, average time or best time
+    results\pause
+  \item We have lots of different notations, e.g. $O(1)$,
+    $\Theta(\log(n))$, $\Omega(n^2)$, etc.\pause
+  \item What does it all mean?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Complexity Class Sets}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The correct way to think about complexity classes is in terms of
+    sets\pause
+  \item Suppose we have an algorithm which takes an input of size $n$
+    and computes an output in $f(n)$ operations\pause
+  \item E.g. $f(n) = 4 n^2 + 2n +3$\pause
+  \item We can partition all run times into sets by considering only the
+    leading order term and ignoring the constant term\pause
+  \item We denote these sets by $\Theta(g(n))$\pause
+    \begin{itemize}
+    \item $4 n^2 + 2n +3 \in \Theta(n^2)$
+    \item $5 n \log(n) + 3 n + 2 \in \Theta(n\log(n))$\pause 
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Defining $\Theta(g(n))$}
+\toptarget{theta}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A function $f(n) \in \Theta(g(n))$ if
+    \begin{align*}
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} &= c  & 0<c<\infty\pause
+    \end{align*}
+  \item E.g.
+    \begin{align*}
+      \lim_{n\rightarrow\infty} \frac{4 n^2 + 2n +3}{n^2} &= 4 \\
+      \lim_{n\rightarrow\infty} \frac{5 n \log(n) + 3 n + 2}{n\log(n)}
+      &= 5\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Ignoring the Constant}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Does an algorithm that uses $4 n^2$ operations run faster than
+    one that uses $7 n^2$ operations?\pause
+  \item Answer depends on the operations which might depend on the
+    programming language or the machine architecture\pauseb
+  \item However asymptotically (i.e. for sufficiently large $n$) an order
+    $n\log(n)$ algorithm will always run faster than an order $n^2$
+    algorithm\pauseb{} even when they are run on different
+    machines\pauseb
+  \item The constant is important in practice (if there are two algorithms
+    $A$ and $B$ that are both $n\log(n)$, but algorithm $A$ runs twice
+    as fast as algorithm $B$, which one should you use?)\pauseb
+  \item Nevertheless, ignoring the constant is often essential to make
+    analysis of algorithms doable\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Ordering Complexity Classes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can define the relation $\Theta(f(n))<\Theta(g(n))$
+    if
+    \begin{align*}
+      \lim_{n\rightarrow\infty} \frac{f(n)}{g(n)} = 0\pause
+    \end{align*}
+  \item Informally if algorithm $A$ has time complexity $\Theta(f(n))$
+    and algorithm $B$ has time complexity $\Theta(g(n))$ then if
+    $\Theta(f(n))<\Theta(g(n))$ algorithm $A$ is faster for sufficiently
+    large $n$\pause
+  \item The relation defines a \emph{complete ordering}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Complexity Line}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can order all complexity classes. E.g.
+    \begin{align*}
+      \Theta(1) < \Theta(\log(n))
+      <\Theta(\sqrt{n}) < \Theta(n) < \Theta(n^2)\pause
+    \end{align*}
+  \item We can depict this as a complexity line
+    \begin{center}
+      \includegraphics[width=\linewidth]{complexityline-0}\pause
+      \multido{\i=1+1}{9}{%
+        \llap{\includegraphics[width=\linewidth]{complexityline-\i}}\pauseb}
+    \end{center}
+  \item The line is dense (i.e. there are an uncountable infinity of
+    complexity classes)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Complexity Dependent on Inputs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The run time of many algorithms depends on the input\pause
+  \item In this case we can define different time complexities
+    \begin{itemize}
+    \item Worst case time complexity (the longest time an algorithm will
+      take)\pause
+    \item Average complexity (the expected time averaged over all
+      possible inputs)\pause
+    \item Best case time complexity (the shortest time an algorithm will
+      take)---usually not very interesting\pause
+    \end{itemize}
+  \item Every algorithm will have a $\Theta$ complexity class for the
+    worst, average and best time complexity\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Unknown Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Algorithms are often rather complicated and knowing the exact
+    time complexity (for either worst, average or best cases) might not
+    be known\pause
+  \item In reality it will have some run time (e.g. $f(n)=3n^2\log(n) +2
+    n^2-n+3$) and will belong to a $\Theta$ time complexity set
+    (e.g. $\Theta(n^2 \log(n))$) but we might not be able to calculate
+    it\pause
+  \item However, we can usually bound the run times of algorithms\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Big-O}
+\toptarget{bigo}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Big-O is an upper bound on the time complexity\pause
+  \item If an algorithm is $O(g(n))$ then its time complexity is no more
+    than $\Theta(g(n))$
+    \begin{center}
+      \includegraphics[width=\linewidth]{bigO-0}\pause
+      \multido{\i=1+1}{5}{%
+        \llap{\includegraphics[width=\linewidth]{bigO-\i}}\pauseb}
+    \end{center}
+  \item I.e. $\Theta(f(n))\leq\Theta(g(n))$ implies $f(n) \in O(g(n))$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Upper Bounding Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Consider a program
+\begin{java}
+// define stuff
+for(int i=0; i<n; i++)  {
+  // do something
+  if (/* some condition */) {
+    for (int j=0; j<n; j++) {
+      // do other stuff
+    }
+  }
+}
+// clean up $\pause$
+\end{java}\vspace{-0.5cm}
+\item If the \texttt{if} statements is never true this is a $\Theta(n)$
+  algorithm if it is always true it is a $\Theta(n^2)$ algorithm\pause
+\item If we don't know then we can at least say that the run time is in
+  $O(n^2)$\pause---we assume the worst\pauseb, but the worst may never happen\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Little-o}
+\toptarget{littleo}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sometimes we want to say that the time complexity for an
+    algorithm $\Theta(f(n))$ is \emph{strictly less} than a known time
+    complexity $\Theta(g(n))$
+    \begin{center}
+      \includegraphics[width=\linewidth]{littleo-0}\pause
+      \multido{\i=1+1}{2}{%
+        \llap{\includegraphics[width=\linewidth]{littleo-\i}}\pauseb}
+    \end{center}
+  \item I.e. $\Theta(f(n)) < \Theta(g(n))$ implies $f(n) \in o(g(n))$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lower Bounds---$\Omega$}
+\toptarget{bigOmega}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is often easy to obtain a lower bound on a particular
+    algorithm\pause, although getting a tight general lower bound is often
+    very difficult\pauseb
+  \item I.e. $\Theta(f(n)) \geq \Theta(g(n))$ implies $f(n) \in
+    \Omega(g(n))$
+    \begin{center}
+      \includegraphics[width=\linewidth]{bigOmega-0}\pause
+      \multido{\i=1+1}{3}{%
+        \llap{\includegraphics[width=\linewidth]{bigOmega-\i}}\pauseb}
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Lower Bounding Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Returning to the program
+\begin{java}
+// define stuff
+for(int i=0; i<n; i++)  {
+  // do something
+  if (/* some condition */) {
+    for (int j=0; j<n; j++) {
+      // do other stuff
+    }
+  }
+}
+// clean up $\pause$
+\end{java}\vspace{-0.5cm}
+\item We might not know how frequently the \texttt{if} statement is
+  true, but we know in all cases the first \texttt{for} loop iterates
+  over $n$\pause
+\item Thus we know this algorithm is in $\Omega(n)$\pause---we assume
+  the best\pauseb, but the best may never happen\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Little Omega---$\omega$}
+\toptarget{littleomega}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is sometimes useful to talk about a strict lower bound\pause
+  \item I.e. $\Theta(f(n)) > \Theta(g(n))$ implies $f(n) \in
+    \omega(g(n))$
+    \begin{center}
+      \includegraphics[width=\linewidth]{littleomega-0}\pause
+      \multido{\i=1+1}{3}{%
+        \llap{\includegraphics[width=\linewidth]{littleomega-\i}}\pauseb}
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Bounding Run Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When we are given an algorithm to analyse we want to compute
+    $\Theta(n)$\pause
+  \item This may be difficult, however, it is often easy to find bounds
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{bounding}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Proving Asymptotic Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If we know an algorithm is
+    \begin{itemize}
+    \item $T(n) \in O(f(n))$
+    \item $T(n) \in \Omega(f(n))$\pause
+    \end{itemize}
+  \item Then $T(n) \in \Theta(f(n))$\pause
+  \item This is a common proof strategy\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Meaning of Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Insertion sort has time complexity $\Theta(n^2)$\pause
+  \item Because it consists of two \texttt{for} loops\pause
+  \item It takes 2 seconds to sort $100\,000$ items\pause
+  \item How long does it take to sort $1\,000\,000$ items?\pause
+  \item $n$ increases by 10, time complexity increases by
+    $10^2=100$\pauseb
+  \item Time taken is approximately 200 seconds or around 3.5
+    minutes\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Exponential Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item When we talk about exponential time complexity we usually mean
+    that
+    \begin{align*}
+      \log(T(n)) \in \Theta(n) \pause
+    \end{align*}
+  \item This is true if
+    \begin{itemize}
+    \item $T(n) = 2^n$ \pause\pauselevel{=3} \hspace{1em} $\log(T(n)) =
+      n\,\log(2)$ \pauseb
+    \item \pauselevel{=2}$T(n) = 6.1\,\e{0.003n}$\pause\pauselevel{=3} \hspace{1em} $\log(T(n)) =
+      0.003\,n + \log(6.1)$ \pauseb
+    \item \pauselevel{=2}$T(n) = n \, 10^n$\pause\pause\pauselevel{=3} \hspace{1em} $\log(T(n)) =
+      n\,\log(10) + \log(n)$ \pauseb
+    \end{itemize}
+  \item Note that none of these are in complexity class $\Theta(\e{n})$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Computing Time Complexity
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Counting For Loops}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item How long does the following code take?
+\begin{java}
+for(int i=0; i<n; i++)  {
+  // prepare stuff
+}
+for(int i=0; i<n; i++)  {
+  // do something
+  for (int j=0; j<n; j++) {
+    // do other stuff
+  }
+} $\pause$
+\end{java}
+\item The first \texttt{for} loop takes $\Theta(n)$ operations the
+  second double \texttt{for} loop takes $\Theta(n^2)$\pauseb
+\item Answer $\Theta(n^2)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Recursion}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Determining time complexity is harder when we use
+    recursion\pause
+  \item Consider Euclid's algorithm for determining the greatest common
+    divisor
+
+    \begin{minipage}{11cm}
+\begin{java}
+  long gcd(long m, long n)
+  {
+    while(n!=0) {
+      long rem = m%n;
+      m = n;
+      n = rem;
+    }
+    return m;
+  }
+\end{java} \pause
+    \end{minipage}\hfill%
+    \begin{minipage}{11cm}
+\begin{java}
+  long gcd(long m, long n)
+  {
+    if (n==0)
+      return m;
+    else
+      return gcd(n, m%n);
+  }
+\end{java} \pauselevel{build =4} \pause 
+    \end{minipage}
+\item This doesn't even look like a recursion\pauselevel{=3}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Example of gcd}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Example of Euclid's algorithm \jl$gcd(1989,1590)$\pause
+  \item Sequence of remainders is 399, 393, 6, 3, 0\pause
+  \item The greatest common divisor is 3\pause
+  \item How long does it take compute \jl$gcd(n,m)$ with $n>m$\pause
+  \item This is subtle as could depend in a complex way on the pair $n$
+    and $m$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\rem}{\mathop{\mathrm{rem}}}
+\begin{slide}
+\section{Recursive Formulae}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item An observation which makes the analysis relatively simple is
+    that the remainder is reduced by at least 2 after two iterations\pause
+  \item To prove
+    \begin{itemize}
+    \item Using the recursion (assuming $m,n<0$)
+    \begin{align*}
+     \hspace{-1em} \gcd(m,n) &= \gcd(n,\rem(m,n)) = \gcd(\rem(m,n),\rem(n,\rem(m,n)))\hspace{1em}\pause
+    \end{align*}
+    \item The proof follows by showing that $\rem(n,\rem(m,n))<n/2$\pause
+    \end{itemize}
+  \item Thus $T(n)<T(n/2)+2$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Solving Recursions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To show that $T(n)\in O(\log(n))$ we observe
+    \begin{itemize}
+    \item Note that $T(1) = 1$\pause
+      \begin{align*}
+        T(n) < T(2^{-1}n)+2 < T(2^{-2}n)+4 < \cdots < T(2^{-t}n) + 2t\pause
+      \end{align*}
+    \item Choose $t=\lceil \log_2(n)  \rceil$
+    \item then $2^{-t}n = 2^{-\lceil \log_2(n)  \rceil}n\leq
+      2^{-\log_2(n)} n = \frac{n}{n} = 1$\pause 
+    \item Thus $T(2^{-t}n)< T(1) = 1$\pause
+    \item $T(n) < 1 + 2 t = 1 +  2 \lceil \log_2(n)  \rceil \in
+      O(\log(n))$\pause
+    \end{itemize}
+  \item A huge calculation shows the the average number of iterations is
+    about $(12 \log(2) \log(n))/\pi^2 + 1.47$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Probability of Relative Primes}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Consider the following program to compute the probability of
+    relative primes for all numbers up to $n$
+\begin{java}
+double probRelPrime(n)
+{
+  int rel=0, tot=0;
+  for(int i=1; i<=n; i++)
+     for(int j=i+1; j<=n; j++) {
+       tot++;
+       if (gcd(i,j)==1)
+          rel++;
+     }
+  return (double) rel / tot;
+} $\pause$
+\end{java}
+\item What is the time complexity?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Time Complexity}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Program involves two nested loops of size $O(n)$\pause
+  \item Then we need to calculate \jl$gcd(i, j)$ at each iteration\pause
+  \item Time complexity is $n \times n \times \log(n) = n^2
+    \log(n)$\pause
+  \item How could we provide empirical support for this calculation?\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Testing Hypothesis}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can test our hypothesis by scaling the run time by the
+    complexity
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{testhypothesis}
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Conclusions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item You should understand the difference between $\Theta$, $O$,$o$,
+    $\Omega$ and $\omega$\pause
+  \item You need to be able to compute time complexity by loop
+    counting\pause
+  \item To compute time complexity for recursive functions you need to
+    be able to obtain recurrence equations\pause
+  \item You should be able to solve simple recurrence equations and sum
+    up simple series\pause
+  \item You should be able to prove more complicated results using proof
+    by induction\pause
+  \item Thank you for attending the course\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

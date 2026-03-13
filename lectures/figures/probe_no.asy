@@ -1,0 +1,51 @@
+import myutil;
+size(400,0);
+
+real sf = 0.1;
+
+draw((0,7*sf)--(0,sf)--(1.12,sf), linewidth(1), Arrows);
+label("loading factor $\lambda= \frac{n}{n_{\text{\tiny max}}}$", (0.5, 0));
+label(rotate(90)*Label("Number of probes"), (-0.1, 3.5*sf));
+
+for(int i=1; i<7; ++i) {
+  draw((0,i*sf)--(-0.02, i*sf));
+  label(string(i), (-0.02, i*sf), W);
+}
+
+for(real x=0; x<=1.0; x+=0.1) {
+  draw((x, sf)--(x,sf-0.02));
+  label(string(x), (x,sf-0.02), S);
+}
+
+import graph;
+
+real chaining(real lambda) {
+  return sf*(1 + 0.5*lambda);
+}
+
+real linear_probing(real lambda) {
+  return 0.5*sf*(1 + 1.0/(1-lambda));
+}
+
+real double_hashing(real lambda) {
+  return -sf*log(1-lambda)/lambda;
+}
+
+draw(graph(chaining, 0, 1), linewidth(1)+heavygreen);
+label(rotate(180/pi*atan(0.5*sf))*Label("separate chaining: $1+\frac{\lambda}{2}$"), (0.78, 1.65*sf),  heavygreen);
+
+ship();
+
+draw(graph(linear_probing, 0, 0.9), linewidth(1)+blue);
+label("linear probing: $\frac{1}{2}\left(1 + \frac{1}{1-\lambda}\right)$", (0.9, linear_probing(0.9)), N, blue);
+
+ship();
+
+
+draw(graph(double_hashing, 0.001, 0.99), linewidth(1)+red);
+label("quadratic probing/double hashing: $-\frac{\ln(1-\alpha)}{\alpha}$", (0.8, 4*sf), W, red);
+draw((0.8, 4*sf)--(0.93, double_hashing(0.935)), red, Arrow);
+
+label(rotate(180/pi*atan(0.5*sf))*Label("separate chaining: $1+\frac{\lambda}{2}$"), (0.78, 1.65*sf),  heavygreen);
+
+ship();

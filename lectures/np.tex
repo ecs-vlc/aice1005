@@ -1,0 +1,666 @@
+%Master File:lectures.tex
+\renewcommand{\class}[1]{\textsf{#1}}
+
+\lesson{Know What's Possible}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{\figs/dp}
+\end{center}
+\keywords{Combinatorial optimisation, NP-completeness, polynomial reduction}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Motivation}{opt}
+    \outlineitem{P, NP and NP-complete}{npcomplete}
+    \outlineitem{Polynomial Reduction}{polyr}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{\figs/dp}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline %
+\toptarget{firstoutline}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Exponentially Large Search Spaces}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We have seen a large number of decision problems and
+    optimisation problems involving an exponentially large search
+    space\pause
+  \item For some of these we have found efficient algorithms (greedy
+    algorithms, divide and conquer, dynamic programming, \ldots)\pause
+  \item For other problems we have found good algorithms (backtracking,
+    branch and bound), but they are not necessarily polynomial\pause
+  \item Can we say anything general about how easy they are to solve\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Types of Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We concentrate here on two types of problems
+    \begin{itemize}
+    \item Decision Problems
+    \item Combinatorial Optimisation Problems\pause
+    \end{itemize}
+  \item Decision problems are problems with a true/false answer, e.g. is
+    it possible to cross all the bridges of K\"onigsberg once?\pause
+  \item We showed earlier that backtracking can be used to find a
+    solution which answers the decision problems, e.g. Hamiltonian
+    circuit problem\pause
+  \item There are many other decision problems, but the most famous is
+    satisfiability or SAT\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{SAT}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Given $n$ Boolean variables $X_i\in\{T,F\}$\pause
+  \item $m$ disjunctive (or's) clauses, e.g.
+    \begin{align*}
+      c_1 &= X_1 \vee \neg X_2 \vee X_3 \\
+      c_2 &= \neg X_2 \vee  X_3 \vee X_5 \\
+      \vdots & \hspace{2cm} \vdots \\
+      c_m &= X_2 \vee \neg X_4 \vee \neg X_5\pause
+    \end{align*}
+  \item Find an assignment, $\bm{X} \in \{T,F\}^n$ which satisfies all
+    the clauses\pause
+  \item We can view this as finding an assignment that makes the
+    formula $f(\bm{X})$ true where
+    \begin{align*}
+      f(\bm{X}) = c_1 \wedge c_2 \wedge \cdots \wedge c_m\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Decisions and Optimisation Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Often we can cast a decision problem as an optimisation problem\pause
+  \item E.g. the MAX-SAT problem is to find an assignment of variables
+    that satisfies the most clauses\pause
+  \item If we can solve the MAX-SAT optimisation problem we can solve
+    the decision problem\pause
+  \item We can also cast optimisation problems as decision problems
+    \begin{quote}
+      \textit{Does there exist a TSP tour shorter than 200 miles?}\pause
+    \end{quote}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Combinatorial Optimisation Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In the set of discrete optimisation problems an important class
+    are those that involve \textit{combinatorial objects} such as
+    permutations, binary string, etc.\pause
+  \item Optimisation problems involving such objects are termed
+    \emph{combinatorial optimisation problems}\pause
+  \item Classical examples of such problems include
+    \begin{itemize}\squeeze
+    \item Travelling Salesperson Problem (TSP)
+    \item Graph colouring
+    \item Maximum Satisfiability (MAX-SAT)
+    \item Many scheduling problems
+    \item Bin-packing
+    \item Quadratic integer problems\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % P, NP and NP-complete
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Polynomial Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Some optimisation problems are ``easy''---there are known
+    polynomial time algorithms to solve them\pause
+    \begin{itemize}
+    \item Minimum spanning tree
+    \item Shortest path
+    \item Linear assignment problem
+    \item Maximum flow between any two vertices of a directed graph
+    \item Linear programming\pause
+    \end{itemize}
+  \item Many apparently different problems can be mapped onto these
+    problems\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{\class{NP-Hard} Problems}
+\toptarget{nphard}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Is it possible to solve the TSP in polynomial time?\pause
+  \item Answer:\pause{} \emph{maybe}\pauseb
+  \item However, no one has discovered such an algorithm\pause\ and if they do
+    it will have huge implications\pause
+  \item TSP is an example of a class of problems called \class{NP-Hard}\pause
+  \item If you can solve one of these problems then you can solve a whole
+    class of problems\pause
+  \item To understand what \class{NP-Hard} means we must backtrack\pause 
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Decision Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item Decision problems are problems with a true or false answer\pause
+  \item E.g. does a TSP have a tour less than $2\,000$ miles?\pause
+  \item Algorithmic complexity theory deals with classes of decision problems
+    that have some characteristic size, $n$\pause
+  \item E.g. $n$ is the number of cities in a TSP\pause
+  \item Any decision problem that can be answered with an algorithm that
+    runs in polynomial time ($n^a$) on a normal computer (Turing
+    machine) is said to be in class \class{P}\pause
+  \item E.g. The decision problem ``Is there a path of length less that
+    450 miles between Southampton and Glasgow?'' is in class
+    \class{P}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Turing Machines}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item  A Turing machine can be viewed as a very dumb computer which
+    computes by having a number of states and reading and writing to a
+    tape\pause
+    \begin{center}
+      \includegraphics[width=0.5\linewidth]{turingMachine.png}
+    \end{center}
+  \item Although dumb, it can do anything that any other computer can do
+    (although it may take polynomially more time)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Non-Deterministic Turing Machines}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A non-deterministic Turing machine is a magic machine that can
+    guess the answer and then use a normal Turing machine to verify the
+    answer\pause
+  \item We assume that it guesses right in the first go\pause
+  \item No one knows how to simulate a non-deterministic Turing machine
+    in polynomial time\pause
+  \item We can simulate it in exponential time by trying all possible
+    guesses\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Class \class{NP}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Any decision problem that can be answered with an algorithm that
+    runs in polynomial time on a non-deterministic Turing machine is
+    said to be in class \class{NP}\pause
+  \item A whole lot of decision problems belong to class~\class{NP}\pause
+  \item All decision problems with polynomial algorithms are also in class
+    \class{NP}  (\class{P}$\subset$\class{NP})\pause
+  \item ``\textit{Is the game of chess winnable by white?}'' is \emph{not} in class~\class{NP}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-0.5]{Belonging to \class{NP}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For a problem to belong to class \class{NP} it must
+    \begin{itemize}
+    \item be a decision problem (true of false)\pause
+    \item describable by some polynomial sized string in the length of
+      the input $n$\pause
+    \item be verifiable if true in polynomial time on a normal Turing
+      machine (e.g. a computer)\pause
+    \end{itemize}
+  \item To be verifiable it is sufficient for the decision problem to
+    have a ``\emph{witness}'' which is usually a solution that can be
+    checked in polynomial time\pause
+  \item E.g. in TSP the witness would be a tour which satisfies the
+    condition\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Using Non-Deterministic Turing Machines}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A witness is sufficient for a problem to be in \class{NP} since a
+    non-deterministic Turing machine can guess the witness in one step
+    and then proceed to check the witness is true in polynomial
+    time\pause
+  \item Thus TSP is also in NP\pause
+  \item As are graph-colouring, SAT, Max-Clique, Hamilton cycle and
+    countless others\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Class \class{NP-complete}}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item In 1971 Cook showed that you could represent any \class{NP}
+    problem on a non-deterministic Turing machine by a polynomially
+    sized SAT (Satisfaction) problem\pause
+  \item Thus if you could solve SAT in polynomial time you can use
+    that to simulate a non-deterministic Turing machine in polynomial
+    time\pause
+  \item SAT is therefore an example of one of the hardest
+    problems in \class{NP} since if you can solve SAT in
+    polynomial time you can solve all problems in \class{NP} in
+    polynomial time\pause
+  \item These hardest problems in \class{NP} are said to be in
+    \class{NP-complete}\pause
+  \item If there existed a polynomial time algorithm for SAT then all
+    problems in \class{NP} could be performed in polynomial time so that
+    \class{NP}=\class{P}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Idea Behind Cook's Theorem}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Cook showed that a non-deterministic Turing machine could be
+    encoded as a big SAT formula\pause
+  \item The evolution of the state and tape was represented by a big
+    tableau ($n^k\times n^k$-table where $n^k$ is the time it takes for
+    the Turing machine to verify the answer)\pause
+  \item The structure of the clauses reflect the rules the
+    Turing machine operates\pause
+  \item If the clauses are simultaneously satisfiable then there exists
+    an input that satisfies the conditions\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Polynomial Reductions
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Polynomial Reductions}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Given two decision problems A and B we say there is a
+      \emph{polynomial reduction} from A to B if\pause
+    \begin{itemize}
+    \item Every instance of A can be mapped to an instance of B:\pause
+    \item The truth of the instance A is the same as the
+      corresponding instance B\pause
+    \end{itemize}
+  \item We can therefore use B to solve A\pause
+  \item So:  B $\in$ \class{P} $\rightarrow$ A  $\in$ \class{P}\pause
+  \item The contrapositive of this statement is
+    \begin{quote}
+      A $\not\in$ \class{P} $\rightarrow$ B  $\not\in$ \class{P}\pause
+    \end{quote}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{SAT to 3-SAT}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We can reduce a clause with 4 variable to a clause with 3
+    \begin{align*}
+      X_1 \vee \neg X_3 \vee  X_6 \vee \neg X_{10}
+      \equiv (X_1 \vee \neg X_3 \vee Z) \wedge (\neg Z \vee  X_6 \vee
+      \neg X_{10})\pause
+    \end{align*}
+  \item In doing so we increase the number of variables and the number
+    of clauses to satisfy\pause
+  \item We can similarly reduce a clause with more variables
+    {\small
+      \begin{align*}
+        X_1 \vee \neg X_3 \vee  X_6 \vee \neg X_{10} \vee \neg X_{11} 
+        \vee X_{15} 
+        \equiv \hspace{8cm} \\
+        (X_1 \vee \neg X_3 \vee Z_1) \wedge (\neg Z_1 \vee  X_6
+        \vee Z_2) \wedge (\neg Z_2 \vee \neg X_{10} \vee Z_3) 
+        \wedge (\neg Z_3 \vee \neg X_{11} \vee X_{15})\pause
+      \end{align*}}
+  \item Because every instance of SAT can be written as a 3-SAT problem
+    which is only polynomially larger than the SAT problem, 3-SAT is
+    also NP-complete\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Vertex Cover}
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item The vertex cover problem is: ``can we choose $K$ (9) vertices of a
+    graph such that every edge is connected to a chosen vertex?''\pauseh
+  \vspace*{-1cm}
+  \begin{center}\pauselevel{=1, :2}\color{TextColor}
+    \multiinclude[graphics={height=12cm}]{VertexCover}\pause
+  \end{center}
+  \vspace*{-1cm}
+\color{TwoColor}
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Vertex Cover is \class{NP-complete}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Vertex cover is obviously in \class{NP} as a set of $K$ vertices
+    acts as a witness, i.e. it can be checked that it covers all edges\pause
+  \item To show vertex cover is \class{NP-complete} we show that every
+    instance of 3-SAT is reducible to vertex cover\pause
+  \item The idea is to show that any 3-SAT problem with variables
+    $\{X_1,X_2, \ldots,X_n\}$ and clauses $\{c_1,c_2,\ldots, c_m\}$ can
+    be encoded as a vertex cover problem\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{3-SAT to Vertex Cover}
+
+\pb
+\pause
+\begin{center}
+  \includegraphics[width=\linewidth]{vcsat0}\mypl{1}
+  \multido{\ia=1+1,\ib=2+1}{13}{%
+    \llap{\includegraphics[width=\linewidth]{vcsat\ia}\mypl{\ib}}}
+\end{center}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Other Examples of \class{NP-complete}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item As we can polynomial reduce any instance of SAT to vertex cover
+    then vertex cover is also \class{NP-complete}\pause
+  \item Lots of problems have been shown to be in class
+    \class{NP-complete}\pause---some $10\,000$, or so, to date\pause
+  \item These include
+    \begin{itemize}
+    \item TSP\pause
+    \item Graph colouring\pause
+    \item Many scheduling problems\pause
+    \item Bin-packing\pause
+    \item Quadratic integer problems\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Structure of Decision Problems}
+
+\begin{center}
+  \includegraphics[height=14cm]{\figs/dp}
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{$P\neq NP$?}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item No one has proved that any problem in \class{NP} is not solvable in
+    polynomial time\pause
+  \item If any \class{NP-complete} problem was solved in
+    polynomial time all problems in NP would be solve and
+    \class{NP}=\class{P}
+    \begin{center}
+      \includegraphics[width=0.5\linewidth]{npneqp}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{\class{NP-Hard}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item TSP is not a decision problem---although we can make it into
+    one---Is there a tour shorter that $L$?\pause
+  \item However, if we can find the shortest tour in polynomial time we
+    could solve the TSP decision problem\pause
+  \item Thus finding the shortest tour is at least as hard as solving the
+    decision problems\pause
+  \item Problems that are at least as hard as \class{NP-complete} decision
+    problems are said to be in \emph{\class{NP-hard}}\pause
+  \item Graph colouring (finding a colouring with the least number of
+    conflicts), job scheduling, etc.\ are all examples of \class{NP-hard}
+    problems\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-0.5]{Not All Hard Problems are \class{NP-Hard}}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Graph isomorphism, GI, (are two graphs identical up to a relabelling
+    of the vertices?) has not been proved to be NP-complete---it is
+    postulated that 
+    \begin{align*}
+      GI \in \class{NP} \,\wedge\, GI \not\in\class{P} \,\wedge\, GI
+      \not\in\class{NP-complete}\pause
+    \end{align*}
+  \item Factoring is \textit{not} believed to be \class{NP-hard}, but it
+    is believed to be sufficiently hard that most banks use an
+    encryption technique based on people not being able to factor large
+    numbers easily\pause
+  \item For large problems polynomial algorithms can take too
+    long\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Not All \class{NP-Hard} Problem Instances are Hard}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item \class{NP-hard}ness is a worst case analysis\pause
+  \item It means there exist some instance of the problem that we don't
+    know how to solve in polynomial time\pause
+  \item Many instance of the problem might be rather easy to solve\pause
+  \item What is the optimal TSP tour for the problem below?
+    \begin{center}
+      \multiinclude[graphics={height=8cm}]{trivialtsp}\pauseb
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Not All \class{NP-Hard} Problems are Hard}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For some problems almost all instances appear easy\pause
+  \item E.g. The subset-sum problem\pause
+    \begin{itemize}
+    \item Given a set of numbers find a subset whose sums is as close as
+      possible to some constant\pause
+    \item Subset-sum is in \class{NP-hard} but there exist a
+      ``pseudo-polynomial time'' algorithm which solves almost every
+      instance in polynomial time\pause
+    \end{itemize}
+  \item Many problems including subset-sum are known to be easy to
+    approximate\pause
+  \item For other problems even finding a good approximation is known to
+    be NP-hard\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There exist efficient algorithms for many problems\ldots\pause
+  \item \ldots but probably not for all\pause
+  \item There are no known polynomial algorithm for any NP-complete
+    problem\pause
+  \item These include many famous problems: TSP, graph-colouring,
+    scheduling, \ldots\pause
+  \item If you could find a polynomial algorithm for any of these
+    problems then you could use it to solve all problems in NP in
+    polynomial time\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+

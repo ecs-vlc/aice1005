@@ -1,0 +1,288 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{a4paper}
+
+\begin{document}
+\begin{center} \bf \large
+  COMP1009: Data Structures and Algorithms
+\end{center}
+\subsection*{Course Structure}
+
+\begin{itemize}
+\item Lectures (lessons)
+\item Tutorials (supervised, marked 15\%)
+\item Book
+\end{itemize}
+
+\subsection*{Lessons}
+\begin{enumerate}
+\item \emph{Use Data Structures and Algorithms}
+  \begin{itemize}
+  \item What is a data structure
+    \begin{itemize}
+    \item Container for data with clean interface, abstracted from
+      problem
+    \item E.g. sets, stacks, lists, trees, graphs
+    \item Comes with algorithms
+    \item Guarrantees on performance
+    \item Exemplary OO Programming
+    \end{itemize}
+  \item Example of simple program to read input from a file and sort
+    using raw code and data structures
+    \begin{itemize}
+    \item C++ implementation
+    \item Modification from integers to reals to strings
+    \item Readability (less bugs)
+    \item Maintainability
+    \end{itemize}
+  \item Don't write your own
+  \item Sophisticated program written in a few lines of code
+    \begin{itemize}
+    \item A moderately competent programmer can write some very
+      impressive programs
+    \end{itemize}
+  \item Outcome of course
+    \begin{itemize}
+    \item Know which common data structures or algorithm to use
+    \item Know enough to extend existing data structure to be fit for
+      purpose
+    \item Understand enough about complexity to select the right data
+      structure or algorithm
+    \end{itemize}
+  \end{itemize}
+\item \emph{Know How Long A Progam Takes}
+  \begin{itemize}
+  \item TSP
+    \begin{itemize}
+    \item Define problem completely
+    \item Define exhaustive enumeration algorithm
+    \item How many tours are there?
+    \item How long does it take?
+    \end{itemize}
+  \item Sort
+    \begin{itemize}
+    \item Comparison between bubble, Shell and Quick sort (real times
+      versus size of input
+    \end{itemize}
+  \item Counting instructions
+    \begin{itemize}
+    \item Ignoring details
+    \item Big $O$ definition
+    \item Big $O$ arithmatic
+    \item Does an $O(n^3)$ algorithm take longer than an $O(n^2)$
+    \item Big $\Omega$
+    \item $\Theta$---lower and upper bounds meet
+    \end{itemize}
+  \end{itemize}
+\item \emph{Declare your intentions (not your actions)}
+  \begin{itemize}
+  \item Arrays, lists, sorted lists, stacks, queues, priority queues,
+  set, multiset, maps
+  \item Abstractions
+  \item Declarations of intent
+  \item Implementation are not always obvious
+    \begin{itemize}
+    \item Variable Length Array
+      \begin{itemize}
+      \item Ordering matters
+      \item Add to end of list
+      \item Deletion from end of list
+      \item Random access
+      \end{itemize}
+    \item Lists
+      \begin{itemize}
+      \item Ordering matters
+      \item Add to list
+      \item searchable
+      \item indexable (random access)
+      \item delete any element?
+      \item Implementation (variable length array, linked list)
+      \end{itemize}
+    \item Sorted list
+      \begin{itemize}
+      \item Construction order doesn't matter
+      \item Want fast look-up
+      \item Implemented with binary tree
+      \end{itemize}
+    \item Stack
+      \begin{itemize}
+      \item LIFO---order matters
+      \item Not random access
+      \item push/pop/empty
+      \item Useful in many applications
+      \item Implemented using variable length array
+      \end{itemize}
+    \item Queue
+      \begin{itemize}
+      \item FIFO---order matters
+      \item append/next
+      \item Implemented using doubly-linked list?
+      \end{itemize}
+    \item Priority Queue
+      \begin{itemize}
+      \item add/next
+      \item Implemented using binary tree
+      \end{itemize}
+    \item Set
+      \begin{itemize}
+      \item List with no ordering or repetitions
+      \item Fast search
+      \item Implemented using binary tree
+      \end{itemize}
+    \item Multi-Set
+      \begin{itemize}
+      \item List with no ordering but with repetitions
+      \item Fast search
+      \item Implement using binary tree and leaves that count
+      \end{itemize}
+    \item Maps
+      \begin{itemize}
+      \item Content addressable
+      \item Fast access
+      \item Implement as tree or hash
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\item \emph{Point to where you are going: links}
+  \begin{itemize}
+  \item Linked lists
+    \begin{itemize}
+    \item Simplest example of a tree/graph
+    \item History
+    \end{itemize}
+  \item Implementation
+  \item Singly and Doubly linked lists
+  \item Why you shouldn't use them
+    \begin{itemize}
+    \item Time complexity (what do they do well) O(1) insertion
+    \item Extendible arrays
+    \item Trees
+    \end{itemize}
+  \end{itemize}
+\item \emph{Make Friends with Trees}
+  \begin{itemize}
+  \item Why trees are good
+  \end{itemize}
+\item \emph{Recurse!}
+  \begin{itemize}
+  \item Thinking about recursion
+    \begin{itemize}
+    \item Base case
+    \item Recursive case
+      \begin{itemize}
+      \item Ensure that you use a smaller problem
+      \item Assume that you can solve the smaller problem
+      \end{itemize}
+    \end{itemize}
+  \item Recursion on trees
+  \item Show alternative
+  \item When not to recurse---Fibonacci, etc.
+  \item What the computer is doing
+  \item Drawing graphs
+  \end{itemize}
+\item \emph{Keep Trees Balanced}
+  \begin{itemize}
+  \item $O(\log(N))$
+  \item Worse case
+  \item Red-black and AVL tress
+  \end{itemize}
+\item \emph{Use Heaps}
+  \begin{itemize}
+  \item Priority Queues
+  \end{itemize}
+\item \emph{Make a hash of it}
+  \begin{itemize}
+  \item Finding it fast with hash tables
+  \end{itemize}
+\item \emph{Sort Wisely}
+  \begin{itemize}
+  \item Different types of sort
+  \item Algorithm complexity
+  \end{itemize}
+\item \emph{Make it Generic}
+  \begin{itemize}
+  \item Objects/comparable etc.
+  \item Introduction to generic computing
+  \item Java collection class
+  \item C++ STL
+  \item Strong typing
+  \item Don't roll your own
+  \end{itemize}
+\item \emph{Follow a Pattern}
+  \begin{itemize}
+  \item Keep classes consistent
+  \item Iterators
+  \end{itemize}
+\item \emph{Think Graphically}
+  \begin{itemize}
+  \item Why graphs are good abstractions
+    \begin{itemize}
+    \item Network
+    \item Interactions
+    \end{itemize}
+  \item Available efficient algorithms on graphs
+    \begin{itemize}
+    \item Shortest path
+    \item Minimum spanning tree
+    \item Max flow
+    \end{itemize}
+  \item Graph theory
+    \begin{itemize}
+    \item $G=(V,E)$
+    \item Directed/undirected
+    \item Weighted
+    \item Acyclic, trees
+    \end{itemize}
+  \end{itemize}
+\item \emph{Know Your Graph Algorithms}
+  \begin{itemize}
+  \item Minimum spanning tree
+    \begin{itemize}
+    \item Greedy
+    \end{itemize}
+  \item Shortest path
+    \begin{itemize}
+    \item Dynamic programming
+    \end{itemize}
+  \end{itemize}
+\item \emph{Analyse}
+  \begin{itemize}
+  \item Proofs
+    \begin{itemize}
+    \item Being sure of yourself
+    \end{itemize}
+  \item Upper bound
+    \begin{itemize}
+    \item Constructive proofs
+    \end{itemize}
+  \item Lower bound
+    \begin{itemize}
+    \item An example
+    \end{itemize}
+  \end{itemize}
+\item \emph{Know when to opt for second best}
+  \begin{itemize}
+  \item NP, P and NP-complete
+  \item Heuristic search
+  \end{itemize}
+\item \emph{Strategise}
+  \begin{itemize}
+  \item Greedy
+  \item Divide and Conquer
+  \item Dynamics Programming (intelligent algorithms)
+  \item Back-tracking 
+  \end{itemize}
+\item \emph{Improve Your General Knowledge}
+  \begin{itemize}
+  \item String matching
+  \item Numerical Analysis
+  \item FFT
+  \item Matrix multiplication
+  \item Linear programming
+  \item Computational Geometry
+  \item Cryptography
+  \item Compression (finding repeats)
+  \end{itemize}
+\end{enumerate}
+\end{document}

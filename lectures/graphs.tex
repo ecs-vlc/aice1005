@@ -1,0 +1,608 @@
+%Master File:lectures.tex
+
+\lesson{Think Graphically}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{colour-graph}
+\end{center}
+\keywords{Graph theory, applications of graphs, graph problems}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{Graph Theory}{gt}
+    \outlineitem{Applications of Graphs}{aog}
+    \begin{itemize}
+    \item \toplink{geometry}{Geometric applications}
+    \item \toplink{relational}{Relational applications}
+    \end{itemize}
+    \outlineitem{Implementing Graphs}{gr}
+    \outlineitem{Graph Problems}{gp}
+  \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{colour-graph}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Motivation}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Many different problems can be described in terms of
+    graphs\pause
+  \item This often reveals the true nature of the problem\pause
+  \item It unifies many apparently different problems\pause
+  \item As much is known about graph problems it often provides a
+    pointer to the solution\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Definition of a Graph}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item A graph, $G$, can be described by\pause
+    \begin{itemize}
+    \item A set of vertices or nodes $\mathcal{V} = \{1,2,3 \ldots
+      n\}$\pause
+    \item A set of edges $\mathcal{E} = \{(i,j)| \mbox{vertex $i$ is
+    connected to vertex $j$} \}$\pause
+    \end{itemize}
+  \item The edges may be
+    \begin{itemize}
+    \item \emph{directed}---sometimes called a \emph{digraph}\pause
+    \item \emph{undirected}\pause
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.3\linewidth]{directed-graph.mps}\hfil
+    \pauselevel{=4}\pause
+    \includegraphics[width=0.3\linewidth]{undirected-graph.mps}
+    \pauselevel{=5}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Connected and Unconnected Graphs}
+
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A graph is \emph{connected} if you can get from one node to any other
+    along a series of edges\pause
+  \item Otherwise it is \emph{disconnected}\pause
+    \begin{center}
+      \multiinclude[graphics={height=10cm}]{disconnected-graph}\pause
+    \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Trees}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A tree is a connected graphs with no cycles\pause
+  \item A tree will have $n-1$ edges\pause
+  \end{itemize}
+  \begin{center}\color{TextColor}
+    \includegraphics[height=10cm]{treeGraph.mps}
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Multigraphs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If the collection of edges is a \textit{multiset} then we obtain
+    a \emph{multigraphs} where more than one edge is allowed between
+    pairs of vertices
+  \begin{center}\color{TextColor}
+    \includegraphics[height=10cm]{multigraph.mps}\pause
+  \end{center}
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Weighted Graphs}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If we assign a number to an edge we obtain a \emph{weighted
+      graph}
+  \end{itemize}
+  \begin{center}\color{TextColor}
+    \includegraphics[height=10cm]{weightedGraph.mps}\pause
+  \end{center}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Networks}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sometimes we add more information to the graph\pause
+  \item E.g. attributes to the nodes or edges\pause
+  \item Graphs with many attributes are often referred to as
+    \emph{networks}\pause 
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Applications of Graphs
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Bridges of K\"onigsberg}
+\toptarget{geometry}
+
+\pausebuild
+Is there a tour around K\"onigsberg going over every bridge once?\pause
+\begin{center}
+  \begin{picture}(140,120)
+    \put(0,0){\includegraphics[height=12cm]{Konigsberg}}
+      \pauselevel{=1 :2}\pause
+    \put(0,0){\includegraphics[height=12cm]{Konigsberg_bridge}}
+      \pauselevel{=2 :3}\pause
+    \put(0,0){\includegraphics[height=12cm]{kb3}}
+      \pauselevel{=3 :4}\pause
+  \end{picture}
+\end{center}
+In 1736 Euler published a paper answering this question and founding
+graph theory\pause
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Representing Distances}
+
+\begin{minipage}{8cm}
+  \begin{center}
+    \begin{picture}(80,140)
+      \put(0,0){\multiinclude[graphics={width=8cm}]{uk1}}\pause
+      \put(0,0){\includegraphics[width=8cm]{uk.pdf}}\pause
+    \end{picture}    
+  \end{center}
+\end{minipage}\hfil
+\begin{minipage}{14cm}
+  \color{TwoColor}
+  \begin{itemize}
+  \item Consider some graph\hl{1}
+  \item With weights representing the distance between nodes\pauseh
+  \item What is the shortest distance between $S$ and $I$?\pauseh
+  \end{itemize}
+\end{minipage}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Applications}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We could take the weights to represent the time taken to travel
+    between nodes\pause
+  \item In a computer network the weights might represent the
+    bandwidth\pause 
+  \item In a representation of a transport system the weights might
+    represent the carrying capacity of the traffic on a road\pause
+  \item Graphs can be used to represent other kinds of relationships\pause
+  \item E.g. We could create a digraph of links between web pages\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}{}
+\section[-2]{Christmas Card Problem}
+\toptarget{relational}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}\squeeze
+\item I have four types of Christmas cards\pauseh
+\item Some of my friends know each other\pauseh
+\begin{center}
+  \color{TextColor}
+  \begin{picture}(100,100)
+    \put(0,0){\includegraphics[height=10cm]{name-colour}}
+    \pauselevel{=1}\pause
+    \put(0,0){\includegraphics[height=10cm]{colour-graph}}
+    \pauselevel{=4}\pause
+  \end{picture}
+\end{center}
+\color{TwoColor}\pauselevel{=3}
+\item I don't want to send friends that know each other the same card\pauseh
+\end{itemize}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{A Real World Problem}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A food company used different colour bags for each of it
+    products\pause
+  \item To save money they reduced the stock of bags to 25\pause
+  \item They wanted to know what items to put in what bags so that as
+    few customers as possible would have items with the same colour
+    bags\pause
+  \item This can again be reduced to a graph colouring problem\pause
+    \begin{itemize}
+    \item Each node represents an item\pause
+    \item The edges were weighted by the number of customers that took
+      both items\pause
+    \item The aim was to colour the nodes with 25 colours to minimise
+      the weights where the edges shared the same colour\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Frequency Assignment Problem}
+
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{frequency_assignment}
+\end{center}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Implementing Graphs
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{slide}
+\section{Representations}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item There is no single way to represent graphs\pause
+  \item The best representation depends on the graph\pause
+  \item Some books describe a \textit{Graph ADT}---graphs are too varied
+    for this to be very useful\pause
+  \item An important issue in representing a graph is how to store the
+    edge information\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Adjacency Matrices}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One representation of a graph $G=(\mathcal{V},\mathcal{E})$ is
+    in term of an $n\times n$ \emph{adjacency matrix} $\mat{A}$ with elements
+    \begin{align*}
+      A_{ij} = \left\{
+          \begin{array}{lll}
+            1 & & \mbox{if $(i,j)\in\mathcal{E}$}\\
+            0 & & \mbox{if $(i,j)\not\in\mathcal{E}$}\\
+          \end{array}\right.
+    \end{align*}
+    where $n=\vert\mathcal{V}\vert$\pause
+  \item For undirected graphs $\mat{A}$ is a symmetric matrix, i.e.
+    $\mat{A}=\mat{A}^\tr$\pause
+  \item For weighted graphs we often store the \emph{connectivity
+      matrix} or \emph{cost-adjacency matrix}, $\mat{C}$, where
+    \begin{align*}
+      C_{ij} = \left\{
+          \begin{array}{lll}
+            w_{ij} & & \mbox{if $(i,j)\in\mathcal{E}$}\\
+            0 & & \mbox{if $(i,j)\not\in\mathcal{E}$}\\
+          \end{array}\right.\pause
+    \end{align*}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Adjacency Lists}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item For \emph{dense} graphs where the number of edges is $\Theta(n^2)$
+    the adjacency matrix is often a useful representation\pause
+  \item But in \emph{sparse} graphs where the number of edges is $\Theta(n)$
+    the adjacency matrix has a very large number of zeros\pause
+  \item A more efficient representation is in terms of the adjacency
+    list where the set of outgoing edges is stored for each node\pause
+  \item In some applications it is useful to store both the adjacency
+    matrix and the adjacency list\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Representing Undirected Graphs}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{adjacency-matrix.mps}
+  Graph \hfil\hfil Adjacency Matrix \hfil Adjancency List
+\end{center}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Representing Digraphs}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{adj-digraph.mps}
+  Graph \hfil\hfil Adjacency Matrix \hfil Adjancency List
+\end{center}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % Graph Problems
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Hamilton Cycle}
+\toptarget{hamiltoncycle}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}\squeeze
+\item The Euler path problem is to find a path through a multigraph
+  that passes through every edge once---easy to solve\pauseh
+\item The Hamilton cycle problem is to find a cycle that goes through
+  each vertex exactly once\pauseh
+  \begin{center}\pauselevel{=1, :2}\color{TextColor}
+    \multiinclude[graphics={height=8.5cm}]{hamiltoncycle}\pauselevel{=3}\pause
+  \end{center}\color{TwoColor}
+\item There is no known efficient algorithm to solve this\pauseh
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Shortest Path and TSP}
+\toptarget{shortestpath}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The shortest path problem is to find a path between two
+    nodes\pause
+  \item There is an efficient algorithm---see next lecture\pause
+  \item In the travelling salesperson problem the task is to find the
+    shortest tour (Hamilton cycle)---we usually assume there is an edge
+    between every pair of nodes\pause
+  \item There is no know efficient algorithm to solve all TSPs\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Minimum Spanning Tree}
+\toptarget{minspantree}
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item Suppose we want to construct pylons connecting a
+  number of cities using the least amount of cable\pauseh
+  \vspace*{-1cm}
+  \begin{center}\pauselevel{=1, :2}\color{TextColor}
+    \multiinclude[graphics={height=12cm}]{PrimGraph}\pause
+  \end{center}
+  \vspace*{-1cm}
+\color{TwoColor}
+\item We will study an efficient algorithm to solve this in the next
+  but one lecture\pauseh
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Graph Partitioning}
+\toptarget{partitioning}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item The simplest version of this problem is to cut a graph into two
+    equal halves so that you minimise the number of edges you cut\pause
+  \item If the edges are weighted then you want to minimise the sum of
+    edges that are cut\pause
+  \item If the vertices are weighted you want to balance the sum of
+    vertex weights in the two partitions\pause
+  \item An example of this problem is in dividing up a problem to run on
+    a parallel computer\pause
+    \begin{itemize}
+    \item Nodes are subtasks (weights on nodes are run times)\pause
+    \item Edge weights indicate communication cost\pause
+    \end{itemize}
+  \item There is no known efficient algorithm to solve this\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Graph Isomorphism}
+\toptarget{isograph}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Do two graphs have the same structure?\pause
+    \begin{center}
+      \includegraphics[height=8cm]{isomorphism}
+    \end{center}
+  \item There is no known efficient algorithm to solve this
+    problem\pause
+  \item Theoretically it is interesting because it is not NP-complete\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Vertex Cover}
+
+\pausebuild
+\color{TwoColor}
+\begin{itemize}
+\item How many guards do you need to cover all the corridors in a
+  museum\pauseh
+  \vspace*{-1cm}
+  \begin{center}\pauselevel{=1, :2}\color{TextColor}
+    \multiinclude[graphics={height=10cm}]{VertexCover}\pause
+  \end{center}
+  \vspace*{-1cm}
+\color{TwoColor}
+\item There is no known efficient algorithm to solve this\pauseh
+\end{itemize}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Graph Colouring}
+\toptarget{colouring}
+
+\color{TwoColor}
+\begin{itemize}
+\item How many colours do I need to colour a graph with no conflicts\pauseh
+  \begin{center}\pauselevel{=1, :2}\color{TextColor}
+    \begin{picture}(100,100)
+      \put(0,0){\includegraphics[height=11cm]{noncolour-graph}}\pause
+      \put(0,0){\includegraphics[height=11cm]{colour-graph}}\pause
+    \end{picture}
+  \end{center}
+\color{TwoColor}
+\item There is no known efficient algorithm to solve this\pauseh
+\end{itemize}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Graph Problems}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item These are only a sample of the many famous graph
+    problems\pause
+  \item Others include
+
+    \begin{minipage}{10cm}
+      \begin{itemize}
+      \item Max-clique (hard)\pause
+      \item Maximal independent set (hard)\pause
+      \item Maximal flow problem (easy)\pause
+      \item Max-cut (hard)\pause
+      \end{itemize}
+    \end{minipage}\hfill
+    \begin{minipage}{11cm}
+      \includegraphics[width=0.9\linewidth]{maxclique}
+    \end{minipage}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Graphs are an important method for abstracting problems\pause
+  \item They appear in a huge number of disparate fields\pause
+  \item There are many problems for which efficient algorithms are
+    known\pause
+  \item There are many problems which are believed to be
+    hard---i.e. there aren't any efficient algorithms\pause
+  \item Even for hard problems there are good algorithms for finding
+    approximated solutions\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+

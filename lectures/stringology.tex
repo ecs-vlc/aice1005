@@ -1,0 +1,80 @@
+%Master File:lectures.tex
+
+\lesson{Use Fast String Algorithms}
+
+\vspace{-2cm}
+\begin{center}
+  \includegraphics[height=10cm]{genknowledge}
+\end{center}
+\keywords{String matching, suffix trees}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section[1]{Outline}
+
+\begin{minipage}{12cm}
+  \begin{enumerate}\squeeze
+    \outlineitem{String Matching}{stringmatching}
+    \outlineitem{Suffix Trees}{suffixtree}
+   \end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}{10cm}
+  \includegraphics[width=10cm]{genknowledge}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline % String Matching
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{String Matching}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Algorithms for strings are a major research area sometimes known
+    as \emph{stringology}\pause
+  \item The prototypical problem is that you have
+    \begin{itemize}
+    \item some text $\bf{T}=T_1 T_2 \cdots T_n$
+    \item some pattern $\bf{P}=P_1 P_2 \cdots P_m$
+    \item you want to find an exact match between the pattern and text\pause
+    \end{itemize}
+  \item Variants on this problem are to find \emph{regexp} matches and
+    inexact matches (see compiler course next year)\pause
+  \item Application in everything from a simple editor to biological
+    sequence analysis\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-0.5]{Strategies for Exact String Matching}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The simplest strategy is a brute force strategy where the
+    pattern is tested at each location in the text---this leads to an
+    $O(n\times m)$ algorithm\pause
+  \item A more sophisticated strategy is to preprocess the pattern to
+    reduce unnecessary comparisons, this can reduce the worst case time
+    to $O(n)$\pause
+  \item If performing many comparisons a more sophisticated strategy is
+    to preprocess the text---this can give very significant
+    speed-ups\pause
+  \item The state-of-the-art techniques are known as suffix trees and
+    suffix arrays (they are containers holding all suffixes)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

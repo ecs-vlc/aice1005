@@ -1,0 +1,110 @@
+<html>
+  <head>
+<title>AICE1000 Lab A2</title>
+</head>
+<body>
+<h1>AICE1000 Algorithms and Analysis Lab A2</h1>
+
+<p>Today we are going to write C++ code.  We will implement two data structures, a queue based on a circular array and a ring.  We are going to use a unit testing that I will provide.  Your task is to pass all the unit tests through writing elegant and correct code.  If you have passed all the units test then you may show this to a demonstrator and then leave.  Otherwise you will need to work to the end of the session to get full marks.</p>
+
+<p><strong>You may work on your own or in a group of two.</strong></p>
+
+<h2>Preparation</h2>
+
+<ol>
+  <li>We are going to use C++ classes.  These are similar to python classes, but if they are completely strange have a look at class section of <a href="https://www.w3schools.com/cpp/">W3 school</a>
+  <li>We are also going to use C++ templates.  For what we are doing all you need is to do is make the data type of the objects you are storing type "T".  If you are completely confused about this or want to know more have a look <a href="https://www.geeksforgeeks.org/templates-cpp/">here</a>.
+  <li>You should review the <a href="https://moodle.ecs.soton.ac.uk/course/view.php?id=121#section-1">C++ 101 lecture</a> and the code associated with the lecture notes on <a href="https://moodle.ecs.soton.ac.uk/course/view.php?id=121">Moodle</a>.  Particularly the array code, the linked list code and the binary tree code.  Make sure you can compile them and run them.
+  <li>Read the description of the data structures we are going to implement.  If you don't understand read the Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Circular_buffer">circular buffer</a>
+</ol>
+
+
+
+<h2>Queues</h2>
+
+<p>We are going to implement a queue using a circular array (we could use a linked list, but won't).  We will use the conventional names <code>enqueue(const T& x)</code> and <code>dequeue()</code> to add and remove items from the queue.  We could implement this using an array.
+  <center><img src="array_queue.png" align=center><i></i></center>
+<p>This would however be hugely wasteful of memory.  Instead we are going to use a resizable circular array.
+  <p><center><div id="CircularQueue">
+<script type="text/javascript" src="d3.min.js"></script>
+<script type="text/javascript" src="circularQueue.js"></script>
+<div id="CQbuttons">
+<input name="updateButton"
+       type="button"
+       value="enqueue(?)"
+       onclick="enqueue()" />
+<input name="updateButton"
+       type="button"
+       value="dequeue()"
+       onclick="dequeue()" />
+<input name="updateButton"
+       type="button"
+       value="isEmpty()"
+       onclick="isEmpty()" />
+<input name="updateButton"
+       type="button"
+       value="size()"
+       onclick="my_size()" /><br/>
+<input name="updateButton"
+       type="button"
+       value="capacity()"
+       onclick="capacity()" />
+</div>
+
+</center>
+
+<ol>
+  <li>I provide you with a header file <a href="code/Queue.h">Queue.h</a>, a test file <a href="code/test_queue.cc">test_queue.cc</a> and a second header file <a href="code/doctest.h">doctest.h</a> to do unit testing and a makefile.  Download these to a directory.
+  <li>You should be able to compile these to get an executably file <code>test_queue</code>.
+  <li>If you run <code>test_queue</code> it should tell you that you have failed most of the tests.  <code>test_queue</code> uses <a href="https://github.com/doctest/doctest">doctest</a> to do unit testing.
+  <li>Your job is to fill in the implementation in <code>Queue.h</code> so that the code passes all the tests (don't change <code>test_queue.cc</code>).  Note I have written functions templates for all the member functions of class <code>Queue&lt;T&gt;</code>, but you need to replace these with working code.  The default capacity should be 8. If there are more than 8 items in the queue you should double the capacity.  All functions should be &Theta;(1)
+  <li>There are lots of hints <a href="hints.html">here.</a>
+</ol>
+
+<h2>Building a Ring Buffer</h2>
+
+<p>Ring buffers are used to store some number of items, but it will write over old items.  It is used in things like history mechanisms which store a number of previous commands, but forgets old commands.
+
+<center><div id="Ring">
+<script type="text/javascript" src="d3.min.js"></script>
+<script type="text/javascript" src="ring.js"></script>
+<div id="Ringbuttons">
+<input name="updateButton"
+       type="button"
+       value="add(?)"
+       onclick="add()" />
+<input name="updateButton"
+       type="button"
+       value="size()"
+       onclick="ringsize()" />
+<input name="updateButton"
+       type="button"
+       value="ring[0]"
+       onclick="get(0)" />
+<input name="updateButton"
+       type="button"
+       value="ring[1]"
+       onclick="get(1)" />
+<input name="updateButton"
+       type="button"
+       value="iterator()"
+       onclick="iterator()" />
+</div>
+
+</center>
+
+<p>You are going to implement a ring mechanism.  It has a funny semantics in that <code>ring[0]</code> will give you the last item you added and <code>ring[1]</code> gives you the item before that (it iterates backwards in time).  We are also going to build an iterator that should iterate over all the items you have stored in the ring.  Once again we are going to have a capacity which by default sets to 8.  Working with unsigned integers is tricky when you need to iterate backwards so to keep things simple I have made all the indexes integers.
+
+  <ol>
+    <li>Copy <a href="code/ring.h">ring.h</a> and <a href="code/test_ring.cc">test_ring.cc</a>.  This uses the same <a href="code/doctest.h">doctest.h</a> file that you used for testing the queue.
+    <li>Once again, compile <code>test_ring.cc</code> and run the executable code.
+    <li>Your task is to fill in the implementation of <code>ring.h</code> so that you pass all the unit tests.
+    <li>The iterator is fiddly.  In C++ the nested class does not by default know about the Outer class.  This information can be passed to the iterator in the constructor, which I have done in the skeleton code.
+  </ol>
+
+
+<address>
+<a href="mailto:apb1@soton.ac.uk">Adam Prugel Bennett</a>
+</address>
+</body>
+</html>

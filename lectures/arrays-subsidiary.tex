@@ -1,0 +1,140 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{center}
+  \Large \bf Details on Array Lecture
+\end{center}
+
+\section*{Time Analysis for Resizing}
+
+We want to calculate the number of operations it takes when we add $N$
+elements to an array with initial capacity $n$.  This involves resizing
+the array $m+1$ times. Each time we double the array.  We thus have arrays
+of size $n$, $2n$, $4n$, \ldots, $2^m n$, $2^{m+1}n$ such that $N\leq
+2^{m+1}n$ so that all the elements fit.  Clearly, $N>2^{m}n$ otherwise
+we would have stopped earlier.  We thus have
+\begin{displaymath}
+  n\times 2^m < N \leq n \times 2^{m+1}.
+\end{displaymath}
+
+How big is $m$?  First let us divide through by $n$
+\begin{displaymath}
+  2^m < \frac{N}{n} \leq 2^{m+1}.
+\end{displaymath}
+(The inequality remain the same as $n$ is positive).
+If we take log to the base 2 of each sides
+\begin{align*}
+  \log_2\left( 2^m\right) < \log_2(\frac{N}{n}) 
+  \leq \log_2\left(2^{m+1}\right).
+\end{align*}
+(We have to be a little careful, since in general $a<b$ does not imply
+$f(a)<f(b)$ for an arbitrary function.  However, logarithms are
+continuous monotonically increasing functions so $a<b$ does imply
+$\log(a)<\log(b)$ for any base of logarithm).  Remembering
+that $\log_2(2^a) = a$ we find
+\begin{align*}
+  m < \log_2(\frac{N}{n}) \leq m+1
+\end{align*}
+thus $m$ is the integer which is the largest integer smaller than
+$\log_2(\frac{N}{n})$.  We can write this as
+\begin{align*}
+  m = \left\lfloor \log_2\left(\strut \frac{N}{n} \right) \right\rfloor
+\end{align*}
+where $\lfloor x \rfloor$ is the floor function and means the largest
+integer smaller than $x$.
+
+Every time we expand the array we must copy all the elements across to
+the new array.  Thus we have to do
+\begin{align*}
+  n + 2n + 4n + \cdots + 2^m n
+\end{align*}
+copies.  But we can sum this series easily
+\begin{align*}
+  n + 2n + 4n + \cdots + 2^m n = n\left( \strut 1+2+4+\cdots+ 2^m \right)
+  = n\times (2^{m+1}-1).
+\end{align*}
+Now we can substitute in the value of $m$ we have calculated above
+\begin{align*}
+  2^{m+1} = 2 \times 2^m = 2 \times 2^{\lfloor \log_2\left(\strut
+  \frac{N}{n} \right) \rfloor}.
+\end{align*}
+Now we know that $\lfloor \log_2(N/n) \rfloor\leq \log_2(N/n)$ so that
+\begin{align*}
+  2^{\lfloor \log_2\left(\strut \frac{N}{n} \right) \rfloor} \leq
+  2^{\log_2\left(\strut \frac{N}{n} \right)} = \frac{N}{n}
+\end{align*}
+which follows from $2^{\log_2(a)}=a$.  Thus
+\begin{align*}
+  2^{m+1} \leq \frac{2N}{n}
+\end{align*}
+and the number of copies is
+\begin{align*}
+  n \times (2^{m+1}-1) \leq n\times \left(\frac{2N}{n} -n\right) = 2N-n.
+\end{align*}
+
+In addition to the copies we also do $N$ adds.  Thus the total number of
+add and copy operations is less than or equal to
+\begin{align*}
+  N+2N-n= 3N-n < 3N.
+\end{align*}
+Thus the cost of resizing an array is less than 3 times the number of
+elements you are putting into the array.
+
+Of course, if you know that you want an array of size $N$ in the first
+place you can reserve that much memory using
+\begin{verbatim}
+List = new ArrayList(N);
+\end{verbatim}
+In which case you don't have to resize the memory at all.  The cost of
+adding is thus $N$ add operations.
+
+
+
+\section*{Things You Need to Know About Logarithms}
+
+Logs are the inverse of exponentiation.  In general
+\begin{align*}
+  \log_a(a^x) = x.
+\end{align*}
+If we exponentiate this we get
+\begin{align*}
+  a^{\log_a(a^x)} = a^x
+\end{align*}
+setting $a^x=y$ we can write this as
+\begin{align*}
+  a^{\log_a(y)} = y.
+\end{align*}
+
+We note that
+\begin{align*}
+  \log_a(x y) = \log_a(x) + \log_a(y)
+\end{align*}
+We can show this by exponentiating
+\begin{align*}
+  a^{\log_a(x \times y)} = a^{\log_a(x) + \log_a(y)}
+\end{align*}
+But $a^{u+v} = a^u \times a^v$ so
+\begin{align*}
+  a^{\log_a(x \times y)} &= a^{\log_a(x)} \times a^{\log_a(y)} \\
+  x \times y &= x \times y.
+\end{align*}
+A related property of logarithms is
+\begin{align*}
+  \log_a(b^c) = c\log(b)
+\end{align*}
+which clearly follows from the previous result if $c$ is an integer, but
+is true even when $c$ isn't an integer.
+
+Finally we note that
+\begin{align*}
+  \log_a(x) = \log_a(b^{\log_b(x)}) = \log_b(x) \times \log_a(b)
+\end{align*}
+where we have used $x = b^{\log_b(x)}$.  Thus $\log_a(x) = c \log_b(x)$
+where $c=\log_a(b)$.  When using big-O notation it doesn't matter which
+logarithm we are using since they are all the same up to a
+multiplicative constant (which we ignore).
+
+\end{document}

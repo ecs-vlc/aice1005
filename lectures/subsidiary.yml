@@ -1,0 +1,26 @@
+practical_cpp:
+  "driver file": main1.cc
+  "header file": array1.h
+  "code file": array1.cc
+practical_cpp_2:
+  "driver file": main2.cc
+  "header file": array2.h
+arrays:
+  "driver file": main3.cc
+  "header file": array3.h
+cpp101:
+  "header file": sos.h
+  "code file": sos.cc
+  "python code": sos.py
+links:
+  "driver file": linkedList.cc
+  "header file": mylist.h
+trees:
+  "driver file": binary_tree_driver.cc
+  "header file": binary_tree.h
+heaps:
+  "driver file": priority_queue.cc
+  "header file": heapPQ.h
+set_algorithms:
+  "disjointedSet code": disjointSet.cc
+  "fastSet code": fastSet.cc

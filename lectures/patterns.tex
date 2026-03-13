@@ -1,0 +1,703 @@
+%Master File:lectures.tex
+
+\lesson{Follow a Pattern}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=10cm]{pattern}
+\end{center}
+\keywords{Design patterns, constructor-destructor pattern, iterators}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\Outline}{%
+\begin{slide}
+\section{Outline}
+\begin{minipage}{15cm}
+  \vfill
+  \begin{enumerate}
+    \outlineitem{Design Patterns}{intro}
+    \begin{itemize}
+    \item \toplink{condes}{Constructor-Destructor Pattern}
+    \end{itemize}
+    \outlineitem{Comparable/Comparator Pattern}{compare}
+    \outlineitem{The Iterator Pattern}{iterators}
+    \outlineitem{A Linked List Iterator}{lliter}
+  \end{enumerate}
+  \vfill
+\end{minipage}\hfill
+\begin{minipage}{8cm}
+  \includegraphics[height=8cm,angle=90]{pattern}
+\end{minipage}
+\end{slide}
+\addtocounter{outlineitem}{1}
+}
+
+\setcounter{outlineitem}{1}
+\Outline
+\toptarget{firstoutline}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Software Design Patterns}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A design pattern is a solution method for a commonly met
+    problem\pause
+  \item In the early 90's it was realised that many problems reoccur in
+    computing\pause
+  \item Rather than re-invent the wheel, good solutions were collected
+    as design patterns\pause
+  \item Using design patterns provides a consistency to code writing\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Simple Design Patterns}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In many situations a method returns two results.\pause\ E.g.
+    \begin{itemize}
+    \item a minimisation method calculates the location of the
+      minimum and its value\pause
+    \item In integrating a function we want to know the value of the
+      integral and its error\pause
+    \end{itemize}
+  \item One common solution is the ``pair pattern'', i.e. the method
+    returns a Pair
+    \begin{java}
+      public class Pair<T,S>
+      {
+        public T first;
+        public S second;
+      }
+    \end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Decorator Pattern}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item The decorator pattern is is used when a class could have a lot of
+    functionality\pause
+  \item In this pattern we dynamically add functionality\pause
+  \item Rather than have one complicated class in the decorator pattern we
+    create a hierarchy of classes\pause
+  \item This pattern is used for input and output streams
+    \begin{java}
+      FileOutputStream fout = new FileOutputStream("filename");
+      BufferedOutputStream bout = new BufferedOutputStream(fout);
+      GZIPOutputStream gout = new GZIPOutputStream(bout);
+      ObjectOutputStream oout = new ObjectOutputStream(gout);
+      oout.writeObject(someObject);
+    \end{java}\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Freeing Resources}
+\toptarget{condes}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item A common problem in writing large programs is to make sure that
+    no resources get lost\pause
+  \item For example, there is often a limited number of files that can
+    be open\pause
+  \item Closing files therefore frees a resource\pause
+  \item This is a particular issue in C++ which does not have automatic
+    garbage collection\pause
+    \begin{itemize}
+    \item Any time you reserve memory using \jl$new$ you have to
+      free it using \jl$delete$\pause
+    \item Failure to do so results in a \textit{memory leak} which can
+      result in a program using up all available memory\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Creating Objects in C++ and Java}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In Java declaring a \texttt{Widget} creates enough memory for a
+    reference to a widget
+    \begin{java}
+      Widget widget;$\pause$
+      widget = new Widget();
+    \end{java}
+    To create a \texttt{Widget} we you use \texttt{new}\pause
+  \item In C++ declaring a \texttt{Widget} creates a \texttt{Widget}
+    \begin{java}
+      Widget widget;
+    \end{java}
+    where the default constructor is called\pause
+  \item To declare a \texttt{Widget} with a non-default constructor in
+    C++ we write
+    \begin{java}
+      Widget widget(parameters);$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{References in C++}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item You can use references in C++ but the syntax is slightly
+    different\pause
+  \item To create a reference to a \texttt{Widget} in C++ we would use
+    \begin{java}
+      Widget& widget;
+      widget = new Widget();$\pause$
+    \end{java}
+  \item But, because there is no garbage collection is C++, you, the
+    programmer, are responsible for destroying the Widget\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Destructors in C++}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item In C++ you can use either references to objects or objects
+    themselves\pause
+  \item This makes the objects more like primitive types\pause
+  \item In C++ you tend to create objects (rather than references)\pause
+  \item When an object goes out of scope the object destructor is
+    called\pause
+  \item There is therefore no need to destroy objects
+    \begin{java}
+      function() {
+        vector<double> v(10);
+        $\vdots$
+      }
+    \end{java}
+    the destructor for the \texttt{vector<double>} will be called\pause
+  \item This destructor frees all the memory used by
+  \texttt{vector<double>}\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{RAII:Constructor-Destructor Pattern}
+
+\begin{PauseHighLight}
+  \begin{itemize}\squeeze
+  \item One common pattern to get around the problem of losing resources
+    is to wrap up all resources in a class\pause
+  \item The resource is grabbed by the constructor method\pause
+  \item The resource is freed in the destructor method\pause
+  \item In Java the \texttt{finalize()} method is called when the object
+    is removed by the garbage collector\pause---this is not very useful
+    as this doesn't necessarily happen\pause
+  \item In C++ the destructor is called when the objects goes out of
+    scope\pause
+  \item This constructor-destructor pattern is used in the standard
+    template library so you don't need to worry about freeing
+    memory\pause---one very good reason for using the STL!\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Comparing Objects}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If you want to sort any objects then you have to specify an
+    \emph{ordering}\pause
+  \item This is also true of finding the maximum or minimum element in a
+    collection, etc.\pause
+  \item That is, you need some way of comparing two objects and saying
+    that object 1 comes before object 2\pause
+  \item Java has two patterns to achieve this either
+    \begin{itemize}
+    \item The objects themselves are \emph{Comparable}\pause\ or
+    \item You supply a \emph{Comparator} class to impose an ordering\pause
+    \end{itemize}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{slide}
+\section[-1]{Comparable}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In Java to make a class Widget comparable you make it implement
+    \jl$Comparable<Widget>$\pause
+  \item The comparable interface contains a single method
+    \begin{java}
+      public interface Comparable<T>
+      {
+         public int compareTo(T o);
+      }$\pause$
+    \end{java}
+  \item where \jl$x.compareTo(y)$ returns
+    \begin{itemize}
+    \item \textbf{0} if $x=y$
+    \item \textbf{a negative integer} if $x$ precedes $y$
+    \item \textbf{a positive integer} if $x$ succeeds $y$\pause
+    \end{itemize}
+  \item Write \jl$x.compareTo(y)<0$ to mean $x<y$\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Implementing an Integer class}
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item To implement the class Integer we have
+    \begin{java}
+      class Integer implements Comparable<Integer>
+      {
+         private int value;
+         ...
+         public int compareTo(Integer that){
+           if ( this.value < that.value )
+              return -1;
+           if ( this.value.equals(that.value) )
+              return 0;
+           return 1;
+         }
+         ... 
+      }$\pause$
+    \end{java}
+  \item This defines the \emph{natural ordering} of the class\pause
+ \item This should be sensible (antisymmetric, transitive and usually
+    compatible with equals)\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Comparator}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Sometimes you want to order a class which isn't Comparable or
+    you want to use a different ordering to the natural ordering\pause
+  \item To do this you create a new class \jl$WidgetCompartor$ which
+    implements the interface \jl$Comparator<Widget>$ where
+    \begin{java}
+      public interface Comparator<T>
+      {
+         public int compare(T o1, T o2);
+      }$\pause$
+    \end{java}
+  \item \jl$compare(T o1, To2)$ returns a value that is negative, zero
+    or positive depending on whether $o1<o2$, $o1=o2$ or $o1>o2$\pause
+  \item You pass the comparator to your sort method, etc.
+    \begin{java}
+      Collections.sort(WidgetList, WidgetComparator);
+      Collections.max(WidgetList, WidgetComparator);$\pause$
+    \end{java}
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item One of the jobs we left undone at the end of the last lecture
+    was to iterate through a linked list\pause
+  \item Iterating through collections is a common operation\pause
+  \item We would like to follow a common pattern\pause
+  \item This is known as the ``iterator pattern''\pause
+  \item It is used in both Java Collections and C++ STL\pause
+  \item In Java it is implemented via an interface\pause
+\end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{The Iterator Interface}
+
+\begin{java}
+public interface Iterator<T>
+{
+  /**
+   * Determine if Iterator object has a next object
+   * @return true - if this object has a next object
+   */
+   boolean hasNext();
+
+   /**
+    * Advances Iterator object and return next element
+    * @return next element
+    * @throws NoSuchElementException - if no next element
+    */
+    T next();
+
+   /**
+    * Remove the element most recently called by next
+    * @throws IllegalStateException - if next() has not been called
+    */
+    void remove();
+}
+\end{java}\vspace{-1cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Javadoc Output}
+
+\begin{center}
+  \includegraphics[width=0.95\linewidth]{iterator1}\vspace*{-2cm}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Javadoc Output}
+
+\begin{center}
+  \includegraphics[width=0.95\linewidth]{iterator2}\vspace*{-2cm}
+\end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Using Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is now easy to iterate over any collection, e.g.
+    \begin{java}
+public class TestIterator
+{
+    public static void main(String [] args )
+    {
+        List<Integer> list = new LinkedList<Integer>();
+        for (int i=0; i<5 ;i++)
+            list.add(i);
+        Iterator<Integer> iter = list.iterator();
+        while (iter.hasNext())
+            System.out.println(iter.next());
+    }
+}$\pause$
+    \end{java}\vspace{-1.5cm}
+  \item Note the iterator pattern
+    \begin{java}
+        Iterator<Integer> iter = list.iterator();
+        while (iter.hasNext())
+            System.out.println(iter.next());$\pause$
+    \end{java}\vspace{-1.5cm}
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Enhanced \texttt{for} Statement}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Java 1.5+ provides an ``enhanced \texttt{for} statements'' that
+    work with collections which provide iterators\pause
+  \item Rather than
+    \begin{java}
+        Iterator<Integer> iter = list.iterator();
+        while (iter.hasNext())
+            System.out.println(iter.next());      
+    \end{java}\pause\vspace{-1cm}
+  \item We can even more simply write
+    \begin{java}
+        for(Integer i: list)
+            System.out.println(i);
+    \end{java}\pause\vspace{-1cm}
+  \item This is intended to enhance readibility of code\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Generic Algorithms}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Using iterators allows us to write generic methods
+    \begin{java}
+      double sum(Collection<Double> c)
+      {
+        double sum = 0.0;
+        for (Double x: c)
+            sum += x;
+        return sum;
+      }$\pause$
+    \end{java}\vspace{-1cm}
+  \item This will work for any collection which implements the
+    \texttt{Collection} interface\pause
+  \item This allows us to write algorithms independent of the underlying
+    data structure (this is used for instance by the AbstractList
+    class)\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Lists}
+\vspace{-1cm}
+\begin{center}
+  \includegraphics[height=14cm]{java-list}
+\end{center}
+\vspace{-1cm}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\Outline
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Implementing An Iterator}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item We create an iterator using the \jl$iterator()$ method
+\begin{java}
+public class MyLinkedList<T>
+{
+    private Node<T> head;
+    private int no_elements;
+
+    // methods described in last lectures
+
+    public Iterator<T> iterator()
+    {
+        return new LLIter();
+    }
+
+    private class LLIter implements Iterator<T>
+    {
+        // Implementation
+    }
+}$\pause$
+\end{java}\vspace{-1cm}
+  \item \jl$LLIter$ is a (private) nested class inside
+  \jl$MyLinkedList<T>$\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{Linked List Iterator}
+
+\begin{PauseHighLight}
+\begin{java}
+    private class LLIter implements Iterator<T>$\pause$
+    {
+        private Node<T> next;$\pause$
+
+        public LLIter() { next = head; }$\pause$
+
+        public boolean hasNext() { return next != null; }$\pause$
+
+        public T next() {
+            if (next==null)
+                throw new NoSuchElementException();
+            T theElement = next.element;
+            next = next.next;
+            return theElement;
+        }$\pause$
+
+        public void remove() { // inefficient to implement, i.e. O(n)
+            throw new UnsupportedOperationException();
+        }$\pause$
+    }
+\end{java}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Notes on Iterator Class}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Implementation of constructor, \texttt{hasNext()} and
+    \texttt{next()} is trivial\pause
+  \item We don't implement \texttt{remove()} as this is inefficient for a
+    singly linked list---we need to find the predecessor\pause
+  \item Our singly linked list class \texttt{MyLinkedList<T>} doesn't
+    implement the \texttt{Collection} interface so we can't use the
+    enhanced \texttt{for} loop\pause
+  \item The doubly linked list class \texttt{LinkedList<T>} which is part
+    of the Collections framework implements the \texttt{ListIterator<T>}
+    interface\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1.5]{ListIterator}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Lists allow bidirectional iterators (i.e. ones that go backward
+    and forward)\pause
+  \item The methods for this class are
+    \begin{java}
+      public void add(T element)
+      public boolean hasNext()
+      public boolean hasPrevious()
+      public T next()
+      public int nextIndex()
+      public T previous()
+      public int previousIndex()
+      public void remove()
+      public void set(T element)
+    \end{java}\pause\vspace{-1cm}
+  \item For all of these the \texttt{Linkedlist} iterator runs in constant
+    time\pause---not true for the \texttt{ArrayList} iterator\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section{Other Iterators}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item All the standard collections \jl$ArrayList<T>$,
+    \jl$LinkedList<T>$, \jl$TreeSet<T>$ and \jl$HashSet<T>$ have iterator
+    classes\pause
+  \item For \jl$TreeSet<T>$ and \jl$HashSet<T>$ these are less trivial
+    than for the lists\pause
+  \item Because all these classes follow the same pattern they are easy
+    to understand and use\pause
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-2]{Maps}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Maps do not implement the collection interface and don't have
+    iterators\pause
+  \item They are implemented using sets
+    \begin{java}
+      public class TreeMap<K,V> implements Map<K,V> {
+        private TreeSet<Map.Entry<K,V>> hiddenSet;$\pause$
+
+        public put(K key, V value) {
+          hiddenSet.add(new Map.Entry<K,V>(key, value));
+        }$\pause$
+
+        public TreeSet<Map.Entry<K,V>> setView() {
+          return hiddenSet;
+        }$\pause$
+    \end{java}
+  \item Iterate over a map by calling \jl+setView+\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{slide}
+\section[-1]{Lessons}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item It is good software practice to follow established
+    patterns\pause
+  \item It requires skill and experience to spot common patterns\pause
+  \item It requires discipline to follow the pattern\pause
+  \item This is especially true when designing a group of classes,
+    e.g. data structure classes\pause
+    \begin{itemize}
+    \item Using the classes is easier because the methods are
+      unified\pause
+    \item It is possible to save coding by using generic methods\pause
+    \end{itemize}
+  \item Iterators are one of the most commonly used patterns---learn to
+    use them\pause
+  \end{itemize}
+\end{PauseHighLight}
+
+\end{slide}

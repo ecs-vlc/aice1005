@@ -1,0 +1,55 @@
+#ifndef ARRAY_H
+#define ARRAY_H
+
+template <typename T>
+class Array {
+private:
+  T *data;
+  unsigned length;
+  unsigned capacity;
+public:
+  Array(unsigned n=0) {
+    length = n;
+    if (n==0) {
+      n = 8;
+    }
+    data = new T[n];
+    capacity = n;
+  }
+  Array(const Array& other);
+  ~Array() {delete[] data;}
+  T& operator[](unsigned index) {return data[index];}
+  const T& operator[](unsigned index) const {return data[index];}
+  unsigned size() const {return length;}
+  T push_back(T value);
+  T* begin() {return data;}
+  T* end() {return data+length;}
+};
+
+template <typename T>
+T Array<T>::push_back(T value) {
+  if (length == capacity) {
+    capacity *= 2;
+    T* new_data = new T[capacity];
+    for (int i=0; i<length; ++i) {
+      new_data[i] = data[i];
+    }
+    delete [] data;
+    data = new_data;
+  }
+  data[length] = value;
+  ++length;
+  return value;
+}
+
+template <typename T>
+Array<T>::Array(const Array& other) {
+  data = new T[other.size()];
+  length = other.size();
+  for(int i=0; i<size(); ++i) {
+    data[i] = other[i];
+  }
+}
+
+
+#endif

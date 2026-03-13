@@ -1,0 +1,43 @@
+#! /bin/bash
+
+files=`grep \\lecture{ lectures.tex | sed 's/\\\lecture{//g' | sed 's/}//g' | grep -v %`
+
+dest="login:/notes/biom2005/lectures/apb-lectures"
+
+for f in $files
+do
+    if [ pdf/${f}_prn.pdf -nt $f.tex ]; then
+	continue
+    fi
+    echo "Processing $f"
+    outf=pdf/$f.pdf
+    if echo $f | /usr/bin/pdflatex -shell-escape lectures; then
+	echo "OK"
+    else
+	echo "Error"
+	exit 1;
+    fi
+    echo $f | /usr/bin/pdflatex lectures
+    ppower4 lectures.pdf pdf/$f.pdf
+    mv lectures.pdf pdf/${f}_prn.pdf
+    pdfjam --nup 2x4 --no-landscape --outfile pdf/${f}_prn_8.pdf pdf/${f}_prn.pdf
+    pdfjam --nup 2x2 --fitpaper true --outfile pdf/${f}_prn_4.pdf pdf/${f}_prn.pdf
+
+    scp pdf/${f}_prn.pdf $dest
+    scp pdf/$f.pdf $dest
+    scp pdf/${f}_prn_8.pdf $dest
+    scp pdf/${f}_prn_4.pdf $dest
+done
+ssh login chmod +r $dest/*
+
+cmd="pdftk "
+for f in $files; do
+    cmd="$cmd pdf/${f}_prn_8.pdf "
+done
+cmd="$cmd cat output pdf/lectures_8.pdf"
+echo $cmd
+$cmd
+scp pdf/lectures_8.pdf $dest
+
+lecturehtml
+
