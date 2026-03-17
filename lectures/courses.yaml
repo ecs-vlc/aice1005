@@ -1,0 +1,72 @@
+calendar:
+  term_start: 2026-01-26
+  weeks: 16
+
+  holidays:
+    - start: 2026-03-23
+      end: 2026-04-17
+
+  bank_holidays:
+    - 2026-05-04
+
+
+courses:
+  - name: "AICE1005: Algorithms and Analysis"
+    lectures:
+      - <a href="lectures.html#use_dsa">Use Data Structures and Algorithms!</a>
+      - <a href="lectures.html#time_complexity">Know How Long A Program Takes</a>
+      -
+      - <a href="lectures.html#declare_intentions">Declare your intentions (not your actions)</a>
+      - <a href="lectures.html#cpp101">C++ 101</a>
+      - <a href="lectures.html#arrays">Use Arrays</a>
+      -
+      - <a href="lectures.html#links">Point to where you are going - links</a>
+      - <a href="lectures.html#iterators">Iterate</a>
+      - <a href="lectures.html#recurse">Recurse!</a>
+      - <a href="labs/A1/A1.html">Lab 1</a>
+      - <a href="lectures.html#trees">Make Friends with Trees</a>
+      - <a href="lectures.html#balanced_trees">Keep Trees Balanced</a>
+      - <a href="lectures.html#multiway_trees">Sometimes It Pays Not to Be Binary</a>
+      -
+      - <a href="lectures.html#hashes">Make a hash of it</a>
+      - <a href="lectures.html#heaps">Use Heaps!</a>
+      - <a href="lectures.html#set_algorithms">Use Arrays for Fast Set Algorithms</a>
+      - <a href="labs/A2/A2.html">Lab 2</a>
+      - <a href="lectures.html#analysis">Analyse!</a>
+      - Void lecture
+      - <a href="lectures.html#sort">Sort Wisely</a>
+      -
+      - <a href="lectures.html#graphs">Think Graphically</a>
+      - <a href="lectures.html#traversal">Learn to Traverse Graphs</a>
+      - <a href="lectures.html#graph_algorithms">Know Your Graph Algorithms</a>
+      -
+      - <a href="lectures.html#search">Know how to Search</a>
+      - <a href="lectures.html#dynamic_programming">Dynamic Programming</a>
+      - <a href="lectures.html#file_compression">Use Smart Encoding!</a>
+      -
+      - <a href="problem-sol.pdf">Problem Sheet</a>
+      - <a href="lectures.html#np">Know What's Possible</a>
+      - <a href="lectures.html#optimisation">Settle For Good Solutions</a>
+      - <a href="labs/A3/A3.html">Lab 3</a>
+      - <a href="lectures.html#linearprog">Use Linear Programmings</a>
+      - <a href="lectures.html#simplex">Solving Linear Programs</a>
+      - <a href="lectures.html#strategies">Know What's Important</a>
+      -
+      - <a href="lectures.html#numerics">Understand Numerics</a>
+      - <a href="lectures.html#bigO">Understand Time Complexity</a>
+      - <a href="labs/A4/A4.html">Lab 4</a>
+      - Revision Lecture
+
+    slots:
+      - day: Mon
+        time: "16:00"
+        location: 02/1089
+      - day: Thu
+        time: "12:00"
+        location: 02/1039
+      - day: Thu
+        time: "14:00"
+        location: AICE Lab
+      - day: Fri
+        time: "14:00"
+        location: 35/1005
