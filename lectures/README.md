@@ -9,7 +9,7 @@ To update index.html and lecture_timetable.html in ../site
   - term_start
   - holidays
   - slots (day, time and location of lectures)
-  - lectures (if necessary)
+  - lectures (if necessary --- note list_lecture.py helps)
 - Run
   - python make_index.py
   - python make_timetable.py

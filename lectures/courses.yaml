@@ -1,6 +1,6 @@
 calendar:
   term_start: 2026-01-26
-  weeks: 16
+  weeks: 12
 
   holidays:
     - start: 2026-03-23
