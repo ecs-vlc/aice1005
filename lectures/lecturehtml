@@ -103,7 +103,7 @@ html.write('''
 html.flush()
 html.close()
 
-subprocess.call(["git", "add", "."])
+subprocess.call(["git", "add", ".."])
 subprocess.call(["git", "commit", "-m", "\"update lectures\""])
 subprocess.call(["git", "push"])
 
