@@ -16,7 +16,7 @@ def homepage():
     header = "<meta charset=\"UTF-8\">\n"
     header += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
     header += "<link rel='stylesheet' href='style.css'>\n"
-    header += tag('title', 'Advanced Machine Learning')
+    header += tag('title', coursename)
     inhtml = tag("head", header, space=True)
     
     inbody = tag("header", coursename)
