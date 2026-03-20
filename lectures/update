@@ -33,4 +33,4 @@ echo $cmd
 $cmd
 cp pdf/lectures_8.pdf ${dir}
 #lecturehtml
-lecturehtml
+python lecturehtml
