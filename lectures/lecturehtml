@@ -68,10 +68,12 @@ for lecture in lectures:
     tex = f"{lecture}.tex"
     lesson, keywords = getKeywords(tex)
     html.write(f"<li><b>{lesson}</b>: {keywords}\n")
+    html.write(f"<div id={lecture}>\n")
     html.write(f"<ul> <li> <a href=\"lecture_pdf/{lecture}.pdf\">Lecture PDF</a>,\n")
     html.write(f"  <a href=\"lecture_pdf/{lecture}_prn.pdf\">Printable PDF</a>,\n")
     html.write(f"  <a href=\"lecture_pdf/{lecture}_prn_4.pdf\">(4 per page)</a>,\n")
     html.write(f"  <a href=\"lecture_pdf/{lecture}_prn_8.pdf\">(8 per page)</a>,\n</li>\n</ul>\n")
+    html.write("</div>\n")
     if lecture in subsidary:
         html.write("<ul>\n")
         for k, v in subsidary[lecture].items():
