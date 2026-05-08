@@ -56,7 +56,8 @@ lectures:
   - <a href="lectures.html#numerics">Understand Numerics</a>
   - <a href="lectures.html#bigO">Understand Time Complexity</a>
   - <a href="labs/A4/A4.html">Lab 4</a>
-  - Revision Lecture
+  - <a href="lectures.html#quiz">Course Quiz</a>
+
 
 slots:
   - day: Mon
