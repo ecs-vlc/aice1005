@@ -1,0 +1,631 @@
+%Master File:lectures.tex
+
+\lesson{Quiz}
+\begin{center}
+ \includegraphics[width=0.5\textwidth]{quiz}
+\end{center}
+\keywords{Course Quiz}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 1}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the time complexity of TSP using exhaustive search?
+    \begin{enumerate}
+    \item $\Theta(2^n)$
+    \item $\Theta(n\, \log(n))$
+    \item $\Theta(n!)$
+    \item $\Theta(n^2)$\pause
+    \end{enumerate}
+  \item Answer: 3. $\Theta(n!)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 2}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item If it takes insertion sort 1 minute to sort 100\,000 elements approximately how long will it take to sort 1 million elements?
+    \begin{enumerate}
+    \item 1.1 seconds
+    \item 10 seconds
+    \item 100 seconds
+    \item 11 seconds\pause
+    \end{enumerate}
+  \item Answer: 3. 100 seconds\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 3}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the commonly used instruction for putting things onto and taking the things of the ADT queue?
+    \begin{enumerate}
+    \item enqueue and dequeue
+    \item add, remove
+    \item insert, \verb+get_minimum+
+    \item push, poll\pause
+    \end{enumerate}
+  \item Answer: 1. enqueue and dequeue\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 4}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which ADT represents a LIFO memory?
+    \begin{enumerate}
+    \item stack
+    \item heap
+    \item queue
+    \item priority queue\pause
+    \end{enumerate}
+  \item Answer: 1. stack\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 5}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In C++ what is the mechanism for preventing memory leaks?
+    \begin{enumerate}
+    \item garbage collection
+    \item malloc
+    \item free
+    \item RAII\pause
+    \end{enumerate}
+  \item Answer: 4. RAII\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 6}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the standard mechanism for implementing a variable length array?
+    \begin{enumerate}
+    \item Add a pointer at the end of current array to new array
+    \item Use a stack
+    \item Create twice the memory and copy existing array
+    \item Use large enough initial array that it fits all possible data\pause
+    \end{enumerate}
+  \item Answer: 3. Create twice the memory and copy existing array\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 7}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the closest bound for the amortorized cost of resizing an array?
+    \begin{enumerate}
+    \item twice the length of data being added
+    \item $\Theta(\log(n))$ additional memory
+    \item 3 times the length of data being added
+    \item $\Theta(n)$ time complexity\pause
+    \end{enumerate}
+  \item Answer: 3. 3 times the length of data being added\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 8}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the cost of inserting one linked list into another?
+    \begin{enumerate}
+    \item $\Theta(1)$
+    \item $\Theta(n\,\log(n))$
+    \item $\Theta(n)$
+    \item $\Theta(n^2)$\pause
+    \end{enumerate}
+  \item Answer: 1. $\Theta(1)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 9}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the cost of finding an element in a linked list?
+    \begin{enumerate}
+    \item $\Theta(n^2)$
+    \item $\Theta(n)$
+    \item $\Theta(1)$
+    \item $\Theta(n\,\log(n))$\pause
+    \end{enumerate}
+  \item Answer: 2. $\Theta(n)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 10}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the time complexity of finding the integer power of a number?
+    \begin{enumerate}
+    \item $\Theta(\log(n))$
+    \item $\Theta(1)$
+    \item $\Theta(n\,\log(n))$
+    \item $\Theta(n)$\pause
+    \end{enumerate}
+  \item Answer: 1. $\Theta(\log(n))$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 11}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What is the time complexity of solving the towers of Hanoi?
+    \begin{enumerate}
+    \item $\Theta(n!)$
+    \item $\Theta(2^n)$
+    \item $\Theta(\E{n})$
+    \item $\Theta(n^3)$\pause
+    \end{enumerate}
+  \item Answer: 2. $\Theta(2^n)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 12}
+
+\pb
+  Which time complexity classes $\Theta(n)$, $\Theta(n\,\log(n))$, $\Theta(n^2)$, $\Theta(\e{c\,n})$) do the curves belong to?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{curves_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 13}
+
+\pb
+  Where would 80 be inserted?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{binarytree_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 14}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true of a balanced binary search tree?
+    \begin{enumerate}
+    \item insertion is linear time but deletion is constant time
+    \item search is constant time
+    \item insertion and search are both fast, i.e. $\Theta(\log(n))$
+    \item search and insertion depend on the length of the input strings\pause
+    \end{enumerate}
+  \item Answer: 3. insertion and search are both fast, i.e. $\Theta(\log(n))$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 15}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which mechanism does C++ use for balancing trees?
+    \begin{enumerate}
+    \item Splay Trees
+    \item Red-Black Trees
+    \item Green-Black Trees
+    \item AVL Trees\pause
+    \end{enumerate}
+  \item Answer: 2. Red-Black Trees\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 16}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true about a B-Tree?
+    \begin{enumerate}
+    \item B-Trees are balanced trees extensively used in databases
+    \item B-Trees are binary trees
+    \item B-Trees are part of the standard template library
+    \item B-Trees are easy to implement\pause
+    \end{enumerate}
+  \item Answer: 1. B-Trees are balanced trees extensively used in databases\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 17}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which statement about \emph{tries} is \emph{false}?
+    \begin{enumerate}
+    \item tries are multiway trees
+    \item tries are commonly used for spell-checking
+    \item tries are known as digital trees
+    \item tries use hash tables\pause
+    \end{enumerate}
+  \item Answer: 4. tries use hash tables is \emph{false}\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 18}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true about suffix trees?
+    \begin{enumerate}
+    \item A suffix tree is a trie of all suffixes of a text
+    \item Suffix trees take $\Theta(n\,\log(n))$ time
+    \item Suffix trees take $\Theta(n\,\log(n))$ space
+    \item Suffix trees are a replacement for B-Trees\pause
+    \end{enumerate}
+  \item Answer: 1. A suffix tree is a trie of all suffixes of a text\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 19}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true of hash-tables?
+    \begin{enumerate}
+    \item It is impossible to delete from a hash-table
+    \item They have insertion and deletion of $\Theta(1)$
+    \item They allow you to iterate over them in sorted order
+    \item They can be implemented using binary trees\pause
+    \end{enumerate}
+  \item Answer: 2. They have insertion and deletion of $\Theta(1)$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 20}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is \emph{not true} of heaps?
+    \begin{enumerate}
+    \item Heaps can be viewed as a complete tree
+    \item Enqueue and dequeue are both take order $\log(n)$ operations
+    \item Heaps are used to implement priority queues
+    \item heaps are high performance stack data structures\pause
+    \end{enumerate}
+  \item Answer: 4. heaps are high performance stack data structures\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 21}
+
+\pb
+  What happens when I add 5 to the heap?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{heap_add_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 22}
+
+\pb
+  What happens when I remove the minimum element from the heap?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{heap_remove_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 23}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which of the following sorts is faster?
+    \begin{enumerate}
+    \item insertion sort
+    \item selection sort
+    \item bubble sort\pause
+    \end{enumerate}
+  \item Answer: 1. insertion sort\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 24}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Merge sort involves splitting an array in half, merge sorting both halves and then merging the two arrays.  Assuming merging two array with combined length $n$ takes $n-1$ operations, what recurrence relation most accurately describes this?
+    \begin{enumerate}
+    \item $T(n) = 2\, T(n-1)$
+    \item $T(n) = n\, \log(n)$
+    \item $T(n) = 2\, T(n/2) + n-1$
+    \item $T(n) = T(n/2) + n-1$\pause
+    \end{enumerate}
+  \item Answer: 3. $T(n) = 2\, T(n/2) + n-1$\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 25}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is \emph{untrue} about breadth first search?
+    \begin{enumerate}
+    \item This can be easily implemented using a queue
+    \item This is commonly used for find the shortest route in terms of number of edges
+    \item This is the most commonly used algorithm for doing graph traversals
+    \item This will search all nodes closest to the start node first\pause
+    \end{enumerate}
+  \item Answer: 3. This is the most commonly used algorithm for doing graph traversals is \emph{false}\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 26}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What best describes branch and bound?
+    \begin{enumerate}
+    \item This is used to determine if a graph has articulation points
+    \item This is a backtracking algorithm that prunes search depending on whether partial solutions are worse than the current best solution
+    \item This makes searching trees polynomial
+    \item This needs to be used with breadth first search\pause
+    \end{enumerate}
+  \item Answer: 2. This is a backtracking algorithm that prunes search depending on whether partial solutions are worse than the current best solution\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 27}
+
+\pb
+  What are the partial costs at the next column?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{dynamic_programming_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 28}
+
+\pb
+  What is the next step in the backwards algorithm?\pauseh
+\pauseh\pauselevel{=1}  \begin{center}
+  \multipdf[height=12cm]{dynamic_programming_back_quiz}\pause
+  \end{center}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 29}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true about wavelet encoding?
+    \begin{enumerate}
+    \item They are typically used to do lossless compression
+    \item They work by concentrating most of the signal "energy" into a short carrier signal
+    \item They work by building a tree representing the symbols in the alphabet
+    \item They cannot cope with any jumps in the signal\pause
+    \end{enumerate}
+  \item Answer: 2. They work by concentrating most of the signal "energy" into a short carrier signal\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 30}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true about problems in NP?
+    \begin{enumerate}
+    \item There are no known efficient algorithms to solve any of these problems
+    \item They include the problem of whether chess is winnable by white
+    \item They are problems that can be done in polynomial time on a non-determinstic Turing machine
+    \item They consist of the set of super-polynomial time problems\pause
+    \end{enumerate}
+  \item Answer: 3. They are problems that can be done in polynomial time on a non-determinstic Turing machine\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 31}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What best describes a hill-climbing algorithm?
+    \begin{enumerate}
+    \item It is the algorithm used by a bipedal robot to go up hills
+    \item It is an algorithm where a step is made in the direction of the gradient
+    \item It is a stochastic algorithm which always moves to a better neighbour when one exists
+    \item It uses a population of searchers evolving using selection, mutation and crossover\pause
+    \end{enumerate}
+  \item Answer: 3. It is a stochastic algorithm which always moves to a better neighbour when one exists\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 32}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true about linear programming?
+    \begin{enumerate}
+    \item It involves problems with a linear objective function, linear constraints and non-negativity constraints
+    \item It is an NP-hard problem
+    \item TSP can be solved using linear programming
+    \item The objective function is quadratic, but the constraints are linear\pause
+    \end{enumerate}
+  \item Answer: 1. It involves problems with a linear objective function, linear constraints and non-negativity constraints\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 33}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What does it mean for a linear program to be in normal form?
+    \begin{enumerate}
+    \item The constraints are all written in matrix form
+    \item All inequality constraints except for non-negativity constraints have been turned into equality constraints
+    \item It does not have any inequality constraints
+    \item It has been turned into its dual problem using Lagrange multipliers\pause
+    \end{enumerate}
+  \item Answer: 2. All inequality constraints except for non-negativity constraints have been turned into equality constraints\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 34}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which algorithm uses a divide and conquer strategy?
+    \begin{enumerate}
+    \item Insertion sort
+    \item Dijkstra's algorithm
+    \item Prim's algorithm
+    \item Merge sort\pause
+    \end{enumerate}
+  \item Answer: 4. Merge sort\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 35}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item Which algorithm uses a greedy algorithm to find an optimal solution?
+    \begin{enumerate}
+    \item TSP
+    \item Finding articulation vertices in a graph
+    \item Quick sort
+    \item Kruskal's algorithm\pause
+    \end{enumerate}
+  \item Answer: 4. Kruskal's algorithm\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 36}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item In numerical algorithms what causes a large loss in accuracy?
+    \begin{enumerate}
+    \item Subtracting two numbers with very similar values
+    \item Adding two numbers with very similar values
+    \item Computing the exponential of a number
+    \item Subtracting two numbers with very different values\pause
+    \end{enumerate}
+  \item Answer: 1. Subtracting two numbers with very similar values\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+
+%%%%%%%%%%%%%%%%%%%%%%% Next Slide %%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\section[-1]{Question 37}
+
+\begin{PauseHighLight}
+  \begin{itemize}
+  \item What statement is true?
+    \begin{enumerate}
+    \item If algorithm A is $\Theta(n^3)$ and algorithm B is $\Theta(n^4)$ then algorithm A will run faster than algorithm B
+    \item If algorithm A and B are both $\Theta(n^2)$ then they take the same time
+    \item If algorithm A is $O(n^3)$ and algorithm B is $O(n^2)$ then for sufficiently large $n$, algorithm B will be faster than algorithm A
+    \item If algorithm A is $\omega(n\,\log(n))$ and algorithm B is $O(n\,\log(n))$ then for sufficiently large $n$, algorithm B is faster than algorithm A\pause
+    \end{enumerate}
+  \item Answer: 4. If algorithm A is $\omega(n\,\log(n))$ and algorithm B is $O(n\,\log(n))$ then for sufficiently large $n$, algorithm B is faster than algorithm A\pauseb
+  \end{itemize}
+\end{PauseHighLight}
+\end{slide}
+

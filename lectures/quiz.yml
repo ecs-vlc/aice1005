@@ -1,0 +1,242 @@
+questions:
+  - question: What is the time complexity of TSP using exhaustive search?
+    answer: $\Theta(n!)$
+    distractors:
+      - $\Theta(n^2)$
+      - $\Theta(2^n)$
+      - $\Theta(n\, \log(n))$
+
+  - question: If it takes insertion sort 1 minute to sort 100\,000 elements approximately how long will it take to sort 1 million elements?
+    answer: 100 seconds
+    distractors:
+      - 10 seconds
+      - 11 seconds
+      - 1.1 seconds
+
+  - question: What is the commonly used instruction for putting things onto and taking the things of the ADT queue?
+    answer: enqueue and dequeue
+    distractors:
+      - add, remove
+      - push, poll
+      - insert, \verb+get_minimum+
+
+  - question: Which ADT represents a LIFO memory?
+    answer: stack
+    distractors:
+      - queue
+      - priority queue
+      - heap
+      
+  - question: In C++ what is the mechanism for preventing memory leaks?
+    answer:  RAII
+    distractors:
+      - garbage collection
+      - free
+      - malloc
+      
+  - question: What is the standard mechanism for implementing a variable length array?
+    answer: Create twice the memory and copy existing array
+    distractors:
+      - Add a pointer at the end of current array to new array
+      - Use large enough initial array that it fits all possible data
+      - Use a stack
+      
+  - question: What is the closest bound for the amortorized cost of resizing an array?
+    answer: 3 times the length of data being added
+    distractors:
+      - $\Theta(\log(n))$ additional memory
+      - twice the length of data being added
+      - $\Theta(n)$ time complexity
+      
+  - question: What is the cost of inserting one linked list into another?
+    answer: $\Theta(1)$
+    distractors:
+      - $\Theta(n\,\log(n))$
+      - $\Theta(n)$
+      - $\Theta(n^2)$
+      
+  - question: What is the cost of finding an element in a linked list?
+    answer: $\Theta(n)$
+    distractors:
+      - $\Theta(1)$
+      - $\Theta(n\,\log(n))$
+      - $\Theta(n^2)$
+      
+  - question: What is the time complexity of finding the integer power of a number?
+    answer: $\Theta(\log(n))$
+    distractors:
+      - $\Theta(n\,\log(n))$
+      - $\Theta(n)$
+      - $\Theta(1)$
+      
+  - question: What is the time complexity of solving the towers of Hanoi?
+    answer: $\Theta(2^n)$
+    distractors:
+      - $\Theta(\E{n})$
+      - $\Theta(n!)$
+      - $\Theta(n^3)$
+      
+  - question: Which time complexity classes $\Theta(n)$, $\Theta(n\,\log(n))$, $\Theta(n^2)$, $\Theta(\e{c\,n})$) do the curves belong to
+    figure: curves_quiz
+    
+  - question: Where would 80 be inserted
+    figure: binarytree_quiz
+    
+  - question: What statement is true of a balanced binary search tree?
+    answer: insertion and search are both fast, i.e. $\Theta(\log(n))$ 
+    distractors:
+      - insertion is linear time but deletion is constant time
+      - search is constant time
+      - search and insertion depend on the length of the input strings
+      
+  - question: Which mechanism does C++ use for balancing trees
+    answer: Red-Black Trees
+    distractors:
+      - AVL Trees
+      - Splay Trees
+      - Green-Black Trees
+      
+  - question: What statement is true about a B-Tree?
+    answer: B-Trees are balanced trees extensively used in databases
+    distractors:
+      - B-Trees are binary trees
+      - B-Trees are easy to implement
+      - B-Trees are part of the standard template library
+      
+  - question: Which statement about \emph{tries} is \emph{false}?
+    answer: tries use hash tables
+    false_answer: True
+    distractors:
+      - tries are known as digital trees
+      - tries are multiway trees
+      - tries are commonly used for spell-checking
+      
+  - question: What statement is true about suffix trees
+    answer: A suffix tree is a trie of all suffixes of a text
+    distractors:
+      - Suffix trees take $\Theta(n\,\log(n))$ time
+      - Suffix trees take $\Theta(n\,\log(n))$ space
+      - Suffix trees are a replacement for B-Trees
+      
+  - question: What statement is true of hash-tables
+    answer: They have insertion and deletion of $\Theta(1)$
+    distractors:
+      - They can be implemented using binary trees
+      - It is impossible to delete from a hash-table
+      - They allow you to iterate over them in sorted order
+      
+  - question: What statement is \emph{not true} of heaps
+    answer: heaps are high performance stack data structures
+    distractors:
+      - Heaps can be viewed as a complete tree
+      - Enqueue and dequeue are both take order $\log(n)$ operations
+      - Heaps are used to implement priority queues
+      
+  - question: What happens when I add 5 to the heap
+    figure: heap_add_quiz
+    
+  - question: What happens when I remove the minimum element from the heap
+    figure: heap_remove_quiz
+    
+  - question: Which of the following sorts is faster
+    answer: insertion sort
+    distractors:
+      - selection sort
+      - bubble sort
+      
+  - question: Merge sort involves splitting an array in half, merge sorting both halves and then merging the two arrays.  Assuming merging two array with combined length $n$ takes $n-1$ operations, what recurrence relation most accurately describes this
+    answer: $T(n) = 2\, T(n/2) + n-1$
+    distractors:
+      - $T(n) = n\, \log(n)$
+      - $T(n) = T(n/2) + n-1$
+      - $T(n) = 2\, T(n-1)$
+      
+  - question: What statement is \emph{untrue} about breadth first search
+    answer: This is the most commonly used algorithm for doing graph traversals
+    false_answer: True
+    distractors:
+      - This can be easily implemented using a queue
+      - This is commonly used for find the shortest route in terms of number of edges
+      - This will search all nodes closest to the start node first
+      
+  - question: What best describes branch and bound
+    answer: This is a backtracking algorithm that prunes search depending on whether partial solutions are worse than the current best solution
+    distractors:
+      - This makes searching trees polynomial
+      - This needs to be used with breadth first search
+      - This is used to determine if a graph has articulation points
+      
+  - question: What are the partial costs at the next column?
+    figure: dynamic_programming_quiz
+    
+  - question: What is the next step in the backwards algorithm?
+    figure: dynamic_programming_back_quiz
+    
+  - question: What statement is true about wavelet encoding
+    answer: They work by concentrating most of the signal "energy" into a short carrier signal
+    distractors:
+      - They are typically used to do lossless compression
+      - They cannot cope with any jumps in the signal
+      - They work by building a tree representing the symbols in the alphabet
+      
+  - question: What statement is true about problems in NP
+    answer: They are problems that can be done in polynomial time on a non-determinstic Turing machine
+    distractors:
+      - They consist of the set of super-polynomial time problems
+      - There are no known efficient algorithms to solve any of these problems
+      - They include the problem of whether chess is winnable by white
+      
+  - question: What best describes a hill-climbing algorithm
+    answer: It is a stochastic algorithm which always moves to a better neighbour when one exists
+    distractors:
+      - It is the algorithm used by a bipedal robot to go up hills 
+      - It is an algorithm where a step is made in the direction of the gradient
+      - It uses a population of searchers evolving using selection, mutation and crossover
+      
+  - question: What statement is true about linear programming
+    answer: It involves problems with a linear objective function, linear constraints and non-negativity constraints
+    distractors:
+      - It is an NP-hard problem
+      - The objective function is quadratic, but the constraints are linear
+      - TSP can be solved using linear programming
+      
+  - question: What does it mean for a linear program to be in normal form
+    answer: All inequality constraints except for non-negativity constraints have been turned into equality constraints
+    distractors:
+      - The constraints are all written in matrix form
+      - It does not have any inequality constraints
+      - It has been turned into its dual problem using Lagrange multipliers
+      
+  - question: Which algorithm uses a divide and conquer strategy
+    answer: Merge sort
+    distractors:
+      - Insertion sort
+      - Prim's algorithm
+      - Dijkstra's algorithm
+      
+  - question: Which algorithm uses a greedy algorithm to find an optimal solution
+    answer: Kruskal's algorithm
+    distractors:
+      - Quick sort
+      - TSP
+      - Finding articulation vertices in a graph
+      
+  - question: In numerical algorithms what causes a large loss in accuracy
+    answer: Subtracting two numbers with very similar values
+    distractors:
+      - Adding two numbers with very similar values
+      - Subtracting two numbers with very different values
+      - Computing the exponential of a number
+      
+  - question: What statement is true
+    answer: If algorithm A is $\omega(n\,\log(n))$ and algorithm B is $O(n\,\log(n))$ then for sufficiently large $n$, algorithm B is faster than algorithm A
+    distractors:
+      - If algorithm A and B are both $\Theta(n^2)$ then they take the same time
+      - If algorithm A is $\Theta(n^3)$ and algorithm B is $\Theta(n^4)$ then algorithm A will run faster than algorithm B
+      - If algorithm A is $O(n^3)$ and algorithm B is $O(n^2)$ then for sufficiently large $n$, algorithm B will be faster than algorithm A
+  - question:
+    answer:
+    distractors:
+      -
+      -
+      -

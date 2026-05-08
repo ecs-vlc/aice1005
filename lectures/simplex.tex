@@ -76,7 +76,7 @@
     but we can still move along the constraint\pause
   \item We then meet another constraint which restricts the direction we
     can move by two degrees of freedom\pause
-  \item Eventually, we will reach $n$ constraints which defines a vertex
+  \item Eventually, we will reach $m$ constraints which defines a vertex
     of the feasible region and is optimal\pause
   \end{itemize}
 \end{PauseHighLight}
@@ -190,7 +190,7 @@
 \begin{PauseHighLight}
   \begin{itemize}
   \item In total we have $n$ equality and $m$ non-negativity constraints\pause
-  \item $n$ constraints must be satisfied to be at a vertex of feasible
+  \item $m$ constraints must be satisfied to be at a vertex of feasible
     region\pause
   \item So at least $n-m$ of the non-negativity constraints are
     satisfied (i.e. $x_i=0$)\pause
@@ -215,12 +215,12 @@
   \item To do this for each additional constraint we add a new
     \emph{auxiliary variable} $\xi_k$, e.g.
     \begin{align*}
-     \forall\, k\in\{1,2,\ldots, m\} \quad\quad
-     \xi_k + \sum_i A_{ki} x_i &= b_k  \geq 0 \pause
+     \forall\, k\in\{1,2,\ldots, m\} \quad\quad\pauselevel{=3 :4}\pause
+     \xi_k + \pauselevel{build =4}\pause\sum_i A_{ki} x_i &= b_k  \geq 0 \pauselevel{=3 :4}\pause
     \end{align*}
   \item We then can find a basic feasible solution by setting $x_i=0$ so
     \begin{align*}
-      \xi_k &= b_k  \quad \forall\, k\in\{1,2,\ldots, m\}\pause
+      \xi_k &= b_k  \quad \forall\, k\in\{1,2,\ldots, m\}\pauselevel{=5}\pause
     \end{align*}
   \end{itemize}
 \end{PauseHighLight}
